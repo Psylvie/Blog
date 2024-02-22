@@ -201,5 +201,5 @@
 			$this->role = $role;
 		}
 		
-		
 	}
+	

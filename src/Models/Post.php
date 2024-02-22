@@ -219,9 +219,5 @@
 			$this->categories = $categories;
 		}
 		
-	
-		
-		
-	
-		
 	}
+	
