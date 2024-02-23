@@ -21,7 +21,7 @@ use Twig\Token;
  * Loops over each item of a sequence.
  *
  *   <ul>
- *    {% for user in users %}
+ *    {% for user in Users %}
  *      <li>{{ user.username|e }}</li>
  *    {% endfor %}
  *   </ul>

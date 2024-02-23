@@ -22,7 +22,7 @@
 				['name' => 'Jim Doe'],
 			];
 			
-			$this->render('users/index.twig', compact('users'));
+			$this->render('Users/index.twig', compact('users'));
 		}
 	}
 	

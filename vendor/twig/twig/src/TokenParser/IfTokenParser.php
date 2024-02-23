@@ -20,9 +20,9 @@ use Twig\Token;
 /**
  * Tests a condition.
  *
- *   {% if users %}
+ *   {% if Users %}
  *    <ul>
- *      {% for user in users %}
+ *      {% for user in Users %}
  *        <li>{{ user.username|e }}</li>
  *      {% endfor %}
  *    </ul>
