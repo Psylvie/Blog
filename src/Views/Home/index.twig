@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Le blog de l'AVBN</title>
+</head>
+
+<body>
+<h1>Le super blog de l'AVBN !</h1>
+<p>Derniers posts du blog :</p>
+
+{% for post in posts %}
+    <div class="news">
+        <h3>
+            {{ post.title|title}}
+            <em>le {{ post.createdAt|date("d/mY") }}</em>
+        </h3>
+        <p>
+            {{ post.content|nl2br|e }}
+            <br />
+            <em><a href="#">Commentaires</a></em>
+        </p>
+    </div>
+{% endfor %}
+</body>
+</html>
