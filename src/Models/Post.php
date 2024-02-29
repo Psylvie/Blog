@@ -1,6 +1,8 @@
 <?php
 	namespace App\Models;
 	
+	use DateTime;
+	
 	class Post{
 		private ?int $id = null;
 		private ?string $title = null;
@@ -218,6 +220,8 @@
 		{
 			$this->categories = $categories;
 		}
+		
+		
 		
 	}
 	

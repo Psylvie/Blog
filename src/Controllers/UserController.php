@@ -2,27 +2,28 @@
 	
 	namespace App\Controllers;
 	
+	use App\Config\DatabaseConnect;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
 	
-	class UserController extends Controller {
+	class UserController extends Controller
+	{
+
 		
-		/**
-		 * @throws SyntaxError
-		 * @throws RuntimeError
-		 * @throws LoaderError
-		 */
 		public function index()
 		{
-			$users = [
-				['name' => 'John Doe'],
-				['name' => 'Jane Doe'],
-				['name' => 'Jim Doe'],
-			];
-			
-			$this->render('Users/index.twig', compact('users'));
+			try {
+				$mysqlClient = DatabaseConnect::connect();
+				
+				$users = $mysqlClient->query('SELECT * FROM users ORDER BY createdAt DESC ') -> fetchAll();
+				
+				$this->render('Users/index.twig', ['users' => $users]);
+			}catch (\Exception $e) {
+				echo 'Erreur de connexion a la base de données !: ' . $e->getMessage();
+			}
 		}
+		
 	}
 	
 	
