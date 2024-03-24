@@ -18,7 +18,7 @@
 				
 				$users = $mysqlClient->query('SELECT * FROM users ORDER BY createdAt DESC ') -> fetchAll();
 				
-				$this->render('Users/index.twig', ['users' => $users]);
+				$this->render('Users/homePage.html.twig', ['users' => $users]);
 			}catch (\Exception $e) {
 				echo 'Erreur de connexion a la base de données !: ' . $e->getMessage();
 			}
