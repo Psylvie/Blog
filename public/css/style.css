@@ -1,17 +1,15 @@
-/* Styles pour le fond sombre */
+
 body {
-    background-color: rgba(34, 34, 34, 0.8); /* Couleur de fond sombre */
-    color: #ffffff; /* Couleur du texte */
+    background-color: rgba(34, 34, 34, 0.8);
+    color: #ffffff;
 }
 
-/* Styles pour certains éléments en vieux rose */
 .card {
-    /*background-color: #442c2e; !* Fond des cartes *!*/
-    border-color: #865353; /* Bordure des cartes */
+    border-color: #865353;
 }
 
 .btn  {
     background-color: #865353;
-    border-color: #c7ced0; /* Bordure des boutons */
-    color: #ffffff; /* Couleur du texte des boutons */
+    border-color: #c0c7c7;
+    color: #ffffff;
 }
