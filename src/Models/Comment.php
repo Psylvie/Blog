@@ -7,22 +7,23 @@
 	{
 		private int $id;
 		private string $content;
-		private int $published;
+		private string $status;
 		private datetime $createdAt;
 		private datetime $updateAt;
 		
 		/**
 		 * @param int $id
 		 * @param string $content
-		 * @param int $published
+		 * @param string $status
 		 * @param DateTime $createdAt
 		 * @param DateTime $updateAt
+		 *
 		 */
-		public function __construct(int $id, string $content, int $published, DateTime $createdAt, DateTime $updateAt)
+		public function __construct(int $id, string $content, string $status, DateTime $createdAt, DateTime $updateAt)
 		{
 			$this->id = $id;
 			$this->content = $content;
-			$this->published = $published;
+			$this->status = $status;
 			$this->createdAt = $createdAt;
 			$this->updateAt = $updateAt;
 		}
@@ -60,19 +61,19 @@
 		}
 		
 		/**
-		 * @return int
+		 * @return string
 		 */
-		public function getPublished(): int
+		public function getStatus(): string
 		{
-			return $this->published;
+			return $this->status;
 		}
 		
 		/**
-		 * @param int $published
+		 * @param string $status
 		 */
-		public function setPublished(int $published): void
+		public function setStatus(string $status): void
 		{
-			$this->published = $published;
+			$this->status = $status;
 		}
 		
 		/**

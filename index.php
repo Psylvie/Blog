@@ -3,6 +3,7 @@
 	require_once __DIR__ . '/vendor/autoload.php';
 	
 	use App\Config\DatabaseConnect;
+	use App\Controllers\CommentController;
 	use App\Controllers\HomeController;
 	use App\Controllers\PostController;
 	use App\Router;
@@ -23,7 +24,7 @@
 	$router->addRoute('/Blog/posts', PostController::class, 'list');
 	$router->addRoute('/Blog/post/{id}', PostController::class, 'show');
 	$router->addRoute('/Blog/contactForm', HomeController::class, 'contactForm');
-
+	$router->addRoute('/Blog/addComment', CommentController::class, 'addComment');
 	try {
 		$router->dispatch($uri);
 	} catch (\Exception $e) {
