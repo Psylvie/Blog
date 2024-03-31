@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="container mt-5 ">
+        <h1 class="text-center">Sylvie Peuzin, la développeuse qu'il vous faut !!!! </h1>
+    </div>
+    <div class="container mt-5">
+        <h2>Compétences</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="public\images\photoMoi.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Curriculum vitae </h5>
+                        <div class="container mt-5">
+                            <a href="public\images\cv.pdf" target="_blank" class="btn btn-secondary mb-2 w-100">Afficher mon CV au format PDF</a>
+                            <a href="public\images\cv.pdf" download class="btn btn-secondary w-100">Télécharger mon CV au format PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mt-3">
+                    <div class="social-media">
+                        <p>Je suis Sylvie, développeuse d'applications PHP/Symfony en alternance. Passionnée par la programmation et le développement web, je cherche continuellement à apprendre et à m'améliorer. En dehors du code, j'adore la musique, les voyages et découvrir de nouvelles cultures.</p>
+                        <div class="row mt-5">
+                            <div class="col-sm-6">
+                                <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" class="btn btn-secondary w-100 mb-2">Facebook</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr" target="_blank" class="btn btn-secondary w-100 mb-2">Linkedin</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="https://www.instagram.com/" target="_blank" class="btn btn-secondary w-100 mb-2">Instagram</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="https://github.com/Psylvie" target="_blank" class="btn btn-secondary w-100 mb-2">Github</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="social-media">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Ce que j'aime</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">La programmation créative</li>
+                                <li class="list-group-item">L'apprentissage de nouvelles technologies</li>
+                                <li class="list-group-item">La résolution de problèmes complexes</li>
+                                <li class="list-group-item">La collaboration avec des équipes passionnées</li>
+                                <li class="list-group-item">L'innovation et l'exploration de nouvelles idées</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-5">Découvrez les derniers articles</h2>
+        <div class="row align-items-start">
+            {% for post in posts %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="public\images\logo.png" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title|upper }}</h5>
+                            <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Publié le : {{ post.createdAt|date('d/m/Y') }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Formulaire de contact  -->
+        <div class="text-center mt-5">
+            <a href="/Blog/posts" class="btn btn-primary">Voir tous les articles</a>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <h2>Contactez-nous</h2>
+        <form action="/Blog/contactForm" method="post" id="contactForm">
+            <div class="mb-3">
+                <label for="firstName" class="form-label" >Prénom:</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Votre prénom" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Nom:</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Votre nom" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Votre email" class="form-control" required>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="message" class="form-label">Message:</label>
+                <textarea id="message" name="message" placeholder="Votre message" class="form-control" rows="5" required></textarea>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                    <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#mentionslegales"> Mentions légales</a>
+                    <label class="form-check-label" for="invalidCheck">
+                    </label>
+                </div>
+            </div>
+
+            <div class="g-recaptcha" data-sitekey="6LflI6MpAAAAAAxmwq2_BzPHU6EL2tKLJGLvFCk-" data-callback="onSubmit" data-theme="dark"></div>
+            <br/>
+            <button type="submit" class="btn btn-dark">Envoyer</button>
+        </form>
+    </div>
+
+    <!-- Modal Mentions légales -->
+    <div class="modal fade" id="mentionslegales" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: black">
+                    <h5 class="modal-title" id="mentionslegales">Mentions légales </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"style="background-color: white"></button>
+                </div>
+                <div class="modal-body" style="background-color: #865353">
+                    <p>  text a faire </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

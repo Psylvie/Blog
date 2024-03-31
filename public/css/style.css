@@ -1,0 +1,15 @@
+
+body {
+    background-color: rgba(34, 34, 34, 0.8);
+    color: #ffffff;
+}
+
+.card {
+    border-color: #865353;
+}
+
+.btn  {
+    background-color: #865353;
+    border-color: #c0c7c7;
+    color: #ffffff;
+}

@@ -15,6 +15,7 @@
 		private ?\DateTime $createdAt = null;
 		private ?\DateTime $updatedAt = null;
 		private ?array $categories = [];
+		private ?array $comments;
 		
 		/**
 		 * @param int|null $id
@@ -29,7 +30,7 @@
 		 * @param DateTime|null $updatedAt
 		 * @param array|null $categories
 		 */
-		public function __construct(?int $id, ?string $title, ?string $chapo, ?string $author, ?string $content, ?string $image, ?int $user_id, ?bool $published, ?DateTime $createdAt, ?DateTime $updatedAt, ?array $categories)
+		public function __construct(?int $id, ?string $title, ?string $chapo, ?string $author, ?string $content, ?string $image, ?int $user_id, ?bool $published, ?DateTime $createdAt, ?DateTime $updatedAt, ?array $categories, ?array $comments = [])
 		{
 			$this->id = $id;
 			$this->title = $title;
@@ -42,6 +43,7 @@
 			$this->createdAt = $createdAt;
 			$this->updatedAt = $updatedAt;
 			$this->categories = $categories;
+			$this->comments = [];
 		}
 		
 		
@@ -59,6 +61,16 @@
 		public function setId(?int $id): void
 		{
 			$this->id = $id;
+		}
+		
+		/**
+		 * @param Comment $comment array
+		 */
+		public function addComment(Comment $comment){
+			$this->comments[] = $comment;
+		}
+		public function getComments(): array{
+			return $this->comments;
 		}
 		
 		/**

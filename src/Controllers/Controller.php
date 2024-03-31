@@ -28,8 +28,7 @@
 		protected function render($view, $data = []): void
 		{
 			echo $this->twig->render("$view", $data);
-		
+			
 		}
 	}
-	
 	

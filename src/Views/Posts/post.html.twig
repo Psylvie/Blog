@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+	<div class="container mt-5 ">
+		<h1 class="text-center">Bienvenue sur ce post !</h1>
+		<h2 class="text-center mb-5">Détails du post</h2>
+	</div>
+	<div class="container mt-5">
+		<div class="row align-items-start">
+			<div class="container mt-4">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{{ post.title|upper }}</h5>
+						<img src="/Blog/public/images/logomatt.png" alt="Logo de mon blog">
+						<p class="card-text">{{ post.content }}...</p>
+					</div>
+					<div class="card-footer text-muted">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col-md-8">
+				<h2>Commentaires ({{ post.comments|length }})</h2>
+				<ul class="list-group">
+					{% for comment in post.comments %}
+						<li class="list-group-item">{{ comment.content }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col-md-8">
+				<h2>Ajouter un commentaire</h2>
+				<form action="/Blog/addComment" method="post">
+					<div class="mb-3">
+						<label for="comment" class="form-label">Votre commentaire :</label>
+						<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
+					</div>
+					<input type="hidden" name="postId" value="{{ post.id }}">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+					<button type="submit" class="btn btn-dark">Envoyer</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

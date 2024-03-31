@@ -1,149 +1,110 @@
 <?php
-	
 	namespace App\Models;
 	
-	class Comment {
-		
-		private ?int $id = null;
-		private ?string $content = null;
-		private ?bool $published = false;
-		private ?\DateTime $createdAt = null;
-		private ?\DateTime $updatedAt = null;
-		private ?User $user = null;
-		private ?Post $post = null;
+	use DateTime;
+	
+	class Comment
+	{
+		private int $id;
+		private string $content;
+		private int $published;
+		private datetime $createdAt;
+		private datetime $updateAt;
 		
 		/**
-		 * @param int|null $id
-		 * @param string|null $content
-		 * @param bool|null $published
-		 * @param \DateTime|null $createdAt
-		 * @param \DateTime|null $updatedAt
-		 * @param User|null $user
-		 * @param Post|null $post
+		 * @param int $id
+		 * @param string $content
+		 * @param int $published
+		 * @param DateTime $createdAt
+		 * @param DateTime $updateAt
 		 */
-		public function __construct(?int $id, ?string $content, ?bool $published, ?\DateTime $createdAt, ?\DateTime $updatedAt, ?User $user, ?Post $post)
+		public function __construct(int $id, string $content, int $published, DateTime $createdAt, DateTime $updateAt)
 		{
 			$this->id = $id;
 			$this->content = $content;
 			$this->published = $published;
 			$this->createdAt = $createdAt;
-			$this->updatedAt = $updatedAt;
-			$this->user = $user;
-			$this->post = $post;
+			$this->updateAt = $updateAt;
 		}
 		
 		/**
-		 * @return int|null
+		 * @return int
 		 */
-		public function getId(): ?int
+		public function getId(): int
 		{
 			return $this->id;
 		}
 		
 		/**
-		 * @param int|null $id
+		 * @param int $id
 		 */
-		public function setId(?int $id): void
+		public function setId(int $id): void
 		{
 			$this->id = $id;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getContent(): ?string
+		public function getContent(): string
 		{
 			return $this->content;
 		}
 		
 		/**
-		 * @param string|null $content
+		 * @param string $content
 		 */
-		public function setContent(?string $content): void
+		public function setContent(string $content): void
 		{
 			$this->content = $content;
 		}
 		
 		/**
-		 * @return bool|null
+		 * @return int
 		 */
-		public function getPublished(): ?bool
+		public function getPublished(): int
 		{
 			return $this->published;
 		}
 		
 		/**
-		 * @param bool|null $published
+		 * @param int $published
 		 */
-		public function setPublished(?bool $published): void
+		public function setPublished(int $published): void
 		{
 			$this->published = $published;
 		}
 		
 		/**
-		 * @return \DateTime|null
+		 * @return DateTime
 		 */
-		public function getCreatedAt(): ?\DateTime
+		public function getCreatedAt(): DateTime
 		{
 			return $this->createdAt;
 		}
 		
 		/**
-		 * @param \DateTime|null $createdAt
+		 * @param DateTime $createdAt
 		 */
-		public function setCreatedAt(?\DateTime $createdAt): void
+		public function setCreatedAt(DateTime $createdAt): void
 		{
 			$this->createdAt = $createdAt;
 		}
 		
 		/**
-		 * @return \DateTime|null
+		 * @return DateTime
 		 */
-		public function getUpdatedAt(): ?\DateTime
+		public function getUpdateAt(): DateTime
 		{
-			return $this->updatedAt;
+			return $this->updateAt;
 		}
 		
 		/**
-		 * @param \DateTime|null $updatedAt
+		 * @param DateTime $updateAt
 		 */
-		public function setUpdatedAt(?\DateTime $updatedAt): void
+		public function setUpdateAt(DateTime $updateAt): void
 		{
-			$this->updatedAt = $updatedAt;
+			$this->updateAt = $updateAt;
 		}
-		
-		/**
-		 * @return User|null
-		 */
-		public function getUser(): ?User
-		{
-			return $this->user;
-		}
-		
-		/**
-		 * @param User|null $user
-		 */
-		public function setUser(?User $user): void
-		{
-			$this->user = $user;
-		}
-		
-		/**
-		 * @return Post|null
-		 */
-		public function getPost(): ?Post
-		{
-			return $this->post;
-		}
-		
-		/**
-		 * @param Post|null $post
-		 */
-		public function setPost(?Post $post): void
-		{
-			$this->post = $post;
-		}
-		
 		
 	}
-	
