@@ -49,10 +49,8 @@
 		}
 		
 		/**
-		 * Récupère tous les posts avec leurs commentaires associés.
-		 *
-		 * @param int|null $limit Limite le nombre de posts à récupérer.
-		 * @return array Tableau des objets Posts avec leurs commentaires.
+		 * @param int|null $limit
+		 * @return array
 		 * @throws \Exception
 		 */
 		public function getAllPosts(?int $limit = null): array
@@ -79,7 +77,6 @@
 			foreach ($postsData as $postData) {
 				$postId = $postData['post_id'];
 				
-				// Si le post n'existe pas déjà dans le tableau, on l'initialise
 				if (!isset($posts[$postId])) {
 					$createdAt = str_replace('/', '-', $postData['createdAt']);
 					$createdAtDateTime = new DateTime($createdAt);
@@ -121,7 +118,6 @@
 		 */
 		public function getPostById(int $postId): ?Post
 		{
-			// Requête SQL pour récupérer les détails du post et ses commentaires
 			$sql = 'SELECT p.id AS post_id, p.title, p.content, p.chapo, DATE_FORMAT(p.createdAt, "%d/%m/%Y") AS createdAt,
                    c.id AS comment_id, c.content AS comment_content, c.published AS comment_published,
                    c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at
@@ -141,7 +137,6 @@
 			$post = null;
 			
 			foreach ($postData as $data) {
-				// Si le post n'a pas encore été initialisé, on l'initialise
 				if ($post === null) {
 					$createdAt = str_replace('/', '-', $data['createdAt']);
 					$createdAtDateTime = new DateTime($createdAt);
@@ -176,4 +171,4 @@
 			return $post;
 		}
 	}
-
+	

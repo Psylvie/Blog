@@ -8,20 +8,16 @@
 		<div class="row align-items-start">
 			<div class="container mt-4">
 				<div class="card">
-
 					<div class="card-body">
-
 						<h5 class="card-title">{{ post.title|upper }}</h5>
 						<img src="/Blog/public/images/logomatt.png" alt="Logo de mon blog">
 						<p class="card-text">{{ post.content }}...</p>
 					</div>
 					<div class="card-footer text-muted">
-						{#                        Publié le : {{ post.createdAt|date('l j F Y')}}#}
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<div class="row mt-5">
 			<div class="col-md-8">
 				<h2>Commentaires ({{ post.comments|length }})</h2>
@@ -32,8 +28,6 @@
 				</ul>
 			</div>
 		</div>
-
-
 		<div class="row mt-5">
 			<div class="col-md-8">
 				<h2>Ajouter un commentaire</h2>

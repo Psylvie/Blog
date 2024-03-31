@@ -6,49 +6,40 @@
     <div class="container mt-5">
         <h2>Compétences</h2>
         <div class="row">
-            <!-- Section pour le CV -->
             <div class="col-md-4">
                 <div class="card">
                     <img src="public\images\photoMoi.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title text-center">Curriculum vitae </h5>
                         <div class="container mt-5">
-                            <!-- Liens pour afficher et télécharger le CV -->
                             <a href="public\images\cv.pdf" target="_blank" class="btn btn-secondary mb-2 w-100">Afficher mon CV au format PDF</a>
                             <a href="public\images\cv.pdf" download class="btn btn-secondary w-100">Télécharger mon CV au format PDF</a>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Section pour les réseaux sociaux -->
-
             <div class="col-md-8">
                 <div class="card mt-3">
                     <div class="social-media">
-                        <!-- Texte -->
                         <p>Je suis Sylvie, développeuse d'applications PHP/Symfony en alternance. Passionnée par la programmation et le développement web, je cherche continuellement à apprendre et à m'améliorer. En dehors du code, j'adore la musique, les voyages et découvrir de nouvelles cultures.</p>
-                        <!-- Liens vers les réseaux sociaux -->
                         <div class="row mt-5">
                             <div class="col-sm-6">
-                                <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" class="btn btn-primary w-100 mb-2">Facebook</a>
+                                <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" class="btn btn-secondary w-100 mb-2">Facebook</a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr" target="_blank" class="btn btn-primary w-100 mb-2">Linkedin</a>
+                                <a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr" target="_blank" class="btn btn-secondary w-100 mb-2">Linkedin</a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="https://www.instagram.com/" target="_blank" class="btn btn-primary w-100 mb-2">Instagram</a>
+                                <a href="https://www.instagram.com/" target="_blank" class="btn btn-secondary w-100 mb-2">Instagram</a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="https://github.com/Psylvie" target="_blank" class="btn btn-primary w-100 mb-2">Github</a>
+                                <a href="https://github.com/Psylvie" target="_blank" class="btn btn-secondary w-100 mb-2">Github</a>
                             </div>
-                            <!-- Ajoutez d'autres réseaux sociaux ici -->
                         </div>
                     </div>
                 </div>
                 <div class="card mt-3">
                     <div class="social-media">
-                        <!-- Nouveau contenu -->
                         <div class="card-body">
                             <h5 class="card-title text-center">Ce que j'aime</h5>
                             <ul class="list-group">
@@ -80,7 +71,7 @@
                             <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
                         </div>
                         <div class="card-footer text-muted">
-                            Publié le : {{ post.createdAt|date('l j F Y')}}
+                            Publié le : {{ post.createdAt|date('d/m/Y') }}
                         </div>
                     </div>
                 </div>
