@@ -1,46 +1,81 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-	<div class="container mt-5 ">
+	<div class="container mt-5">
 		<h1 class="text-center">Bienvenue sur ce post !</h1>
 		<h2 class="text-center mb-5">Détails du post</h2>
-	</div>
-	<div class="container mt-5">
+
 		<div class="row align-items-start">
-			<div class="container mt-4">
+			<div class="col-md-8 mx-auto">
 				<div class="card">
 					<div class="card-body">
 						<h5 class="card-title">{{ post.title|upper }}</h5>
-						<img src="/Blog/public/images/logomatt.png" alt="Logo de mon blog">
-						<p class="card-text">{{ post.content }}...</p>
+						<img src="/Blog/public/images/logomatt.png" alt="Logo de mon blog" class="img-fluid mb-3">
+						<p class="card-text">{{ post.chapo | raw }}</p>
+						<p class="card-text">{{ post.content | raw }}</p>
+						<p class="card-text">Auteur: {{ post.author }}</p>
 					</div>
 					<div class="card-footer text-muted">
+						<p class="card-text">Dernière mise à jour: {{ post.updateAt|date("d/m/Y") }} </p>
 					</div>
 				</div>
 			</div>
 		</div>
+
 		<div class="row mt-5">
-			<div class="col-md-8">
+			<div class="col-md-8 mx-auto">
 				<h2>Commentaires ({{ post.comments|length }})</h2>
-				<ul class="list-group">
-					{% for comment in post.comments %}
-						<li class="list-group-item">{{ comment.content }}</li>
-					{% endfor %}
-				</ul>
+				<div class="accordion" id="accordionComments">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#allCommentsCollapse" aria-expanded="true" aria-controls="allCommentsCollapse">
+								Voir les commentaires
+							</button>
+						</h2>
+						<div id="allCommentsCollapse" class="accordion-collapse collapse" aria-labelledby="allCommentsCollapse" data-bs-parent="#accordionComments">
+							<div class="accordion-body">
+								<ul class="list-group">
+									{% for comment in post.comments %}
+										<li class="list-group-item">{{ comment.content }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+
 		<div class="row mt-5">
-			<div class="col-md-8">
-				<h2>Ajouter un commentaire</h2>
-				<form action="/Blog/addComment" method="post">
-					<div class="mb-3">
-						<label for="comment" class="form-label">Votre commentaire :</label>
-						<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
-					</div>
-					<input type="hidden" name="postId" value="{{ post.id }}">
-					<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-					<button type="submit" class="btn btn-dark">Envoyer</button>
-				</form>
+			<div class="col-md-8 mx-auto">
+				<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+					Ajouter un commentaire
+				</button>
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: black">
+					<h5 class="modal-title" id="addCommentModalLabel">Ajouter un commentaire</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Form add comment -->
+					<form action="/Blog/addComment" method="post">
+						<div class="mb-3" style="background-color: #865353">
+							<label for="comment" class="form-label"  >Votre commentaire :</label>
+							<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
+						</div>
+						<input type="hidden" name="postId" value="{{ post.id }}">
+						{#                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">#}
+						<button type="submit" class="btn btn-dark">Envoyer</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 {% endblock %}
