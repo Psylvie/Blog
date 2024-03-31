@@ -55,8 +55,7 @@
 		 */
 		public function getAllPosts(?int $limit = null): array
 		{
-			$sql = 'SELECT p.id AS post_id, p.title, p.content, p.chapo, DATE_FORMAT(p.createdAt, "%d/%m/%Y") AS createdAt,
-                   c.id AS comment_id, c.content AS comment_content, c.published AS comment_published,
+			$sql = 'SELECT p.*, c.id AS comment_id, c.content AS comment_content, c.published AS comment_published,
                    c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at
             FROM posts p
             LEFT JOIN posts_comments pc ON p.id = pc.post_id
@@ -75,8 +74,7 @@
 			$posts = [];
 			
 			foreach ($postsData as $postData) {
-				$postId = $postData['post_id'];
-				
+				$postId = $postData['id'];
 				if (!isset($posts[$postId])) {
 					$createdAt = str_replace('/', '-', $postData['createdAt']);
 					$createdAtDateTime = new DateTime($createdAt);
@@ -84,13 +82,13 @@
 						$postId,
 						$postData['title'],
 						$postData['chapo'],
-						'',
+						$postData['author'],
 						$postData['content'],
-						'',
-						0,
-						false,
+						$postData['image'],
+						$postData['user_id'],
+						$postData['published'],
 						$createdAtDateTime,
-						$createdAtDateTime,
+						new DateTime($postData['updateAt']),
 						[]
 					);
 				}

@@ -2,41 +2,29 @@
 {% block title %}
 {% endblock %}
 {% block content %}
-	{% for post in posts %}
-		<div class="news">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="mb-0">
-						{{ post.title|upper }}
-						<em>le {{ post.updateAt|date("d/m/Y") }}</em>
-					</h3>
-				</div>
-				<div class="card-body">
-					<p>{{ post.chapo|capitalize }}</p>
-					<img src="public\images\logo.png" class="card-img-top" alt="..." style="width: 100px;">
-					<p>{{ post.author }}</p>
-					<h3>{{ post.comments|length }} commentaire(s) :</h3>
-				</div>
-				<div class="card-footer">
-					<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#comments{{ post.id }}" aria-expanded="false" aria-controls="comments{{ post.id }}">
-						Afficher/Masquer les commentaires
-					</button>
-				</div>
-				<div class="collapse" id="comments{{ post.id }}">
-					<div class="card-body">
-						<ul>
-							{% for comment in post.comments %}
-								<li>{{ comment.content|capitalize }}</li>
-							{% endfor %}
-						</ul>
-						<div class="mb-3">
-							<label for="comment" class="form-label">Soumettre un commentaire :</label>
-							<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
-							<button type="submit" class="btn btn-dark">Envoyer</button>
+	<div class="mt-4">
+		<div class="row">
+			{% for post in posts %}
+				<div class="col-md-6 mb-4">
+					<div class="card">
+						<div class="card-header bg-secondary text-white">
+							<h5 class="card-title mb-0">{{ post.title|upper }}</h5>
+						</div>
+						<div class="card-body">
+							<p class="card-text">{{ post.chapo|capitalize }}</p>
+							<img src="public/images/logo.png" class="card-img-top" alt="..." style="width: 100px;">
+							<p class="card-text">Auteur: {{ post.author }}</p>
+							<p class="card-text">Dernière mise à jour: {{ post.updateAt|date("d/m/Y") }}</p>
+						</div>
+						<div class="card-footer">
+							<div class="d-flex justify-content-between align-items-center">
+								<span>{{ post.comments|length }} commentaire(s)</span>
+								<a href="/Blog/post/{{ post.id }}" class="btn btn-primary">Lire la suite</a>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			{% endfor %}
 		</div>
-	{% endfor %}
+	</div>
 {% endblock %}
