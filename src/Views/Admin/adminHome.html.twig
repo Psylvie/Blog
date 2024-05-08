@@ -1,0 +1,36 @@
+{% extends 'admin.html.twig' %}
+
+{% block content %}
+	<h2>Welcome to the Admin Home!</h2>
+
+	<div class="card mb-4">
+		<div class="card-header">
+			<div class="container mt-5">
+				<h2 class="text-center mb-5">Les derniers posts</h2>
+				<div class="row align-items-start">
+					{% for post in posts %}
+						<div class="col-md-4 mb-4">
+							<div class="card mb-4">
+								{% if post.image  %}
+									<img src="/MonBlog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="...">
+								{% else %}
+									<img src="/Blog/public/images/logo.png" class="card-img-top" style="height: 250px;" alt="...">
+								{% endif %}
+								<div class="card-body">
+									<h5 class="card-title">{{ post.title|upper }}</h5>
+									<p class="card-text">{{ post.content|slice(0, 100) }}...</p>
+								</div>
+								<div class="card-footer text-muted">
+									Publié le : {{ post.createdAt|date('l j F Y')}}
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="text-center mt-5">
+					<a href="/Blog/admin/showPost" class="btn btn-primary">Voir tous les posts</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

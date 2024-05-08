@@ -1,0 +1,153 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Admin Home{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="my-4">LISTE DES POSTS</h1>
+		<div class="row">
+			{% for post in posts %}
+				<div class="col-md-6 mb-4">
+					<div class="card h-100">
+						<div class="card-header">
+							<h5 class="card-title">{{ post.title|upper }}</h5>
+							<p class="card-text">{{ post.createdAt|date('d/m/Y')}}</p>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-4">
+									{% if post.image %}
+										<img src="/Blog/public/uploads/{{ post.image }}" class="img-fluid rounded" alt="Image du post">
+									{% else %}
+										<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image" style="max-width: 200px;">
+									{% endif %}
+								</div>
+								<div class="col-md-8">
+									<p class="card-text">{{ post.content|slice(0, 100) }}...</p>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer">
+							<a href="/Blog/admin/updatePost/{{ post.id }}" class="btn btn-secondary">Modifier</a>
+							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ post.id }}">Supprimer</button>
+							<div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											Êtes-vous sûr de vouloir supprimer ce post ?
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+											<a href="/Blog/admin/deletePost/{{ post.id }}" class="btn btn-danger">Confirmer</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+{#{% extends 'admin.html.twig' %}#}
+
+{#{% block title %}Admin Home{% endblock %}#}
+
+{#{% block content %}#}
+{#	<h2>Welcome to the Admin Home!</h2>#}
+{#	<!-- Modal de confirmation de suppression -->#}
+{#	<div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">#}
+{#		<div class="modal-dialog">#}
+{#			<div class="modal-content">#}
+{#				<div class="modal-header">#}
+{#					<h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>#}
+{#					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#				</div>#}
+{#				<div class="modal-body">#}
+{#					Êtes-vous sûr de vouloir supprimer ce post ?#}
+{#				</div>#}
+{#				<div class="modal-footer">#}
+{#					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>#}
+{#					<a href="/MonBlog/admin/deletePost/{{ post.id }}" class="btn btn-danger">Confirmer</a>#}
+{#				</div>#}
+{#			</div>#}
+{#		</div>#}
+{#	</div>#}
+
+{#	<div class="card mb-4">#}
+{#		<div class="card-header">#}
+{#			<div class="container mt-5">#}
+{#				<div class="row align-items-center">#}
+{#					<div class="col">#}
+{#						<h2 class="text-center mb-5">Posts</h2>#}
+{#					</div>#}
+{#					<div class="col text-end">#}
+{#						<a href="/MonBlog/admin/newPost" class="btn btn-secondary">Nouveau</a>#}
+{#					</div>#}
+{#				</div>#}
+{#				<div class="row align-items-start">#}
+{#					{% for post in posts %}#}
+{#						<div class="col-md-4 mb-4">#}
+{#							<div class="card mb-4">#}
+{#								{% if post.image  %}#}
+{#									<img src="/MonBlog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="...">#}
+{#								{% else %}#}
+{#									<img src="/MonBlog/images/logo.png" class="card-img-top" style="height: 250px;" alt="...">#}
+{#								{% endif %}#}
+{#								<div class="card-body">#}
+{#									<h5 class="card-title">{{ post.title|upper }}</h5>#}
+{#									<p class="card-text">{{ post.content|slice(0, 100) }}...</p>#}
+{#								</div>#}
+{#								<div class="card-footer text-muted">#}
+{#									Publié le : {{ post.createdAt|date('l j F Y')}}#}
+{#									<div class="mt-3">#}
+{#										<a href="/MonBlog/admin/updatePost/{{ post.id }}" class="btn btn-secondary">Modifier</a>#}
+{#										<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ post.id }}">Supprimer</button>#}
+{#										<div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">#}
+{#											<div class="modal-dialog">#}
+{#												<div class="modal-content">#}
+{#													<div class="modal-header">#}
+{#														<h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>#}
+{#														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#													</div>#}
+{#													<div class="modal-body">#}
+{#														Êtes-vous sûr de vouloir supprimer ce post ?#}
+{#													</div>#}
+{#													<div class="modal-footer">#}
+{#														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>#}
+{#														<a href="/MonBlog/admin/deletePost/{{ post.id }}" class="btn btn-danger">Confirmer</a>#}
+{#													</div>#}
+{#												</div>#}
+{#											</div>#}
+{#										</div>#}
+{#									</div>#}
+{#								</div>#}
+{#							</div>#}
+{#						</div>#}
+{#					{% endfor %}#}
+{#				</div>#}
+{#				<div class="text-center mt-5">#}
+{#					<a href="/MonBlog/posts" class="btn btn-primary">Voir tous les articles</a>#}
+{#				</div>#}
+{#			</div>#}
+{#		</div>#}
+{#	</div>#}
+
+{#{% endblock %}#}

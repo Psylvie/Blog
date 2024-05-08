@@ -1,7 +1,6 @@
 <?php
 	
 	namespace App\Controllers;
-	require_once __DIR__ . '/../../vendor/autoload.php';
 	require_once __DIR__ . '/../Config/MailConfig.php';
 	require_once __DIR__ . '/../Config/Recaptcha.php';
 	use App\Repository\PostRepository;
@@ -58,7 +57,7 @@
 					header('Location: /Blog/');
 					exit;
 				}
-				$recaptchaResponse = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : '';
+				$recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
 				if (empty($recaptchaResponse)) {
 					$_SESSION['alert_message'] = "Veuillez cocher la case reCAPTCHA !";
 					header('Location: /Blog/');
