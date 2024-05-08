@@ -135,7 +135,6 @@
 			$statement->bindParam(':postId', $postId, PDO::PARAM_INT);
 			$statement->execute();
 			$postData = $statement->fetchAll(PDO::FETCH_ASSOC);
-			
 			if (empty($postData)) {
 				return null;
 			}
@@ -173,6 +172,47 @@
 				}
 			}
 			return $post;
+		}
+		/**
+		 * @throws \Exception
+		 */
+		public function createPost($title, $chapo, $author, $content, $image, $userId, $published): void
+		{
+			try {
+				$stmt = $this->mysqlClient->prepare("INSERT INTO posts (title, chapo, author, content, image, user_id, published) VALUES (?, ?, ?, ?, ?, ?, ?)");
+				$stmt->execute([$title, $chapo, $author, $content, $image, $userId, $published]);
+			} catch (PDOException $e) {
+				throw new \Exception("Erreur lors de la création du post : " . $e->getMessage());
+			}
+		}
+		
+		/**
+		 * @throws \Exception
+		 */
+		public function deletePost($postId): void
+		{
+			try {
+				$stmt = $this->mysqlClient->prepare("DELETE FROM posts WHERE id = ?");
+				$stmt->execute([$postId]);
+			} catch (PDOException $e) {
+				throw new \Exception("Erreur lors de la suppression du post : " . $e->getMessage());
+			}
+		}
+		
+		public function updatePost($postId, $title, $chapo, $author, $content): void
+		{
+			try {
+				$sql = "UPDATE posts SET title = :title, chapo = :chapo, author = :author, content = :content WHERE id = :id";
+				$stmt = $this->mysqlClient->prepare($sql);
+				$stmt->bindParam(':title', $title, PDO::PARAM_STR);
+				$stmt->bindParam(':chapo', $chapo, PDO::PARAM_STR);
+				$stmt->bindParam(':author', $author, PDO::PARAM_STR);
+				$stmt->bindParam(':content', $content, PDO::PARAM_STR);
+				$stmt->bindParam(':id', $postId, PDO::PARAM_INT);
+				$stmt->execute();
+			} catch (PDOException $e) {
+				throw new PDOException("Erreur lors de la mise à jour du post : " . $e->getMessage());
+			}
 		}
 	}
 	
