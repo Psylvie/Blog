@@ -44,6 +44,9 @@
 			$this->render('Admin/adminFormPost.html.twig');
 		}
 		
+		/**
+		 * @throws \Exception
+		 */
 		public function createPost()
 		{
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -92,5 +95,57 @@
 			}
 		}
 		
+		/**
+		 * @throws \Exception
+		 */
+		public function deletePost($postId):void
+		{
+			try {
+				$post = $this->postRepository->getPostById($postId);
+				$imageName = $post?->getImage();
+				$postRepository = new PostRepository();
+				$postRepository->deletePost($postId);
+				if ($imageName !== null) {
+					unlink(UPLOADS_POST_PATH . $imageName);
+				}
+				$_SESSION['flash_message'] = "Le post a été supprimé avec succès !";
+				$_SESSION['flash_type'] = "success";
+				header('Location: /Blog/admin/showPost');
+				exit;
+			} catch (PDOException $e) {
+				$_SESSION['flash_message'] = "Une erreur s'est produite lors de la suppression du post : " . $e->getMessage();
+				$_SESSION['flash_type'] = "danger";
+				header('Location: /Blog/admin/showPost');
+				exit;
+			}
+		}
+		
+		/**
+		 * @throws SyntaxError
+		 * @throws RuntimeError
+		 * @throws LoaderError
+		 * @throws \Exception
+		 */
+		public function updatePost($postId)
+		{
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				$title = $_POST['title'];
+				$chapo = $_POST['chapo'];
+				$author = $_POST['author'];
+				$content = $_POST['content'];
+				
+				$postRepository = new PostRepository();
+				$postRepository->updatePost($postId, $title, $chapo, $author, $content);
+				$_SESSION['flash_message'] = "Le post a été mis à jour avec succès !";
+				$_SESSION['flash_type'] = "success";
+				header('Location: /Blog/admin/showPost');
+				exit();
+			} else {
+				$post = $this->postRepository->getPostById($postId);
+				$_SESSION['flash_message'] = "Le post a été mis à jour avec succès !";
+				$_SESSION['flash_type'] = "success";
+				$this->render('Admin/adminUpdatePost.html.twig', ['post' => $post]);
+			}
+		}
 	}
 	

@@ -21,9 +21,11 @@
 				'cache' => false,
 			]);
 			$this->twig->addExtension(new DebugExtension());
+			
 			if (session_status() == PHP_SESSION_NONE) {
 				session_start();
 			}
+			$this->twig->addGlobal('session', $_SESSION);
 		}
 		
 		/**
