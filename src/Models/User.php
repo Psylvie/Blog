@@ -3,202 +3,227 @@
 	namespace App\Models;
 	
 	
-	class User{
-	private ?int $id;
-	private ?string $name = null ;
-	private ?string $lastName = null;
-	private ?string $profilePicture = null;
-	private ?string $slug = null;
-	private ?string $email = null;
-	private ?string $password = null;
-	private ?\DateTime $createdAt = null;
-	private ?\DateTime $updatedAt = null;
-	private ?string $role = null;
+	use DateTime;
+	/**
+	 * @uniqueEntity(fields="email"), message="Cet email est déjà utilisé."
+	 
+	 */
+	class User
+	{
+		private int $id;
+		private string $name;
+		private string $lastName;
+		private string $image;
+		private string $slug;
+		private string $email;
+		private string $password;
+		private datetime $createdAt;
+		private datetime $updateAt;
+		private string $role;
+		private ?string $resetToken;
 		
 		/**
-		 * @param int|null $id
-		 * @param string|null $name
-		 * @param string|null $lastName
-		 * @param string|null $profilePicture
-		 * @param string|null $slug
-		 * @param string|null $email
-		 * @param string|null $password
-		 * @param \DateTime|null $createdAt
-		 * @param \DateTime|null $updatedAt
-		 * @param string|null $role
+		 * @param int $id
+		 * @param string $name
+		 * @param string $lastName
+		 * @param string $image
+		 * @param string $slug
+		 * @param string $email
+		 * @param string $password
+		 * @param DateTime $createdAt
+		 * @param DateTime $updateAt
+		 * @param string $role
+		 * @param string|null $resetToken
 		 */
-		public function __construct(?int $id, ?string $name, ?string $lastName, ?string $profilePicture, ?string $slug, ?string $email, ?string $password, ?\DateTime $createdAt, ?\DateTime $updatedAt, ?string $role)
+		public function __construct(int $id, string $name, string $lastName, string $image, string $slug, string $email, string $password, DateTime $createdAt, DateTime $updateAt, string $role, ?string $resetToken)
 		{
 			$this->id = $id;
 			$this->name = $name;
 			$this->lastName = $lastName;
-			$this->profilePicture = $profilePicture;
+			$this->image = $image;
 			$this->slug = $slug;
 			$this->email = $email;
 			$this->password = $password;
 			$this->createdAt = $createdAt;
-			$this->updatedAt = $updatedAt;
+			$this->updateAt = $updateAt;
 			$this->role = $role;
+			$this->resetToken = $resetToken;
 		}
 		
 		/**
-		 * @return int|null
+		 * @return int
 		 */
-		public function getId(): ?int
+		public function getId(): int
 		{
 			return $this->id;
 		}
 		
 		/**
-		 * @param int|null $id
+		 * @param int $id
 		 */
-		public function setId(?int $id): void
+		public function setId(int $id): void
 		{
 			$this->id = $id;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getName(): ?string
+		public function getName(): string
 		{
 			return $this->name;
 		}
 		
 		/**
-		 * @param string|null $name
+		 * @param string $name
 		 */
-		public function setName(?string $name): void
+		public function setName(string $name): void
 		{
 			$this->name = $name;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getLastName(): ?string
+		public function getLastName(): string
 		{
 			return $this->lastName;
 		}
 		
 		/**
-		 * @param string|null $lastName
+		 * @param string $lastName
 		 */
-		public function setLastName(?string $lastName): void
+		public function setLastName(string $lastName): void
 		{
 			$this->lastName = $lastName;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getProfilePicture(): ?string
+		public function getImage(): string
 		{
-			return $this->profilePicture;
+			return $this->image;
 		}
 		
 		/**
-		 * @param string|null $profilePicture
+		 * @param string $image
 		 */
-		public function setProfilePicture(?string $profilePicture): void
+		public function setImage(string $image): void
 		{
-			$this->profilePicture = $profilePicture;
+			$this->image = $image;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getSlug(): ?string
+		public function getSlug(): string
 		{
 			return $this->slug;
 		}
 		
 		/**
-		 * @param string|null $slug
+		 * @param string $slug
 		 */
-		public function setSlug(?string $slug): void
+		public function setSlug(string $slug): void
 		{
 			$this->slug = $slug;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getEmail(): ?string
+		public function getEmail(): string
 		{
 			return $this->email;
 		}
 		
 		/**
-		 * @param string|null $email
+		 * @param string $email
 		 */
-		public function setEmail(?string $email): void
+		public function setEmail(string $email): void
 		{
 			$this->email = $email;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getPassword(): ?string
+		public function getPassword(): string
 		{
 			return $this->password;
 		}
 		
 		/**
-		 * @param string|null $password
+		 * @param string $password
 		 */
-		public function setPassword(?string $password): void
+		public function setPassword(string $password): void
 		{
 			$this->password = $password;
 		}
 		
 		/**
-		 * @return \DateTime|null
+		 * @return DateTime
 		 */
-		public function getCreatedAt(): ?\DateTime
+		public function getCreatedAt(): DateTime
 		{
 			return $this->createdAt;
 		}
 		
 		/**
-		 * @param \DateTime|null $createdAt
+		 * @param DateTime $createdAt
 		 */
-		public function setCreatedAt(?\DateTime $createdAt): void
+		public function setCreatedAt(DateTime $createdAt): void
 		{
 			$this->createdAt = $createdAt;
 		}
 		
 		/**
-		 * @return \DateTime|null
+		 * @return DateTime
 		 */
-		public function getUpdatedAt(): ?\DateTime
+		public function getUpdateAt(): DateTime
 		{
-			return $this->updatedAt;
+			return $this->updateAt;
 		}
 		
 		/**
-		 * @param \DateTime|null $updatedAt
+		 * @param DateTime $updateAt
 		 */
-		public function setUpdatedAt(?\DateTime $updatedAt): void
+		public function setUpdateAt(DateTime $updateAt): void
 		{
-			$this->updatedAt = $updatedAt;
+			$this->updateAt = $updateAt;
 		}
 		
 		/**
-		 * @return string|null
+		 * @return string
 		 */
-		public function getRole(): ?string
+		public function getRole(): string
 		{
 			return $this->role;
 		}
 		
 		/**
-		 * @param string|null $role
+		 * @param string $role
 		 */
-		public function setRole(?string $role): void
+		public function setRole(string $role): void
 		{
 			$this->role = $role;
+		}
+		
+		/**
+		 * @return string|null
+		 */
+		public function getResetToken(): ?string
+		{
+			return $this->resetToken;
+		}
+		
+		/**
+		 * @param string|null $resetToken
+		 */
+		public function setResetToken(?string $resetToken): void
+		{
+			$this->resetToken = $resetToken;
 		}
 		
 	}

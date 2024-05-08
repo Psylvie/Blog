@@ -7,6 +7,7 @@
 	use App\Models\Post;
 	use DateTime;
 	use PDO;
+	use PDOException;
 	
 	class PostRepository
 	{
@@ -30,8 +31,8 @@
 			$posts = [];
 			
 			foreach ($postsData as $postData) {
-				$userId = isset($postData['user_id']) ? $postData['user_id'] : null;
-				$published = isset($postData['published']) ? $postData['published'] : null;
+				$userId = $postData['user_id'] ?? null;
+				$published = $postData['published'] ?? null;
 				
 				$createdAt = new DateTime($postData['createdAt']);
 				$post = new Post(
@@ -61,7 +62,7 @@
 		public function getAllPosts(?int $limit = null): array
 		{
 			$sql = 'SELECT p.*, c.id AS comment_id, c.content AS comment_content, c.status AS comment_status,
-                   c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at
+                   c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at, c.user_id AS comment_user_id
             FROM posts p
             LEFT JOIN posts_comments pc ON p.id = pc.post_id
             LEFT JOIN comments c ON pc.comment_id = c.id
@@ -106,7 +107,8 @@
 						$postData['comment_content'],
 						$postData['comment_status'],
 						$commentCreatedAt,
-						$commentUpdatedAt
+						$commentUpdatedAt,
+						$postData['comment_user_id']
 					);
 					$posts[$postId]->addComment($comment);
 				}
@@ -123,7 +125,7 @@
 		{
 			$sql = 'SELECT p.*,
                    c.id AS comment_id, c.content AS comment_content, c.status AS comment_status,
-                   c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at
+                   c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at, c.user_id AS comment_user_id
             FROM posts p
             LEFT JOIN posts_comments pc ON p.id = pc.post_id
             LEFT JOIN comments c ON pc.comment_id = c.id
@@ -156,7 +158,7 @@
 						[]
 					);
 				}
-				if (!empty($data['comment_id'])) {
+				if (!empty($data['comment_id']) && $data['comment_status'] === 'approved') {
 					$commentCreatedAt = new DateTime($data['comment_created_at']);
 					$commentUpdatedAt = new DateTime($data['comment_updated_at']);
 					$comment = new Comment(
@@ -164,7 +166,8 @@
 						$data['comment_content'],
 						$data['comment_status'],
 						$commentCreatedAt,
-						$commentUpdatedAt
+						$commentUpdatedAt,
+						$data['comment_user_id']
 					);
 					$post->addComment($comment);
 				}

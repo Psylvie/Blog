@@ -4,18 +4,17 @@
 	use DateTime;
 	
 	class Post{
-		private ?int $id = null;
-		private ?string $title = null;
-		private ?string $chapo = null;
-		private ?string $author = null;
-		private ?string $content = null;
-		private ?string $image = null;
-		private ?int $user_id = null;
-		private ?bool $published = false;
-		private ?\DateTime $createdAt = null;
-		private ?\DateTime $updatedAt = null;
-		private ?array $categories = [];
-		private ?array $comments;
+		private int $id;
+		private string $title;
+		private string $chapo;
+		private string $author;
+		private string $content;
+		private string $image;
+		private int $user_id ;
+		private bool $published;
+		private DateTime $createdAt;
+		private \DateTime $updatedAt;
+		private ?array $comments = [];
 		
 		/**
 		 * @param int|null $id
@@ -28,9 +27,9 @@
 		 * @param bool|null $published
 		 * @param DateTime|null $createdAt
 		 * @param DateTime|null $updatedAt
-		 * @param array|null $categories
+		 * @param array|null $comments
 		 */
-		public function __construct(?int $id, ?string $title, ?string $chapo, ?string $author, ?string $content, ?string $image, ?int $user_id, ?bool $published, ?DateTime $createdAt, ?DateTime $updatedAt, ?array $categories, ?array $comments = [])
+		public function __construct(?int $id, ?string $title, ?string $chapo, ?string $author, ?string $content, ?string $image, ?int $user_id, ?bool $published, ?DateTime $createdAt, ?DateTime $updatedAt, ?array $comments = [])
 		{
 			$this->id = $id;
 			$this->title = $title;
@@ -42,7 +41,6 @@
 			$this->published = $published;
 			$this->createdAt = $createdAt;
 			$this->updatedAt = $updatedAt;
-			$this->categories = $categories;
 			$this->comments = [];
 		}
 		
@@ -66,7 +64,8 @@
 		/**
 		 * @param Comment $comment array
 		 */
-		public function addComment(Comment $comment){
+		public function addComment(Comment $comment): void
+		{
 			$this->comments[] = $comment;
 		}
 		public function getComments(): array{
@@ -216,24 +215,6 @@
 		{
 			$this->updatedAt = $updatedAt;
 		}
-		
-		/**
-		 * @return array|null
-		 */
-		public function getCategories(): ?array
-		{
-			return $this->categories;
-		}
-		
-		/**
-		 * @param array|null $categories
-		 */
-		public function setCategories(?array $categories): void
-		{
-			$this->categories = $categories;
-		}
-		
-		
 		
 	}
 	

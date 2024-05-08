@@ -1,25 +1,28 @@
 <?php
+	error_reporting(E_ALL);
+	ini_set('display_errors', true);
 	session_start();
-	require_once __DIR__ . '/vendor/autoload.php';
+	print_r($_SESSION);
 	
-	use App\Config\DatabaseConnect;
+	session_start();
+	print_r($_SESSION);
+	require __DIR__ . '/../vendor/autoload.php';
+	
+	use App\Controllers\Admin\AdminController;
+	use App\Controllers\Admin\AdminPostController;
 	use App\Controllers\CommentController;
 	use App\Controllers\HomeController;
 	use App\Controllers\PostController;
 	use App\Router;
 	
-	
-	try {
-		$mysqlClient = DatabaseConnect::connect();
-		
-	}catch (\Exception $e) {
-		echo 'Erreur de connexion a la base de données !: ' . $e->getMessage();
-	}
-	
 	$uri = $_SERVER['REQUEST_URI'];
 
 	$router = new Router();
-	
+	$router->addRoute('/Blog/admin', AdminController::class, 'index');
+	$router->addRoute('/Blog/admin/showPost', AdminPostController::class, 'showPost');
+	$router->addRoute('/Blog/admin/newPost', AdminPostController::class, 'newPost');
+	$router->addRoute('/Blog/admin/createPost', AdminPostController::class, 'createPost');
+	$router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
 	$router->addRoute('/Blog/posts', PostController::class, 'list');
 	$router->addRoute('/Blog/post/{id}', PostController::class, 'show');
