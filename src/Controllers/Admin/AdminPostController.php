@@ -56,6 +56,7 @@
 				$content = isset($_POST['content']) ? trim($_POST['content']) : '';
 				$published = isset($_POST['published']) ? intval($_POST['published']) : 1;
 				$userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
+				$image = null;
 				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
 					$allowed = ['jpg' => 'image/jpeg',
 						'jpeg' => 'image/jpeg',
@@ -75,10 +76,11 @@
 					$newname = md5(uniqid());
 					$newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;
 					move_uploaded_file($_FILES['image']['tmp_name'], $newfilename);
+					$image = $newname . '.' . $extension;
 				}
 				try {
 					$postRepository = new PostRepository();
-					$postRepository->createPost($title, $chapo, $author, $content, $newname . '.' . $extension, $userId, $published);
+					$postRepository->createPost($title, $chapo, $author, $content, $image, $userId, $published);
 					$_SESSION['flash_message'] = "Le post a été créé avec succès !";
 					$_SESSION['flash_type'] = "success";
 					header('Location: /Blog/admin/newPost');
@@ -121,31 +123,35 @@
 		}
 		
 		/**
-		 * @throws SyntaxError
-		 * @throws RuntimeError
-		 * @throws LoaderError
-		 * @throws \Exception
+		 *
+		 * @param int $postId
+		 * @throws \Exception Si les données d'entrée sont invalides ou s'il y a une erreur lors de la mise à jour de l'article.
 		 */
-		public function updatePost($postId)
+		public function updatePost(int $postId)
 		{
-			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$title = $_POST['title'];
-				$chapo = $_POST['chapo'];
-				$author = $_POST['author'];
-				$content = $_POST['content'];
+			if ($_SERVER["REQUEST_METHOD"] === "POST") {
+				$title = $_POST['title'] ?? '';
+				$chapo = $_POST['chapo'] ?? '';
+				$author = $_POST['author'] ?? '';
+				$content = $_POST['content'] ?? '';
+				$published = isset($_POST['published']) ? intval($_POST['published']) : 0;
 				
-				$postRepository = new PostRepository();
-				$postRepository->updatePost($postId, $title, $chapo, $author, $content);
-				$_SESSION['flash_message'] = "Le post a été mis à jour avec succès !";
-				$_SESSION['flash_type'] = "success";
+				if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
+					throw new \Exception("Tous les champs sont requis.");
+				}
+				try {
+					$this->postRepository->updatePost($postId, $title, $chapo, $author, $content, $published);
+				} catch (\PDOException $e) {
+					throw new \Exception("Erreur de connexion à la base de données : " . $e->getMessage());
+				}
+				
 				header('Location: /Blog/admin/showPost');
 				exit();
 			} else {
 				$post = $this->postRepository->getPostById($postId);
-				$_SESSION['flash_message'] = "Le post a été mis à jour avec succès !";
-				$_SESSION['flash_type'] = "success";
 				$this->render('Admin/adminUpdatePost.html.twig', ['post' => $post]);
 			}
 		}
+		
 	}
 	

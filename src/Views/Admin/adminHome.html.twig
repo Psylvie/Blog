@@ -7,14 +7,14 @@
 		<div class="card-header">
 			<div class="container mt-5">
 				<h2 class="text-center mb-5">Les derniers posts</h2>
-				<div class="row align-items-start">
+				<div class="row align-items-stretch">
 					{% for post in posts %}
 						<div class="col-md-4 mb-4">
-							<div class="card mb-4">
-								{% if post.image  %}
-									<img src="/MonBlog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="...">
+							<div class="card mb-4 h-100">
+								{% if post.image %}
+									<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid" alt="Post Image" style="height: 200px;">
 								{% else %}
-									<img src="/Blog/public/images/logo.png" class="card-img-top" style="height: 250px;" alt="...">
+									<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image" style="height: 200px;">
 								{% endif %}
 								<div class="card-body">
 									<h5 class="card-title">{{ post.title|upper }}</h5>

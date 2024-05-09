@@ -199,15 +199,16 @@
 			}
 		}
 		
-		public function updatePost($postId, $title, $chapo, $author, $content): void
+		public function updatePost($postId, $title, $chapo, $author, $content, $published): void
 		{
 			try {
-				$sql = "UPDATE posts SET title = :title, chapo = :chapo, author = :author, content = :content WHERE id = :id";
+				$sql = "UPDATE posts SET title = :title, chapo = :chapo, author = :author, content = :content, published = :published WHERE id = :id";
 				$stmt = $this->mysqlClient->prepare($sql);
 				$stmt->bindParam(':title', $title, PDO::PARAM_STR);
 				$stmt->bindParam(':chapo', $chapo, PDO::PARAM_STR);
 				$stmt->bindParam(':author', $author, PDO::PARAM_STR);
 				$stmt->bindParam(':content', $content, PDO::PARAM_STR);
+				$stmt->bindParam(':published', $published, PDO::PARAM_INT);
 				$stmt->bindParam(':id', $postId, PDO::PARAM_INT);
 				$stmt->execute();
 			} catch (PDOException $e) {
