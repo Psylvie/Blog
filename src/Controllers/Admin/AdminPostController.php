@@ -68,10 +68,12 @@
 					
 					$extension = pathinfo($filename, PATHINFO_EXTENSION);
 					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-						die("erreur de type de fichier");
+						$_SESSION['flash_message'] = "Erreur de type de fichier";
+						$_SESSION['flash_type'] = "danger";
 					}
 					if ($filesize > 1024 * 1024) {
-						die("erreur de taille de fichier");
+						$_SESSION['flash_message'] = "Erreur de taille de fichier";
+						$_SESSION['flash_type'] = "danger";
 					}
 					$newname = md5(uniqid());
 					$newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;

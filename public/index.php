@@ -3,16 +3,16 @@
 	ini_set('display_errors', true);
 	session_start();
 	print_r($_SESSION);
-	
-	session_start();
-	print_r($_SESSION);
 	require __DIR__ . '/../vendor/autoload.php';
 	
 	use App\Controllers\Admin\AdminController;
 	use App\Controllers\Admin\AdminPostController;
 	use App\Controllers\CommentController;
 	use App\Controllers\HomeController;
+	use App\Controllers\LoginController;
 	use App\Controllers\PostController;
+	use App\Controllers\RegisterController;
+	use App\Controllers\UserController;
 	use App\Router;
 	
 	$uri = $_SERVER['REQUEST_URI'];
@@ -25,6 +25,17 @@
 	$router->addRoute('/Blog/admin/updatePost/{id}', AdminPostController::class, 'updatePost');
 	$router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
+	$router->addRoute('/Blog/inscription', RegisterController::class, 'registrationForm');
+	$router->addRoute('/Blog/register', RegisterController::class, 'register');
+	$router->addRoute('/Blog/user/updateProfile/{id}', UserController::class, 'updateProfile');
+	$router->addRoute('/Blog/login', LoginController::class, 'loginForm');
+	$router->addRoute('/Blog/loginProcess', LoginController::class, 'login');
+	$router->addRoute('/Blog/logout', LoginController::class, 'logout');
+	$router->addRoute('/Blog/user/{id}', UserController::class, 'show');
+	$router->addRoute('/Blog/user/deleteUser/{id}', UserController::class, 'deleteUser');
+	$router->addRoute('/Blog/reset-password', LoginController::class, 'resetPassword');
+	$router->addRoute('/Blog/reset', LoginController::class, 'requestPasswordReset');
+	$router->addRoute('/Blog/newPassword/{token}', LoginController::class, 'newPassword');
 	$router->addRoute('/Blog/posts', PostController::class, 'list');
 	$router->addRoute('/Blog/post/{id}', PostController::class, 'show');
 	$router->addRoute('/Blog/contactForm', HomeController::class, 'contactForm');

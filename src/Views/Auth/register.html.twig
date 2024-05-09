@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+	<div class="container mt-5">
+		<h2 class="text-center mb-4">Inscription</h2>
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<form action="/Blog/register" method="post" id="register" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label for="name" class="form-label">Nom</label>
+						<input type="text" class="form-control" id="name" name="name" required>
+					</div>
+					<div class="mb-3">
+						<label for="lastName" class="form-label">Prénom</label>
+						<input type="text" class="form-control" id="lastName" name="lastName" required>
+					</div>
+					<div class="mb-3">
+						<label for="image" class="form-label">Image</label>
+						<input type="file" class="form-control" id="image" name="image">
+
+					</div>
+					<div class="mb-3">
+						<label for="slug" class="form-label">Slug</label>
+						<textarea class="form-control" id="slug" name="slug" rows="6"></textarea>
+					</div>
+					<div class="mb-3">
+						<label for="email" class="form-label">Email</label>
+						<input type="email" class="form-control" id="email" name="email" required>
+					</div>
+					<div class="mb-3">
+						<label for="password" class="form-label">Mot de passe</label>
+						<input type="password" class="form-control" id="password" name="password" required>
+					</div>
+					<input type="checkbox" name="role" value="subscriber">
+					<button type="submit" class="btn btn-primary">S'inscrire</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
