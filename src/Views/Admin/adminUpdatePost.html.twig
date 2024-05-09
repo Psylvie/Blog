@@ -1,0 +1,80 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %} Modification du Post - {{ post.id }}{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h2 class="mb-4">Modification du Post - {{ post.id }}</h2>
+		<div class="card">
+			<div class="card-body">
+				<form action="/Blog/admin/updatePost/{{ post.id }}" method="post" enctype="multipart/form-data">
+					<div class="mb-3 row">
+						<label for="title" class="col-sm-2 col-form-label">Title</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="chapo" class="col-sm-2 col-form-label">Chapo</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="chapo" name="chapo" value="{{ post.chapo }}" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="author" class="col-sm-2 col-form-label">Author</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="author" name="author" value="{{ post.author }}" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="content" class="col-sm-2 col-form-label">Content</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" id="content" name="content" rows="6" required>{{ post.content }}</textarea>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="image" class="col-sm-2 col-form-label">Image</label>
+						<div class="col-sm-10">
+							{% if post.image %}
+								<div class="card" style="max-width: 200px;">
+									<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid" alt="Post Image">
+								</div>
+							{% else %}
+								<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image" style="max-width: 200px;">
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="mb-3 row">
+						<label for="user_id" class="col-sm-2 col-form-label">User ID</label>
+						<div class="col-sm-10">
+							<input type="number" class="form-control" id="user_id" name="user_id" value="{{ session.user_id }}" disabled>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="published" class="col-sm-2 col-form-label">Publication</label>
+						<div class="col-sm-10">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" id="published" name="published" value="1" {% if post.published == 1 %}checked{% endif %}>
+								<label class="form-check-label" for="published">
+									Publier maintenant
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" id="draft" name="published" value="0" {% if post.published == 0 %}checked{% endif %}>
+								<label class="form-check-label" for="draft">
+									Enregistrer en tant que brouillon
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-sm-10 offset-sm-2">
+							<button type="submit" class="btn btn-secondary">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

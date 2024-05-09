@@ -22,6 +22,7 @@
 	$router->addRoute('/Blog/admin/showPost', AdminPostController::class, 'showPost');
 	$router->addRoute('/Blog/admin/newPost', AdminPostController::class, 'newPost');
 	$router->addRoute('/Blog/admin/createPost', AdminPostController::class, 'createPost');
+	$router->addRoute('/Blog/admin/updatePost/{id}', AdminPostController::class, 'updatePost');
 	$router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
 	$router->addRoute('/Blog/posts', PostController::class, 'list');

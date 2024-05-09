@@ -9,7 +9,7 @@
 		private string $chapo;
 		private string $author;
 		private string $content;
-		private string $image;
+		private ?string $image;
 		private int $user_id ;
 		private bool $published;
 		private DateTime $createdAt;
