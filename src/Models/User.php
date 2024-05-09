@@ -13,7 +13,7 @@
 		private int $id;
 		private string $name;
 		private string $lastName;
-		private string $image;
+		private ?string $image;
 		private string $slug;
 		private string $email;
 		private string $password;

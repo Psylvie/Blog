@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+
+    <div class="container">
+        <h1>Profil de {{ user.name }} {{ user.lastName }}</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <img src="/Blog/public/users/{{ user.image }}" class="card-img-top" style="height: 250px;" alt="Image du profil "/>
+            </div>
+            <div class="col-md-8">
+                <form action="/Blog/user/updateProfile/{{ user.id }}" method="post" enctype="multipart/form-data">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label for="name" class="form-label">Nom :</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+                        </li>
+                        <li class="list-group-item">
+                            <label for="lastName" class="form-label">Prénom :</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
+                        </li>
+                        <li class="list-group-item">
+                            <label for="email" class="form-label">Email :</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                        </li>
+                        <li class="list-group-item">
+                            <label for="role" class="form-label">Rôle :</label>
+                            <input type="text" class="form-control" id="role" name="role" value="{{ user.role }}" >
+                        </li>
+                        <li class="list-group-item">
+                            <label for="slug" class="form-label">Slug :</label>
+                            <input type="text" class="form-control" id="slug" name="slug" value="{{ user.slug }}">
+                        </li><li class="list-group-item">
+                            <label for="currentPassword" class="form-label">Mot de passe actuel :</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required >
+                        </li>
+
+                    </ul>
+                    <button type="submit" class="btn btn-secondary mt-3">Enregistrer les modifications</button>
+                </form>
+                <form action="/Blog/user/deleteUser/{{ user.id }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil?');">
+                    <button type="submit" class="btn btn-danger mt-3">Supprimer le compte </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

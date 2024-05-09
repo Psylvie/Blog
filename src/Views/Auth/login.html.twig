@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card mt-5">
+					<div class="card-body">
+						<h1 class="card-title text-center mb-4">Connexion</h1>
+						<form action="/Blog/loginProcess" method="post" id="login">
+							<div class="mb-3">
+								<label for="email" class="form-label">Adresse e-mail :</label>
+								<input type="email" class="form-control" id="email" name="email" required>
+							</div>
+							<div class="mb-3">
+								<label for="password" class="form-label">Mot de passe :</label>
+								<input type="password" class="form-control" id="password" name="password" required>
+							</div>
+							<div class="d-grid gap-2">
+								<button type="submit" name="submit" class="btn btn-secondary">Se connecter</button>
+							</div>
+							<div class="d-grid gap-2">
+								<label>
+									<input type="checkbox" name="remember_me" value="1"> Se souvenir de moi
+								</label>
+							</div>
+							<div class="container">
+								<span class="psw"><a href="/Blog/reset-password">Mot de passe oublié ?</a></span>
+							</div>
+						</form>
+						<div class="text-center mt-3">
+							<p>Vous n'avez pas de compte ? <a href="/Blog/inscription">Inscrivez-vous ici</a>.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
