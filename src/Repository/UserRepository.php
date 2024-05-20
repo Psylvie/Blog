@@ -36,12 +36,13 @@
 					$userData['name'],
 					$userData['lastName'],
 					$userData['image'],
-					$userData['slug'],
+					$userData['pseudo'],
 					$userData['email'],
 					$userData['password'],
 					$createdAt,
 					$updatedAt,
 					$userData['role'],
+					$userData['first_login_done'],
 					$userData['resetToken']
 				);
 			}
@@ -57,7 +58,7 @@
 			$statement = $this->mysqlClient->prepare($sql);
 			$statement->execute(['email' => $email]);
 			$userData = $statement->fetch(PDO::FETCH_ASSOC);
-			
+			$firstLoginDone = isset($userData['first_login_done']) ? (bool)$userData['first_login_done'] : null;
 			if ($userData) {
 				$createdAt = new DateTime($userData['createdAt']);
 				$updatedAt = new DateTime($userData['updateAt']);
@@ -66,16 +67,16 @@
 					$userData['name'],
 					$userData['lastName'],
 					$userData['image'],
-					$userData['slug'],
+					$userData['pseudo'],
 					$userData['email'],
 					$userData['password'],
 					$createdAt,
 					$updatedAt,
 					$userData['role'],
+					$firstLoginDone,
 					$userData['resetToken']
 				);
 			}
-			
 			return null;
 		}
 		
@@ -97,28 +98,27 @@
 					$userData['name'],
 					$userData['lastName'],
 					$userData['image'],
-					$userData['slug'],
+					$userData['pseudo'],
 					$userData['email'],
 					$userData['password'],
 					$createdAt,
 					$updatedAt,
 					$userData['role'],
+					$userData['first_login_done'],
 					$userData['resetToken']
 				);
 			}
-			
 			return null;
 		}
 		
 		/**
 		 * @throws Exception
 		 */
-		public function createUser($name, $lastName, $image, $slug, $email, $password, $role, $resetToken): void
+		public function createUser($name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken): void
 		{
 			try {
 				$pdo = DatabaseConnect::connect();
-				$stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, slug, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-				$stmt->execute([$name, $lastName, $image, $slug, $email, $password, $role, $resetToken]);
+				$stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, pseudo, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");				$stmt->execute([$name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken]);
 			} catch (PDOException $e) {
 				if ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_email') !== false) {
 					throw new Exception("L'adresse e-mail est déjà utilisée.");
@@ -128,26 +128,53 @@
 			}
 		}
 		
-		
+		/**
+		 * @throws Exception
+		 */
 		public function delete(int $id): void
 		{
-			$sql = 'DELETE FROM users WHERE id = :id';
-			$statement = $this->mysqlClient->prepare($sql);
-			$statement->execute(['id' => $id]);
+			try {
+				$this->mysqlClient->beginTransaction();
+				$stmt = $this->mysqlClient->prepare("
+                UPDATE comments
+                SET user_id = (SELECT id FROM users WHERE email = 'sylvie.pepete@live.fr' AND role = 'subscriber')
+                WHERE user_id = :user_id
+            ");
+				$stmt->bindParam(':user_id', $id, PDO::PARAM_INT);
+				$stmt->execute();
+				
+				$sql = 'DELETE FROM users WHERE id = :id';
+				$statement = $this->mysqlClient->prepare($sql);
+				$statement->execute(['id' => $id]);
+				$this->mysqlClient->commit();
+			} catch (PDOException $e) {
+				$this->mysqlClient->rollBack();
+				throw new Exception("Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
+			}
 		}
 		
-		public function updateProfile($userId, $name, $lastName, $email, $role): void
+		/**
+		 * @throws Exception
+		 */
+		public function updateProfile($userId, $name, $lastName, $email, $pseudo, $role): void
 		{
-			$sql = 'UPDATE users SET name = :name, lastName = :lastName, email = :email, role = :role WHERE id = :id';
-			$statement = $this->mysqlClient->prepare($sql);
-			$statement->execute([
-				'id' => $userId,
-				'name' => $name,
-				'lastName' => $lastName,
-				'email' => $email,
-				'role' => $role,
-			]);
+			try {
+				$sql = 'UPDATE users SET name = :name, lastName = :lastName, pseudo = :pseudo, email = :email, role = :role WHERE id = :id';
+				$statement = $this->mysqlClient->prepare($sql);
+				$statement->execute([
+					'name' => $name,
+					'lastName' => $lastName,
+					'pseudo' => $pseudo,
+					'email' => $email,
+					'role' => $role,
+					'id' => $userId,
+				]);
+			} catch (PDOException $e) {
+				throw new Exception("Erreur lors de la mise à jour du profil : " . $e->getMessage());
+			}
 		}
+		
+		
 		public function setResetToken($email, $resetToken): void
 		{
 			$sql = 'UPDATE users SET resetToken = :resetToken WHERE email = :email';
@@ -173,35 +200,49 @@
 			if (!$result) {
 				return null;
 			}
+			
 			$user = new User(
 				$result['id'],
 				$result['name'],
 				$result['lastName'],
 				$result['image'],
-				$result['slug'],
+				$result['pseudo'],
 				$result['email'],
 				$result['password'],
 				new DateTime($result['createdAt']),
 				new DateTime($result['updateAt']),
 				$result['role'],
+				$result['first_login_done'],
 				$result['resetToken']
-			
 			);
-			
 			return $user;
 		}
 		
+		/**
+		 * @throws Exception
+		 */
 		public function updatePassword(string $userEmail, string $password_hash): void
 		{
-			
-			$sql = 'UPDATE users SET password = :password WHERE email = :email';
-			$statement = $this->mysqlClient->prepare($sql);
-			$statement->execute([
-				'email' => $userEmail,
-				'password' => $password_hash,
-			])
-			;
+			try {
+				$sql = 'UPDATE users SET password = :password WHERE email = :email';
+				$statement = $this->mysqlClient->prepare($sql);
+				$statement->execute([
+					'email' => $userEmail,
+					'password' => $password_hash,
+				]);
+			} catch (PDOException $e) {
+				throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
+			}
 		}
 		
-		
+		public function updateFirstLoginDone(int $userId, bool $value): void
+		{
+			$sql = 'UPDATE users SET first_login_done = :value WHERE id = :userId';
+			$statement = $this->mysqlClient->prepare($sql);
+			$statement->execute([
+				'value' => $value,
+				'userId' => $userId,
+			]);
+		}
 	}
+	

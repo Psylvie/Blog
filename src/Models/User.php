@@ -14,39 +14,42 @@
 		private string $name;
 		private string $lastName;
 		private ?string $image;
-		private string $slug;
+		private string $pseudo;
 		private string $email;
 		private string $password;
 		private datetime $createdAt;
 		private datetime $updateAt;
 		private string $role;
+		private bool $firstLoginDone = false;
 		private ?string $resetToken;
 		
 		/**
 		 * @param int $id
 		 * @param string $name
 		 * @param string $lastName
-		 * @param string $image
-		 * @param string $slug
+		 * @param string|null $image
+		 * @param string $pseudo
 		 * @param string $email
 		 * @param string $password
 		 * @param DateTime $createdAt
 		 * @param DateTime $updateAt
 		 * @param string $role
+		 * @param bool $firstLoginDone
 		 * @param string|null $resetToken
 		 */
-		public function __construct(int $id, string $name, string $lastName, string $image, string $slug, string $email, string $password, DateTime $createdAt, DateTime $updateAt, string $role, ?string $resetToken)
+		public function __construct(int $id, string $name, string $lastName, ?string $image, string $pseudo, string $email, string $password, DateTime $createdAt, DateTime $updateAt, string $role, bool $firstLoginDone , ?string $resetToken)
 		{
 			$this->id = $id;
 			$this->name = $name;
 			$this->lastName = $lastName;
 			$this->image = $image;
-			$this->slug = $slug;
+			$this->pseudo = $pseudo;
 			$this->email = $email;
 			$this->password = $password;
 			$this->createdAt = $createdAt;
 			$this->updateAt = $updateAt;
 			$this->role = $role;
+			$this->firstLoginDone = $firstLoginDone;
 			$this->resetToken = $resetToken;
 		}
 		
@@ -99,17 +102,17 @@
 		}
 		
 		/**
-		 * @return string
+		 * @return string|null
 		 */
-		public function getImage(): string
+		public function getImage(): ?string
 		{
 			return $this->image;
 		}
 		
 		/**
-		 * @param string $image
+		 * @param string|null $image
 		 */
-		public function setImage(string $image): void
+		public function setImage(?string $image): void
 		{
 			$this->image = $image;
 		}
@@ -117,17 +120,17 @@
 		/**
 		 * @return string
 		 */
-		public function getSlug(): string
+		public function getPseudo(): string
 		{
-			return $this->slug;
+			return $this->pseudo;
 		}
 		
 		/**
-		 * @param string $slug
+		 * @param string $pseudo
 		 */
-		public function setSlug(string $slug): void
+		public function setPseudo(string $pseudo): void
 		{
-			$this->slug = $slug;
+			$this->pseudo = $pseudo;
 		}
 		
 		/**
@@ -208,6 +211,22 @@
 		public function setRole(string $role): void
 		{
 			$this->role = $role;
+		}
+		
+		/**
+		 * @return bool
+		 */
+		public function isFirstLoginDone(): bool
+		{
+			return $this->firstLoginDone;
+		}
+		
+		/**
+		 * @param bool $firstLoginDone
+		 */
+		public function setFirstLoginDone(bool $firstLoginDone): void
+		{
+			$this->firstLoginDone = $firstLoginDone;
 		}
 		
 		/**

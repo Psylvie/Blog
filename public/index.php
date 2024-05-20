@@ -7,6 +7,7 @@
 	
 	use App\Controllers\Admin\AdminController;
 	use App\Controllers\Admin\AdminPostController;
+	use App\Controllers\Admin\AdminUserController;
 	use App\Controllers\CommentController;
 	use App\Controllers\HomeController;
 	use App\Controllers\LoginController;
@@ -16,14 +17,11 @@
 	use App\Router;
 	
 	$uri = $_SERVER['REQUEST_URI'];
+	$userRole = $_SESSION['user_role'] ?? null;
 
 	$router = new Router();
-	$router->addRoute('/Blog/admin', AdminController::class, 'index');
-	$router->addRoute('/Blog/admin/showPost', AdminPostController::class, 'showPost');
-	$router->addRoute('/Blog/admin/newPost', AdminPostController::class, 'newPost');
-	$router->addRoute('/Blog/admin/createPost', AdminPostController::class, 'createPost');
-	$router->addRoute('/Blog/admin/updatePost/{id}', AdminPostController::class, 'updatePost');
-	$router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
+	
+	
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
 	$router->addRoute('/Blog/inscription', RegisterController::class, 'registrationForm');
 	$router->addRoute('/Blog/register', RegisterController::class, 'register');
@@ -33,13 +31,31 @@
 	$router->addRoute('/Blog/logout', LoginController::class, 'logout');
 	$router->addRoute('/Blog/user/{id}', UserController::class, 'show');
 	$router->addRoute('/Blog/user/deleteUser/{id}', UserController::class, 'deleteUser');
+	$router->addRoute('/Blog/showPassword', LoginController::class, 'showPasswordResetForm');
 	$router->addRoute('/Blog/reset-password', LoginController::class, 'resetPassword');
 	$router->addRoute('/Blog/reset', LoginController::class, 'requestPasswordReset');
 	$router->addRoute('/Blog/newPassword/{token}', LoginController::class, 'newPassword');
+	$router->addRoute('/Blog/first-connection', LoginController::class, 'firstConnectionForm');
+	$router->addRoute('/Blog/first-connection-process', LoginController::class, 'handleFirstConnection');
 	$router->addRoute('/Blog/posts', PostController::class, 'list');
 	$router->addRoute('/Blog/post/{id}', PostController::class, 'show');
 	$router->addRoute('/Blog/contactForm', HomeController::class, 'contactForm');
 	$router->addRoute('/Blog/addComment', CommentController::class, 'addComment');
+	
+	if(isset($userRole) && $userRole == 'admin') {
+		$router->addRoute('/Blog/admin', AdminController::class, 'index');
+		$router->addRoute('/Blog/admin/showPost', AdminPostController::class, 'showPost');
+		$router->addRoute('/Blog/admin/newPost', AdminPostController::class, 'newPost');
+		$router->addRoute('/Blog/admin/createPost', AdminPostController::class, 'createPost');
+		$router->addRoute('/Blog/admin/updatePost/{id}', AdminPostController::class, 'updatePost');
+		$router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
+		$router->addRoute('/Blog/admin/users/list', AdminUserController::class, 'list');
+		$router->addRoute('/Blog/admin/users/show/{id}', AdminUserController::class, 'show');
+		$router->addRoute('/Blog/admin/users/delete/{id}', AdminUserController::class, 'delete');
+		$router->addRoute('/Blog/admin/users/update/{id}', AdminUserController::class, 'update');
+		$router->addRoute('/Blog/admin/users/create', AdminUserController::class, 'createUser');
+		$router->addRoute('/Blog/admin/users/createUser', AdminUserController::class, 'createUserProcess');
+	}
 	try {
 		$router->dispatch($uri);
 	} catch (\Exception $e) {
