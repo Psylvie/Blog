@@ -28,7 +28,7 @@
 			</div>
 		</nav>
 
-		{% if flash_message is defined  %}
+		{% if flash_message %}
 			<div class="alert-wrapper">
 				<div class="alert alert-{{ flash_type }}" role="alert">
 					{{ flash_message }}
@@ -81,9 +81,8 @@
 								Utilisateurs
 							</button>
 							<ul class="dropdown-menu" aria-labelledby="dropdownUsers">
-								<li><a class="dropdown-item" href="/Blog/admin/users/list">Liste</a></li>
+								<li><a class="dropdown-item" href="/Blog/admin/users/list">Modifier/Supprimer</a></li>
 								<li><a class="dropdown-item" href="/Blog/admin/users/create">Nouveau</a></li>
-								<li><a class="dropdown-item" href="#">Roles utilisateur</a></li>
 							</ul>
 						</div>
 					</div>
@@ -121,14 +120,19 @@
 		</section>
 	</div>
 </main>
-
 <footer class="mt-auto">
 	{% block footer %}
-		<div class="btn" >
-			<a href="/Blog">retour au blog</a>
-		</div>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/Blog/">Retour au blog </a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 		<div class="container">
-			<p class="text-center">My Blog - 2021</p>
+			<p class="text-center ">My Blog - 2021 - Peuzin Sylvie</p>
 		</div>
 	{% endblock %}
 </footer>

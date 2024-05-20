@@ -41,40 +41,28 @@
                                 <a class="nav-link" href="/Blog/posts">Posts</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/Blog/about">À propos</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="/Blog/contact">Contact</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Blog/inscription">Inscription</a>
                             </li>
                             {% if session.user_role in ['subscriber', 'admin'] %}
                                 <li class="nav-item">
                                     <a class="nav-link btn btn-danger" href="/Blog/logout">Déconnexion</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link btn btn-danger" href="/Blog/user/{{ user.id }}">Mon Profil</a>
+                                    <a class="nav-link btn btn-danger" href="/Blog/user/{{ session.user_id }}">Mon Profil</a>
                                 </li>
                             {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/Blog/inscription">Inscription</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link btn btn-danger" href="/Blog/login">Connexion</a>
                                 </li>
                             {% endif %}
-
-
-
-
                         </ul>
                     </div>
                 </div>
             </nav>
         </div>
-        {#        {% if app.session.hasFlash('alert_message') %}#}
-        {#            <div class="alert alert-{{ app.session.getFlash('alert_type') }}" role="alert">#}
-        {#                {{ app.session.getFlash('alert_message') }}#}
-        {#            </div>#}
-        {#        {% endif %}#}
     {% endblock %}
 </header>
 
@@ -92,9 +80,30 @@
     {% block content %}
     {% endblock %}
 </main>
-<footer class="mt-auto">
+{% if session.user_role in ['admin'] %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/Blog/admin">Administration </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% else %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/Blog/">Accueil </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endif %}
+<footer class="mt-auto bg-dark">
     {% block footer %}
-        <div class="container text-center">
+        <div class="container text-center bg-dark">
             <p>&copy; 2024 Mon Blog</p>
         </div>
     {% endblock %}

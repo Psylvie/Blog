@@ -1,0 +1,46 @@
+{% extends 'admin.html.twig' %}
+
+{% block content %}
+
+
+	<div class="container">
+		<h1>Profil de {{ user.name }} {{ user.lastName }}</h1>
+		<div class="row">
+			<div class="col-md-4">
+				<img src="/MonBlog/public/users/{{ user.image }}" class="card-img-top" style="height: 250px;" alt="Image du profil "/>
+			</div>
+			<div class="col-md-8">
+				<form action="/Blog/admin/users/update/{{ user.id }}" method="post" enctype="multipart/form-data">
+					<ul class="list-group">
+						<li class="list-group-item">
+							<label for="name" class="form-label">Nom :</label>
+							<input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+						</li>
+						<li class="list-group-item">
+							<label for="lastName" class="form-label">Prénom :</label>
+							<input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
+						</li>
+						<li class="list-group-item">
+							<label for="email" class="form-label">Email :</label>
+							<input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+						</li>
+						<li class="list-group-item">
+							<label for="role" class="form-label">Rôle :</label>
+							<select class="form-select" id="role" name="role" required>
+								<option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+								<option value="subscriber" {% if user.role == 'subscriber' %}selected{% endif %}>Subscriber</option>
+							</select>
+						</li>
+						<li class="list-group-item">
+							<label for="pseudo" class="form-label">Pseudo :</label>
+							<input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ user.pseudo }}">
+					</ul>
+					<button type="submit" class="btn btn-secondary mt-3">Enregistrer les modifications</button>
+				</form>
+				<form action="/Blog/admin/users/delete/{{ user.id }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil?');">
+					<button type="submit" class="btn btn-danger mt-3">Supprimer le compte </button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

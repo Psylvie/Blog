@@ -35,7 +35,7 @@
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$name = isset($_POST["name"]) ? trim($_POST["name"]) : '';
 				$lastName = isset($_POST["lastName"]) ? trim($_POST["lastName"]) : '';
-				$slug = isset($_POST["slug"]) ? trim($_POST["slug"]) : '';
+				$pseudo = isset($_POST["pseudo"]) ? trim($_POST["pseudo"]) : '';
 				$email = isset($_POST["email"]) ? trim($_POST["email"]) : '';
 				$role = isset($_POST["role"]) ? trim($_POST["role"]) : '';
 				$resetToken = isset($_POST["resetToken"]) ? trim($_POST["resetToken"]) : '';
@@ -64,7 +64,7 @@
 				
 				try {
 					$userRepository = new UserRepository();
-					$userRepository->createUser($name, $lastName, $image, $slug, $email, $hashedPassword, $role, $resetToken);
+					$userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
 					$_SESSION['flash_message'] = "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.";
 					$_SESSION['flash_type'] = "success";
 					header("Location: /Blog/");
