@@ -5,6 +5,7 @@
 	print_r($_SESSION);
 	require __DIR__ . '/../vendor/autoload.php';
 	
+	use App\Controllers\Admin\AdminCommentController;
 	use App\Controllers\Admin\AdminController;
 	use App\Controllers\Admin\AdminPostController;
 	use App\Controllers\Admin\AdminUserController;
@@ -49,6 +50,9 @@
 		$router->addRoute('/Blog/admin/createPost', AdminPostController::class, 'createPost');
 		$router->addRoute('/Blog/admin/updatePost/{id}', AdminPostController::class, 'updatePost');
 		$router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
+		$router->addRoute('/Blog/admin/showAllPosts', AdminCommentController::class, 'showAllPosts');
+		$router->addRoute('/Blog/admin/showAllComments/{id}', AdminCommentController::class, 'showAllComments');
+		$router->addRoute('/Blog/admin/handleCommentValidation', AdminCommentController::class, 'handleCommentValidation');
 		$router->addRoute('/Blog/admin/users/list', AdminUserController::class, 'list');
 		$router->addRoute('/Blog/admin/users/show/{id}', AdminUserController::class, 'show');
 		$router->addRoute('/Blog/admin/users/delete/{id}', AdminUserController::class, 'delete');

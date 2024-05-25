@@ -1,0 +1,36 @@
+{% extends 'admin.html.twig' %}
+
+{% block content %}
+	<div class="container">
+		<h1>Liste des Posts</h1>
+
+		<table class="table">
+			<thead>
+			<tr>
+
+				<th>Titre</th>
+				<th>Chapo</th>
+				<th>En attente </th>
+				<th>Approuvés</th>
+				<th>Rejetés</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for postData in postsData %}
+				<tr>
+					<td><a href="/Blog/admin/showAllComments/{{ postData.post.id }}">{{ postData.post.title }}</a></td>
+					<td>{{ postData.post.chapo }}</td>
+					<td style="color: red;">
+						{{ postData.comments|filter(comment => comment.status == 'pending')|length }}
+					</td>
+					<td>{{ postData.comments|filter(comment => comment.status == 'approved')|length }}</td>
+					<td>{{ postData.comments|filter(comment => comment.status == 'rejected')|length }}</td>
+					<td>
+
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
