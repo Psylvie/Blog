@@ -14,11 +14,11 @@
                     <ul class="list-group">
                         <li class="list-group-item">
                             <label for="name" class="form-label">Nom :</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+                            <input type="text" class="form-control" id="name" name="name" value="{{ user.name|capitalize }}">
                         </li>
                         <li class="list-group-item">
                             <label for="lastName" class="form-label">Prénom :</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName|capitalize }}">
                         </li>
                         <li class="list-group-item">
                             <label for="email" class="form-label">Email :</label>
@@ -26,11 +26,11 @@
                         </li>
                         <li class="list-group-item">
                             <label for="role" class="form-label">Rôle :</label>
-                            <input type="text" class="form-control" id="role" name="role" value="{{ user.role }}" >
+                            <input type="text" class="form-control" id="role" name="role" value="{{ user.role|capitalize }}" >
                         </li>
                         <li class="list-group-item">
-                            <label for="slug" class="form-label">Slug :</label>
-                            <input type="text" class="form-control" id="slug" name="slug" value="{{ user.slug }}">
+                            <label for="pseudo" class="form-label">Pseudo :</label>
+                            <input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ user.pseudo|capitalize }}">
                         </li><li class="list-group-item">
                             <label for="currentPassword" class="form-label">Mot de passe actuel :</label>
                             <input type="password" class="form-control" id="currentPassword" name="currentPassword" required >

@@ -1,0 +1,153 @@
+{% extends 'admin.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-4">
+			<div class="card shadow mb-4">
+				{% if post.image %}
+					<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" alt="..." style="width: 100%; height: 200px; object-fit: contain;">
+				{% else %}
+					<img src="/Blog/images/defaultImage.jpg" class="card-img-top" alt="..." style="width: 100%; height: 200px; object-fit: contain;">
+				{% endif %}
+				<div class="card-body">
+					<h5 class="card-title">{{ post.title|upper }}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">{{ post.chapo }}</h6>
+					<p class="card-text">Auteur: {{ post.author|capitalize }}</p>
+					<p class="card-text">{{ post.content|capitalize }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="text-center mb-4">
+				<h2>Commentaires: </h2>
+			</div>
+			<div class="accordion" id="accordionFlushExample">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="flush-headingPending">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePending" aria-expanded="false" aria-controls="flush-collapsePending">
+							Commentaires en Attente ({{ comments|filter(comment => comment.status == 'pending')|length }})
+						</button>
+					</h2>
+					<div id="flush-collapsePending" class="accordion-collapse collapse" aria-labelledby="flush-headingPending" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+							<ul>
+								{% for comment in comments %}
+									{% if comment.status == 'pending' %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											Le {{ comment.createdAt|date('d/m/Y') }} : {{ comment.content|slice(0, 10) ~ '...' }} par {{ comment.user.pseudo }}
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">
+												Examiner
+											</button>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="flush-headingApproved">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseApproved" aria-expanded="false" aria-controls="flush-collapseApproved">
+							Commentaires Approuvés ({{ comments|filter(comment => comment.status == 'approved')|length }})
+						</button>
+					</h2>
+					<div id="flush-collapseApproved" class="accordion-collapse collapse" aria-labelledby="flush-headingApproved" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+							<ul>
+								{% for comment in comments %}
+									{% if comment.status == 'approved' %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											Le {{ comment.createdAt|date('d/m/Y') }} : {{ comment.content|slice(0, 10) ~ '...' }} par {{ comment.user.pseudo }}
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">
+												Examiner
+											</button> </li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="flush-headingRejected">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseRejected" aria-expanded="false" aria-controls="flush-collapseRejected">
+							Commentaires Rejetés ({{ comments|filter(comment => comment.status == 'rejected')|length }})
+						</button>
+					</h2>
+					<div id="flush-collapseRejected" class="accordion-collapse collapse" aria-labelledby="flush-headingRejected" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+							<ul>
+								{% for comment in comments %}
+									{% if comment.status == 'rejected' %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											Le {{ comment.createdAt|date('d/m/Y') }} : {{ comment.content|slice(0, 10) ~ '...' }} par {{ comment.user.pseudo }}
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">
+												Examiner
+											</button>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>														{#	modal validation #}
+	<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" style="background-color: rgba(34, 34, 34, 0.8); color: #ffffff;">
+				<div class="modal-header" style="border-color: #865353; background-color: #865353; color: #ffffff;">
+					<h5 class="modal-title" id="commentModalLabel">Validation du commentaire</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: #ffffff;"></button>
+				</div>
+				<div class="modal-body">
+					<p class="fw-bold">Commentaire ajouté le {{ comment.createdAt|date('d/m/Y') }}</p>
+					<p class="fw-bold">Post : {{ post.title|upper }} par {{ post.author|capitalize }}</p>
+					<hr style="border-color: #865353;">
+					<div id="commentContentDisplay" class="mb-3">{{ comment.content }}</div>
+					<form action="/Blog/admin/handleCommentValidation" method="post" enctype="multipart/form-data">
+						<div class="mb-3">
+							<label for="validationOption" class="form-label" style="color: #ffffff;">Action à effectuer :</label>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="validationOption" id="validateOption_{{ comment.id }}" value="approved" style="appearance: none;">
+								<label class="form-check-label" for="validateOption_{{ comment.id }}" style="color: #ffffff;">Valider le commentaire</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="validationOption" id="rejectOption_{{ comment.id }}" value="rejected" style="appearance: none;">
+								<label class="form-check-label" for="rejectOption_{{ comment.id }}" style="color: #ffffff;">Rejeter le commentaire</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="validationOption" id="pendingOption_{{ comment.id }}" value="pending" checked style="appearance: none;">
+								<label class="form-check-label" for="pendingOption_{{ comment.id }}" style="color: #ffffff;">Laisser en attente</label>
+							</div>
+						</div>
+						<input type="hidden" name="postId" value="{{ post.id }}">
+						<input type="hidden" id="commentIdInput" name="commentId" value="{{ comment.id }}">
+						<input type="hidden" id="commentContentInput" name="commentContent" value="{{ comment.content }}">
+						<button type="submit" class="btn btn-secondary">Valider</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let commentButtons = document.querySelectorAll("[data-comment-id]");
+
+            commentButtons.forEach(function(button) {
+                button.addEventListener("click", function() {
+                    let commentId = button.dataset.commentId;
+                    let commentIdInput = document.getElementById("commentIdInput");
+                    commentIdInput.value = commentId;
+                    let commentContent = button.dataset.commentContent;
+                    let commentContentInput = document.getElementById("commentContentInput");
+                    commentContentInput.value = commentContent;
+
+                    let commentContentDisplay = document.getElementById("commentContentDisplay");
+                    commentContentDisplay.textContent = commentContent;
+                });
+            });
+        });
+	</script>
+{% endblock %}
+
