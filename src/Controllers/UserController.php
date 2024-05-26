@@ -106,12 +106,42 @@
 					
 					if ($user !== null && password_verify($currentPassword, $user->getPassword())) {
 						if ($newPassword === $confirmPassword) {
-							$this->userRepository->updateProfile($userId, $name, $lastName, $email, $pseudo, $role);
+							$image = $user->getImage();
+							if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+								$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
+								$filename = $_FILES['image']['name'];
+								$filetype = $_FILES['image']['type'];
+								$filesize = $_FILES['image']['size'];
+								
+								$extension = pathinfo($filename, PATHINFO_EXTENSION);
+								if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
+									$_SESSION['flash_message'] = "Erreur de type de fichier";
+									$_SESSION['flash_type'] = "danger";
+								}
+								if ($filesize > 1024 * 1024) {
+									$_SESSION['flash_message'] = "Erreur de taille de fichier";
+									$_SESSION['flash_type'] = "danger";
+								}
+								$newname = md5(uniqid());
+								$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
+								if (move_uploaded_file($_FILES['image']['tmp_name'], $newfilename)) {
+									if ($image !== 'avatar.png') {
+										$oldImage = $image;
+										if ($oldImage !== null) {
+											unlink(UPLOADS_PROFILE_PATH . $oldImage);
+										}
+									}
+									$image = $newname . '.' . $extension;
+								} else {
+									$_SESSION['flash_message'] = "Erreur lors du téléchargement de l'image.";
+									$_SESSION['flash_type'] = "danger";
+								}
+							}
+							$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role);
 							if (!empty($newPassword)) {
 								$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 								$this->userRepository->updatePassword($email, $hashedPassword);
 							}
-							
 							$_SESSION['flash_message'] = "Les informations du profil ont été mises à jour avec succès.";
 							$_SESSION['flash_type'] = "success";
 							header("Location: /Blog/user/{$userId}");
@@ -125,5 +155,6 @@
 				}
 			}
 		}
+		
 	}
 	

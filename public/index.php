@@ -10,6 +10,7 @@
 	use App\Controllers\Admin\AdminPostController;
 	use App\Controllers\Admin\AdminUserController;
 	use App\Controllers\CommentController;
+	use App\Controllers\Controller;
 	use App\Controllers\HomeController;
 	use App\Controllers\LoginController;
 	use App\Controllers\PostController;
@@ -42,6 +43,8 @@
 	$router->addRoute('/Blog/post/{id}', PostController::class, 'show');
 	$router->addRoute('/Blog/contactForm', HomeController::class, 'contactForm');
 	$router->addRoute('/Blog/addComment', CommentController::class, 'addComment');
+	$router->addRoute('/Blog/Error/', Controller::class, 'handleErrors');
+	
 	
 	if(isset($userRole) && $userRole == 'admin') {
 		$router->addRoute('/Blog/admin', AdminController::class, 'index');
@@ -60,9 +63,14 @@
 		$router->addRoute('/Blog/admin/users/create', AdminUserController::class, 'createUser');
 		$router->addRoute('/Blog/admin/users/createUser', AdminUserController::class, 'createUserProcess');
 	}
+	
 	try {
 		$router->dispatch($uri);
 	} catch (\Exception $e) {
+		if (str_starts_with($uri, '/Blog/')){
+			header('Location: /Blog/Error/');
+			exit();
+		}
 		echo 'Error: ' . $e->getMessage();
 	}
 

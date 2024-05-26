@@ -1,7 +1,6 @@
 <?php
 	
 	namespace App\Repository;
-
 	
 	use App\Config\DatabaseConnect;
 	use App\Models\Comment;
@@ -17,7 +16,6 @@
 		{
 			$this->mysqlClient = DatabaseConnect::connect();
 		}
-		
 		
 		public function addComment(string $commentContent, int $postId, int $userId): void
 		{

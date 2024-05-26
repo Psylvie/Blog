@@ -36,7 +36,13 @@
 		 * @throws \Exception
 		 */
 		public function show($id){
+			
+			
 			$post = $this->postRepository->getPostById($id);
+			if (!$post){
+				$this->handleErrors();
+				return;
+			}
 			$this->render('Posts/post.html.twig', ['post' => $post]);
 			
 		}
