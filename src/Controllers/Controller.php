@@ -40,7 +40,6 @@
 			unset($_SESSION['flash_message']);
 			unset($_SESSION['flash_type']);
 			echo $this->twig->render("$view", $data);
-			
 		}
 		
 		/**

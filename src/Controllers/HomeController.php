@@ -49,7 +49,6 @@
 				$email = isset($_POST['email']) ? trim($_POST['email']) : '';
 				$message = isset($_POST['message']) ? trim($_POST['message']) : '';
 				
-				
 				if (empty($firstName) || empty($lastName) || empty($email) || empty($message)) {
 					$_SESSION['flash_message'] = "Tous les champs sont obligatoires !";
 					$_SESSION['flash_type'] = "info";
@@ -78,6 +77,7 @@
 					$_SESSION['flash_message'] = "Erreur de validation reCAPTCHA !";
 					$_SESSION['flash_type'] = "danger";
 					header('Location: /Blog/');
+					
 					exit;
 				}
 				
@@ -128,4 +128,3 @@
 			$this->render('Home/contact.html.twig');
 		}
 	}
-	
