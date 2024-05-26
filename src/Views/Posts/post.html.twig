@@ -2,8 +2,7 @@
 {% block content %}
 	<div class="container mt-5">
 		<h1 class="text-center">Bienvenue sur ce post !</h1>
-		<h2 class="text-center mb-5">Détails du post</h2>
-
+		<h2 class="text-center mb-5"> Post {{ post.title }}</h2>
 		<div class="row align-items-start">
 			<div class="col-md-8 mx-auto">
 				<div class="card">
@@ -24,7 +23,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="row mt-5">
 			<div class="col-md-8 mx-auto">
 				<h2>Commentaires ({{ post.comments|length }})</h2>
@@ -50,25 +48,28 @@
 		</div>
 
 		<div class="row mt-5">
-			<div class="col-md-8 mx-auto">
+			<div class="col-md-8 mx-auto d-flex justify-content-between">
 				<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">
 					Ajouter un commentaire
 				</button>
+					<div class="mt-auto">
+						<a href="/Blog/posts" class="btn btn-secondary">Retour aux posts</a>
+					</div>
 			</div>
 		</div>
 	</div>
-
+	<!-- Modal -->
 	<div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: black">
+				<div class="modal-header" style="background-color:  #865353">
 					<h5 class="modal-title" id="addCommentModalLabel">Ajouter un commentaire</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<!-- Form add comment -->
 					<form action="/Blog/addComment" method="post">
-						<div class="mb-3" style="background-color: #865353">
+						<div class="mb-3" style="background-color:  #865353">
 							<label for="comment" class="form-label"  >Votre commentaire :</label>
 							<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
 						</div>

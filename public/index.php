@@ -25,6 +25,7 @@
 	
 	
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
+	$router->addRoute('/Blog/contact', HomeController::class, 'contact');
 	$router->addRoute('/Blog/inscription', RegisterController::class, 'registrationForm');
 	$router->addRoute('/Blog/register', RegisterController::class, 'register');
 	$router->addRoute('/Blog/user/updateProfile/{id}', UserController::class, 'updateProfile');

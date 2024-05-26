@@ -13,7 +13,7 @@
 			if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] !== 'subscriber' && $_SESSION['user_role'] !== 'admin')) {
 				$_SESSION['flash_message'] = "Veuillez vous connecter pour soumettre un commentaire.";
 				$_SESSION['flash_type'] = "danger";
-				header('Location: /MonBlog/post/' . $_POST['postId']);
+				header('Location: /Blog/post/' . $_POST['postId']);
 				exit();
 			}
 			
@@ -27,10 +27,10 @@
 				$commentRepository->addComment($commentContent, $postId, $userId);
 				$_SESSION['flash_message'] = "Votre commentaire est en attente de validation.";
 				$_SESSION['flash_type'] = "info";
-				header('Location: /MonBlog/post/' . $postId);
+				header('Location: /Blog/post/' . $postId);
 				exit();
 			} catch (PDOException $e) {
-				header('Location: /MonBlog/post/' . $postId);
+				header('Location: /Blog/post/' . $postId);
 				exit();
 			}
 		}
