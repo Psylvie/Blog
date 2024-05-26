@@ -42,5 +42,19 @@
 			echo $this->twig->render("$view", $data);
 			
 		}
+		
+		/**
+		 * @throws SyntaxError
+		 * @throws RuntimeError
+		 * @throws LoaderError
+		 */
+		public function handleErrors(): void
+		{
+			$isAdmin = false;
+			if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+				$isAdmin = true;
+			}
+			$this->render('Error/error.html.twig', ['is_admin' => $isAdmin]);
+		}
 	}
 	

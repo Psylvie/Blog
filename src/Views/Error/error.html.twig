@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card border-danger shadow">
+					<div class="card-header bg-danger text-white">
+						<h3 class="mb-0">
+							{% if is_admin %}
+								 OUPS !!
+								<h3>Erreur Admin </h3>
+								<p class="card-text text-white">
+									Une erreur s'est produite.
+									<br>Veuillez contacter la développeuse, soyez indulgent elle est en cours d'apprentissage 😊
+								</p>
+							{% else %}
+								 AIE !!!
+								<h3>Erreur/Accès refusé</h3>
+							{% endif %}
+						</h3>
+					</div>
+					<div class="card-body">
+						<p class="card-text text-white">
+							{% if is_admin %}
+								Une erreur s'est produite.
+							{% else %}
+						<p class="card-text text-danger">
+							Désolé, soit vous n'avez pas les autorisations nécessaires pour accéder à cette page, soit la page n'existe pas.
+						</p>
+
+							{% endif %}
+						</p>
+						<a href="/Blog" class="btn btn-secondary">Retour à l'accueil</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card shadow">
+					<div class="card-header bg-danger text-white">
+						<h5 class="mb-0">
+							Si vous pensez que c'est une erreur, veuillez contacter l'administrateur du site.
+						</h5>
+					</div>
+					<div class="card-body">
+						{% include 'Home/_contactForm.html.twig' %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

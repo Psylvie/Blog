@@ -127,7 +127,7 @@
 		/**
 		 *
 		 * @param int $postId
-		 * @throws \Exception Si les données d'entrée sont invalides ou s'il y a une erreur lors de la mise à jour de l'article.
+		 * @throws \Exception
 		 */
 		public function updatePost(int $postId)
 		{
@@ -141,8 +141,43 @@
 				if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
 					throw new \Exception("Tous les champs sont requis.");
 				}
+				$post = $this->postRepository->getPostById($postId);
+				$currentImage = $post->getImage();
+				$image = $currentImage;
+				
+				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+					$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
+					$filename = $_FILES['image']['name'];
+					$filetype = $_FILES['image']['type'];
+					$filesize = $_FILES['image']['size'];
+					$extension = pathinfo($filename, PATHINFO_EXTENSION);
+					
+					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
+						$_SESSION['flash_message'] = "Erreur de type de fichier";
+						$_SESSION['flash_type'] = "danger";
+					} elseif ($filesize > 1024 * 1024) {
+						$_SESSION['flash_message'] = "Erreur de taille de fichier";
+						$_SESSION['flash_type'] = "danger";
+					} else {
+						$newname = md5(uniqid());
+						$newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;
+						if (move_uploaded_file($_FILES['image']['tmp_name'], $newfilename)) {
+							$image = $newname . '.' . $extension;
+							if ($currentImage && $currentImage !== 'defaultImage.jpg') {
+								$currentImagePath = UPLOADS_POST_PATH . $currentImage;
+								if (file_exists($currentImagePath)) {
+									unlink($currentImagePath);
+								}
+							}
+						} else {
+							$_SESSION['flash_message'] = "Erreur lors du téléchargement de l'image.";
+							$_SESSION['flash_type'] = "danger";
+						}
+					}
+				}
+				
 				try {
-					$this->postRepository->updatePost($postId, $title, $chapo, $author, $content, $published);
+					$this->postRepository->updatePost($postId, $title, $chapo, $author, $content, $image,  $published);
 				} catch (\PDOException $e) {
 					throw new \Exception("Erreur de connexion à la base de données : " . $e->getMessage());
 				}

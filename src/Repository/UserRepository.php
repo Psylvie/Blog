@@ -18,6 +18,15 @@
 			$this->mysqlClient = DatabaseConnect::connect();
 		}
 		
+		public function findLatestUsers($limit = 3): bool|array
+		{
+			$sql = 'SELECT * FROM users ORDER BY createdAt DESC LIMIT :limit';
+			$statement = $this->mysqlClient->prepare($sql);
+			$statement->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->fetchAll(PDO::FETCH_ASSOC);
+		}
+		
 		/**
 		 * @throws Exception
 		 */
@@ -156,14 +165,15 @@
 		/**
 		 * @throws Exception
 		 */
-		public function updateProfile($userId, $name, $lastName, $email, $pseudo, $role): void
+		public function updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role): void
 		{
 			try {
-				$sql = 'UPDATE users SET name = :name, lastName = :lastName, pseudo = :pseudo, email = :email, role = :role WHERE id = :id';
+				$sql = 'UPDATE users SET name = :name, lastName = :lastName, image = :image  ,pseudo = :pseudo, email = :email, role = :role WHERE id = :id';
 				$statement = $this->mysqlClient->prepare($sql);
 				$statement->execute([
 					'name' => $name,
 					'lastName' => $lastName,
+					'image' => $image,
 					'pseudo' => $pseudo,
 					'email' => $email,
 					'role' => $role,

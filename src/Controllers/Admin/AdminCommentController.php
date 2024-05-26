@@ -1,13 +1,10 @@
 <?php
 	
 	namespace App\Controllers\Admin;
-	//	session_start();
-	
 	
 	use App\Controllers\Controller;
 	use App\Repository\CommentRepository;
 	use App\Repository\PostRepository;
-	use App\Repository\UserRepository;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
@@ -15,16 +12,14 @@
 	class AdminCommentController extends Controller
 	{
 		
-		private CommentRepository $CommentRepository;
-		private PostRepository $PostRepository;
-		private UserRepository $UserRepository;
+		private CommentRepository $commentRepository;
+		private PostRepository $postRepository;
 		
 		public function __construct()
 		{
 			parent::__construct();
-			$this->CommentRepository = new CommentRepository();
-			$this->PostRepository = new PostRepository();
-			$this->UserRepository = new UserRepository();
+			$this->commentRepository = new CommentRepository();
+			$this->postRepository = new PostRepository();
 		}
 		
 		/**
@@ -35,12 +30,12 @@
 		 */
 		public function showAllPosts()
 		{
-			$posts = $this->PostRepository->getAllPosts();
+			$posts = $this->postRepository->getAllPosts();
 			$postsData = [];
 			
 			foreach ($posts as $post) {
 				$postId = $post->getId();
-				$comments = $this->CommentRepository->findAllByPostId($postId);
+				$comments = $this->commentRepository->findAllByPostId($postId);
 				
 				$postsData[] = [
 					'post' => $post,
@@ -50,8 +45,6 @@
 			$this->render('/Admin/adminShowAllCommentsPosts.html.twig', ['postsData' => $postsData]);
 		}
 		
-		
-		
 		/**
 		 * @throws SyntaxError
 		 * @throws RuntimeError
@@ -60,16 +53,15 @@
 		 */
 		public function showAllComments($postId)
 		{
-			$comments = $this->CommentRepository->findAllByPostId($postId);
-			$post = $this->PostRepository->getPostById($postId);
+			$comments = $this->commentRepository->findAllByPostId($postId);
+			$post = $this->postRepository->getPostById($postId);
 			foreach ($comments as $comment) {
-				$user = $this->CommentRepository->findUserByComment($comment->getId());
+				$user = $this->commentRepository->findUserByComment($comment->getId());
 				$comment->user = $user;
 			}
 				$this->render('Admin/adminShowComments.html.twig', [
 					'comments' => $comments,
 					'post' => $post]);
-			
 		}
 		
 		public function handleCommentValidation()
@@ -81,13 +73,13 @@
 				if ($validationOption !== null && $commentId !== null) {
 					switch ($validationOption) {
 						case 'approved':
-							$this->CommentRepository->updateCommentStatus($commentId, 'approved');
+							$this->commentRepository->updateCommentStatus($commentId, 'approved');
 							break;
 						case 'rejected':
-							$this->CommentRepository->updateCommentStatus($commentId, 'rejected');
+							$this->commentRepository->updateCommentStatus($commentId, 'rejected');
 							break;
 						default:
-							$this->CommentRepository->updateCommentStatus($commentId, 'pending');
+							$this->commentRepository->updateCommentStatus($commentId, 'pending');
 							break;
 					}
 					$postId = $_POST['postId'] ?? null;
@@ -99,10 +91,8 @@
 						exit();
 					}
 					header('Location: /Blog/admin/showAllComments/{id}');
-					
-					
 				}
 			}
 		}
-		
 	}
+	

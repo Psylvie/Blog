@@ -61,6 +61,9 @@
 			exit();
 		}
 		
+		/**
+		 * @throws Exception
+		 */
 		public function update($userId)
 		{
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -69,8 +72,48 @@
 				$email = $_POST['email'] ?? '';
 				$pseudo = $_POST['pseudo'] ?? '';
 				$role = $_POST['role'] ?? '';
+				$user = $this->userRepository->find($userId);
+				if ($user === null) {
+					$_SESSION['flash_message'] = "L'utilisateur n'existe pas.";
+					$_SESSION['flash_type'] = "danger";
+					header("Location: /Blog/admin/users/list");
+					exit();
+				}
+				
+				$image = $user->getImage(); // Conserver l'ancienne image si elle n'est pas modifiée
+				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+					$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
+					$filename = $_FILES['image']['name'];
+					$filetype = $_FILES['image']['type'];
+					$filesize = $_FILES['image']['size'];
+					
+					$extension = pathinfo($filename, PATHINFO_EXTENSION);
+					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
+						$_SESSION['flash_message'] = "Erreur de type de fichier";
+						$_SESSION['flash_type'] = "danger";
+					} elseif ($filesize > 1024 * 1024) {
+						$_SESSION['flash_message'] = "Erreur de taille de fichier";
+						$_SESSION['flash_type'] = "danger";
+					} else {
+						$newname = md5(uniqid());
+						$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
+						if (move_uploaded_file($_FILES['image']['tmp_name'], $newfilename)) {
+							if ($image !== 'avatar.png') {
+								$oldImage = $image;
+								if ($oldImage !== null) {
+									unlink(UPLOADS_PROFILE_PATH . $oldImage);
+								}
+							}
+							$image = $newname . '.' . $extension;
+						} else {
+							$_SESSION['flash_message'] = "Erreur lors du téléchargement de l'image.";
+							$_SESSION['flash_type'] = "danger";
+						}
+					}
+				}
+				
 				try {
-					$this->userRepository->updateProfile($userId, $name, $lastName, $email, $pseudo, $role);
+					$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role);
 					$_SESSION['flash_message'] = "Les informations de l'utilisateur $name $lastName ont été mises à jour avec succès.";
 					$_SESSION['flash_type'] = "success";
 				} catch (Exception $e) {
@@ -81,6 +124,7 @@
 				exit();
 			}
 		}
+		
 		
 		/**
 		 * @throws SyntaxError
@@ -123,10 +167,11 @@
 					$newname = md5(uniqid());
 					$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
 					move_uploaded_file($_FILES['image']['tmp_name'], $newfilename);
+					$image = $newname . '.' . $extension;
 				}
 				try {
 					$userRepository = new UserRepository();
-					$userRepository->createUser($name, $lastName, $newname . '.' . $extension, $pseudo, $email, $hashedPassword, $role, $resetToken);
+					$userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
 					$_SESSION['flash_message'] = "L'utilisateur a été créé avec succès.";
 					$_SESSION['flash_type'] = "success";
 					header("Location: /Blog/admin/users/list");

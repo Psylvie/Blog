@@ -21,7 +21,8 @@
 										<div class="card h-100">
 											<div class="card-header">
 												<h5 class="card-title">{{ post.title|upper }}</h5>
-												<p class="card-text">{{ post.createdAt|date('d/m/Y')}}</p>
+												<p class="card-text">Mise a jour : {{ post.updateAt|date('d/m/Y')}} par {{ post.author }}</p>
+												<p class="card-text">{{ post.comments|length }} Commentaires</p>
 											</div>
 											<div class="card-body">
 												<div class="row">
@@ -33,7 +34,7 @@
 														{% endif %}
 													</div>
 													<div class="col-md-8">
-														<p class="card-text">{{ post.content|slice(0, 100) }}...</p>
+														<p class="card-text">{{ post.content}}...</p>
 													</div>
 												</div>
 											</div>
@@ -79,7 +80,8 @@
 								<div class="card mb-3">
 									<div class="card-header">
 										<h5 class="card-title">{{ post.title|upper }}</h5>
-										<p class="card-text">{{ post.createdAt|date('d/m/Y')}}</p>
+										<p class="card-text">Mise a jour : {{ post.updateAt|date('d/m/Y')}} par {{ post.author }}</p>
+										<p class="card-text">{{ post.comments|length }} Commentaires</p>
 									</div>
 									<div class="card-body">
 										<div class="row">

@@ -74,14 +74,14 @@
                         {% if post.image  %}
                             <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="...">
                         {% else %}
-                            <img src="/Blog/images/logo.png" class="card-img-top" style="height: 250px;" alt="...">
+                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;" alt="...">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ post.title|upper }}</h5>
                             <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
                         </div>
                         <div class="card-footer text-muted">
-                            Publié le : {{ post.createdAt|date('l j F Y')}}
+                            Mise a jour  : {{ post.updateAt|date('d/m/Y') }} par {{ post.author|capitalize }}
                         </div>
                     </div>
                 </div>

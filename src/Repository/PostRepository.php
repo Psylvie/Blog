@@ -23,7 +23,7 @@
 		 */
 		public function findLatestPosts(int $limit = 3): array
 		{
-			$sql = 'SELECT * FROM posts ORDER BY createdAt DESC LIMIT :limit';
+			$sql = 'SELECT * FROM posts ORDER BY updateAt DESC LIMIT :limit';
 			$statement = $this->mysqlClient->prepare($sql);
 			$statement->bindParam(':limit', $limit, PDO::PARAM_INT);
 			$statement->execute();
@@ -199,17 +199,21 @@
 			}
 		}
 		
-		public function updatePost($postId, $title, $chapo, $author, $content, $published): void
+		public function updatePost($postId, $title, $chapo, $author, $content, $image, $published): void
 		{
 			try {
-				$sql = "UPDATE posts SET title = :title, chapo = :chapo, author = :author, content = :content, published = :published WHERE id = :id";
+				$sql = "UPDATE posts SET title = :title, chapo = :chapo, author = :author, content = :content, image = :image, published = :published WHERE id = :id";
 				$stmt = $this->mysqlClient->prepare($sql);
 				$stmt->bindParam(':title', $title, PDO::PARAM_STR);
 				$stmt->bindParam(':chapo', $chapo, PDO::PARAM_STR);
 				$stmt->bindParam(':author', $author, PDO::PARAM_STR);
 				$stmt->bindParam(':content', $content, PDO::PARAM_STR);
+				$stmt->bindParam(':image', $image, PDO::PARAM_STR);
 				$stmt->bindParam(':published', $published, PDO::PARAM_INT);
 				$stmt->bindParam(':id', $postId, PDO::PARAM_INT);
+				if ($image){
+					$stmt->bindParam(':image', $image, PDO::PARAM_STR);
+				}
 				$stmt->execute();
 			} catch (PDOException $e) {
 				throw new PDOException("Erreur lors de la mise à jour du post : " . $e->getMessage());
