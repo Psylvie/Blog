@@ -1,45 +1,50 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+	{% set approvedComments = comments|filter(comment => comment.status == 'approved') %}
 	<div class="container mt-5">
 		<h1 class="text-center">Bienvenue sur ce post !</h1>
-		<h2 class="text-center mb-5"> Post {{ post.title }}</h2>
-		<div class="row align-items-start">
-			<div class="col-md-8 mx-auto">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">{{ post.title|upper }}</h5>
-						{% if post.image %}
-							<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid" alt="Post Image">
-						{% else %}
-							<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image">
-						{% endif %}
-						<p class="card-text">{{ post.chapo | raw }}</p>
-						<p class="card-text">{{ post.content | raw }}</p>
-						<p class="card-text">Auteur: {{ post.author }}</p>
-					</div>
-					<div class="card-footer text-muted">
-						<p class="card-text">Dernière mise à jour: {{ post.updateAt|date("d/m/Y") }} </p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row mt-5">
-			<div class="col-md-8 mx-auto">
-				<h2>Commentaires ({{ post.comments|length }})</h2>
-				<div class="accordion" id="accordionComments">
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#allCommentsCollapse" aria-expanded="true" aria-controls="allCommentsCollapse">
-								Voir les commentaires
-							</button>
-						</h2>
-						<div id="allCommentsCollapse" class="accordion-collapse collapse" aria-labelledby="allCommentsCollapse" data-bs-parent="#accordionComments">
-							<div class="accordion-body">
-								<ul class="list-group">
-									{% for comment in post.comments %}
-										<li class="list-group-item">{{ comment.content }}</li>
-									{% endfor %}
-								</ul>
+		<h2 class="text-center mb-8">Post {{ post.title }}</h2>
+		<div class="container mt-5">
+			<div class="row align-items-start">
+				<div class="col-md-8 mx-auto">
+					<div class="card shadow-lg">
+						<div class="card-body">
+							<h5 class="card-title text-center text-uppercase font-weight-bold">{{ post.title }}</h5>
+							{% if post.image %}
+								<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid rounded mb-1" alt="Post Image">
+							{% else %}
+								<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid rounded mb-1" alt="Post Image">
+							{% endif %}
+							<p class="card-text">{{ post.chapo | raw }}</p>
+							<hr>
+							<p class="card-text">{{ post.content | raw }}</p>
+							<p class="card-text"><strong>Auteur:</strong> {{ post.author }}</p>
+						</div>
+						<div class="card-footer text-muted text-center">
+							<p class="mb-0">Mise à jour: {{ post.updateAt|date("d/m/Y") }}</p>
+							<div class="row mt-5">
+								<div class="accordion" id="accordionComments">
+									<div class="accordion-item" style="background-color: #865353">
+										<h2 class="accordion-header" style="background-color: #865353">
+											<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#allCommentsCollapse" aria-expanded="true" aria-controls="allCommentsCollapse" style="background-color: #865353; color: white" >
+												<h4>Commentaires ({{ approvedComments|length }})</h4>
+											</button>
+										</h2>
+										<div id="allCommentsCollapse" class="accordion-collapse collapse" aria-labelledby="allCommentsCollapse" data-bs-parent="#accordionComments">
+											<div class="accordion-body">
+												<ul class="list-group text-start">
+													{% for comment in approvedComments %}
+														<li class="list-group-item">
+															<span>{{ comment.content|capitalize }}</span>
+															<br>
+															<i style="font-size: 12px">({{ comment.user.pseudo|capitalize }} le {{ comment.created_at|date('d/m/Y') }}:)</i>
+														</li>
+													{% endfor %}
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -49,12 +54,19 @@
 
 		<div class="row mt-5">
 			<div class="col-md-8 mx-auto d-flex justify-content-between">
-				<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">
-					Ajouter un commentaire
-				</button>
-					<div class="mt-auto">
-						<a href="/Blog/posts" class="btn btn-secondary">Retour aux posts</a>
-					</div>
+				{% if session.user_role in ['subscriber', 'admin'] %}
+					<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+						Ajouter un commentaire
+					</button>
+				{% else %}
+					<a href="/Blog/login" class="btn btn-secondary">Veuillez vous connecter pour soumettre un commentaire</a>
+				{% endif %}
+{#				<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">#}
+{#					Ajouter un commentaire#}
+{#				</button>#}
+				<div class="mt-auto">
+					<a href="/Blog/posts" class="btn btn-secondary">Retour aux posts</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -69,8 +81,8 @@
 				<div class="modal-body">
 					<!-- Form add comment -->
 					<form action="/Blog/addComment" method="post">
-						<div class="mb-3" style="background-color:  #865353">
-							<label for="comment" class="form-label"  >Votre commentaire :</label>
+						<div class="mb-3" style="background-color: #865353">
+							<label for="comment" class="form-label">Votre commentaire :</label>
 							<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
 						</div>
 						<input type="hidden" name="postId" value="{{ post.id }}">
@@ -81,5 +93,4 @@
 			</div>
 		</div>
 	</div>
-
 {% endblock %}

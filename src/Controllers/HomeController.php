@@ -127,4 +127,24 @@
 		{
 			$this->render('Home/contact.html.twig');
 		}
+		
+		/**
+		 * @throws SyntaxError
+		 * @throws RuntimeError
+		 * @throws LoaderError
+		 */
+		public function privacyPolicy()
+		{
+			$this->render('Home/privacyPolicy.html.twig');
+		}
+		
+		/**
+		 * @throws SyntaxError
+		 * @throws RuntimeError
+		 * @throws LoaderError
+		 */
+		public function legalMention()
+		{
+			$this->render('Home/legalMention.html.twig');
+		}
 	}
