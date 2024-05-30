@@ -25,6 +25,8 @@
 	
 	
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
+	$router->addRoute('/Blog/privacyPolicy', HomeController::class, 'privacyPolicy');
+	$router->addRoute('/Blog/legalMention', HomeController::class, 'legalMention');
 	$router->addRoute('/Blog/contact', HomeController::class, 'contact');
 	$router->addRoute('/Blog/inscription', RegisterController::class, 'registrationForm');
 	$router->addRoute('/Blog/register', RegisterController::class, 'register');

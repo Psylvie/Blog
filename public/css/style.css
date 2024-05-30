@@ -1,15 +1,69 @@
-
 body {
     background-color: rgba(34, 34, 34, 0.8);
     color: #ffffff;
 }
-
+.content-container {
+    margin-top: 20px;
+}
 .card {
     border-color: #865353;
+    box-shadow: 0 0 10px #865353;
 }
-
 .btn  {
     background-color: #865353;
     border-color: #c0c7c7;
     color: #ffffff;
 }
+a {
+    color: #865353;
+}
+a:hover {
+    color: #865353;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    --bs-accordion-btn-focus-border-color: #865353;
+
+}
+.accordion-button:not(.collapsed) {
+    background-color: #865353;
+    color: white;
+}
+.accordion-button.collapsed {
+    background-color: #865353;
+    color: white;
+}
+/* Flash-message*/
+.alert {
+    text-align: center;
+}
+.alert-danger {
+    background-color: #d32222;
+    color: white;
+    border-color:  #d32222;
+}
+.alert-info {
+    background-color: #000000;
+    color: white;
+    border-color: #000000;
+}
+.alert-success {
+    background-color: #865353;
+    color: white;
+    border-color: #865353;
+}
+/* navbar*/
+.nav-link {
+    font-weight: bold;
+}
+.nav-link:hover {
+    color: #865353;
+}
+.navbar {
+    padding: 0.5rem 1rem;
+}
+.navbar-brand img {
+    width: 150px;
+}
+
