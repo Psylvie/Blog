@@ -85,7 +85,7 @@
 					$postRepository->createPost($title, $chapo, $author, $content, $image, $userId, $published);
 					$_SESSION['flash_message'] = "Le post a été créé avec succès !";
 					$_SESSION['flash_type'] = "success";
-					header('Location: /Blog/admin/newPost');
+					header('Location: /Blog/admin/showPost');
 					exit;
 				} catch (PDOException $e) {
 					$_SESSION['flash_message'] = "Erreur de connexion à la base de données : " . $e->getMessage();

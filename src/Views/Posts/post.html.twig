@@ -2,7 +2,6 @@
 {% block content %}
 	{% set approvedComments = comments|filter(comment => comment.status == 'approved') %}
 	<div class="container mt-5">
-		<h1 class="text-center">Bienvenue sur ce post !</h1>
 		<h2 class="text-center mb-8">Post {{ post.title }}</h2>
 		<div class="container mt-5">
 			<div class="row align-items-start">
@@ -10,11 +9,13 @@
 					<div class="card shadow-lg">
 						<div class="card-body">
 							<h5 class="card-title text-center text-uppercase font-weight-bold">{{ post.title }}</h5>
-							{% if post.image %}
-								<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid rounded mb-1" alt="Post Image">
-							{% else %}
-								<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid rounded mb-1" alt="Post Image">
-							{% endif %}
+							<div class="w-100 overflow-hidden d-flex justify-content-center" style="max-height: 200px;">
+								{% if post.image %}
+									<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid rounded mb-1" style="max-width: 50%; max-height: 100%;" alt="Post Image">
+								{% else %}
+									<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid rounded mb-1" style="max-width: 50%; max-height: 100%;" alt="Post Image">
+								{% endif %}
+							</div>
 							<p class="card-text">{{ post.chapo | raw }}</p>
 							<hr>
 							<p class="card-text">{{ post.content | raw }}</p>
@@ -27,7 +28,7 @@
 									<div class="accordion-item" style="background-color: #865353">
 										<h2 class="accordion-header" style="background-color: #865353">
 											<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#allCommentsCollapse" aria-expanded="true" aria-controls="allCommentsCollapse" style="background-color: #865353; color: white" >
-												<h4>Commentaires ({{ approvedComments|length }})</h4>
+												<h4>Commentaire(s) ({{ approvedComments|length }})</h4>
 											</button>
 										</h2>
 										<div id="allCommentsCollapse" class="accordion-collapse collapse" aria-labelledby="allCommentsCollapse" data-bs-parent="#accordionComments">
@@ -37,7 +38,9 @@
 														<li class="list-group-item">
 															<span>{{ comment.content|capitalize }}</span>
 															<br>
-															<i style="font-size: 12px">({{ comment.user.pseudo|capitalize }} le {{ comment.created_at|date('d/m/Y') }}:)</i>
+															<i style="font-size: 12px">
+																<b>{{ comment.user.pseudo|capitalize }}</b> le {{ comment.created_at|date('d/m/Y') }} :
+															</i>
 														</li>
 													{% endfor %}
 												</ul>
@@ -51,19 +54,15 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="row mt-5">
 			<div class="col-md-8 mx-auto d-flex justify-content-between">
 				{% if session.user_role in ['subscriber', 'admin'] %}
-					<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+					<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addCommentModal">
 						Ajouter un commentaire
 					</button>
 				{% else %}
 					<a href="/Blog/login" class="btn btn-secondary">Veuillez vous connecter pour soumettre un commentaire</a>
 				{% endif %}
-{#				<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCommentModal">#}
-{#					Ajouter un commentaire#}
-{#				</button>#}
 				<div class="mt-auto">
 					<a href="/Blog/posts" class="btn btn-secondary">Retour aux posts</a>
 				</div>
@@ -74,20 +73,22 @@
 	<div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color:  #865353">
+				<div class="modal-header" style="background-color: #865353; color: #fff;">
 					<h5 class="modal-title" id="addCommentModalLabel">Ajouter un commentaire</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
-					<!-- Form add comment -->
+				<div class="modal-body" style="background-color: #f8f9fa; color: #212529;">
 					<form action="/Blog/addComment" method="post">
-						<div class="mb-3" style="background-color: #865353">
-							<label for="comment" class="form-label">Votre commentaire :</label>
+						<div class="mb-3">
+							<label for="comment" class="form-label">Commentaire :</label>
 							<textarea id="comment" name="comment" placeholder="Votre commentaire ici..." class="form-control" rows="5" required></textarea>
 						</div>
 						<input type="hidden" name="postId" value="{{ post.id }}">
-						<button type="submit" class="btn btn-dark">Envoyer</button>
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<h5 class="text-center">Votre commentaire sera soumis à l'administrateur pour validation</h5>
+						<div class="d-flex justify-content-end">
+							<button type="submit" class="btn btn-secondary me-2">Envoyer</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						</div>
 					</form>
 				</div>
 			</div>

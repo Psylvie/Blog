@@ -165,10 +165,10 @@
 		/**
 		 * @throws Exception
 		 */
-		public function updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role): void
+		public function updateProfile($userId, $name, $image, $lastName, $email, $pseudo): void
 		{
 			try {
-				$sql = 'UPDATE users SET name = :name, lastName = :lastName, image = :image  ,pseudo = :pseudo, email = :email, role = :role WHERE id = :id';
+				$sql = 'UPDATE users SET name = :name, lastName = :lastName, image = :image  ,pseudo = :pseudo, email = :email  WHERE id = :id';
 				$statement = $this->mysqlClient->prepare($sql);
 				$statement->execute([
 					'name' => $name,
@@ -176,7 +176,7 @@
 					'image' => $image,
 					'pseudo' => $pseudo,
 					'email' => $email,
-					'role' => $role,
+//					'role' => $role,
 					'id' => $userId,
 				]);
 			} catch (PDOException $e) {

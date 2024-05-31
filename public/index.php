@@ -1,8 +1,8 @@
 <?php
-	error_reporting(E_ALL);
-	ini_set('display_errors', true);
+//	error_reporting(E_ALL);
+//	ini_set('display_errors', true);
 	session_start();
-	print_r($_SESSION);
+//	print_r($_SESSION);
 	require __DIR__ . '/../vendor/autoload.php';
 	
 	use App\Controllers\Admin\AdminCommentController;
@@ -18,12 +18,10 @@
 	use App\Controllers\UserController;
 	use App\Router;
 	
-	$uri = $_SERVER['REQUEST_URI'];
-	$userRole = $_SESSION['user_role'] ?? null;
+	$uri = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
+	$userRole = filter_var($_SESSION['user_role'] ?? null);
 
 	$router = new Router();
-	
-	
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');
 	$router->addRoute('/Blog/privacyPolicy', HomeController::class, 'privacyPolicy');
 	$router->addRoute('/Blog/legalMention', HomeController::class, 'legalMention');

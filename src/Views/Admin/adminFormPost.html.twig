@@ -1,53 +1,61 @@
 {% extends 'admin.html.twig' %}
 
-{% block title %}Admin Home{% endblock %}
+{% block title %}Nouveau POST{% endblock %}
 
 {% block content %}
-	<h2>Welcome to the Admin Home!</h2>
-	<div class="card mb-4">
-		<div class="card-header">
-			Create a New Post
-		</div>
-		<div class="card-body">
-			<form action="/Blog/admin/createPost" method="post" enctype="multipart/form-data">
+	<div class="container">
+		<h2 class="mb-4 text-center">Création du nouveau Post</h2>
 
-				<div class="mb-3">
-					<label for="title" class="form-label">Title</label>
-					<input type="text" class="form-control" id="title" name="title" required>
-				</div>
-				<div class="mb-3">
-					<label for="chapo" class="form-label">Chapo</label>
-					<input type="text" class="form-control" id="chapo" name="chapo" required>
-				</div>
-				<div class="mb-3">
-					<label for="author" class="form-label">Author</label>
-					<input type="text" class="form-control" id="author" name="author" required>
-				</div>
-				<div class="mb-3">
-					<label for="content" class="form-label">Content</label>
-					<textarea class="form-control" id="content" name="content" rows="6" required></textarea>
-				</div>
-				<div class="mb-3">
-					<label for="image" class="form-label">Image</label>
-					<input type="file" class="form-control" id="image" name="image">
-				</div>
-				<div class="mb-3">
-					<label for="user_id" class="form-label">User ID</label>
-					<input type="number" class="form-control" id="user_id" name="user_id" value="{{ session.user_id }}" disabled>
-				</div>
-				<div class="mb-3 row">
-					<label for="published" class="col-sm-2 col-form-label">Publication</label>
-					<div class="col-sm-10">
-						<div class="btn-group" role="group" aria-label="Publication">
-							<input type="radio" class="btn-check" id="published" name="published" value="1" {% if post.published == 1 %}checked{% endif %}>
-							<label class="btn btn-outline-secondary" for="published">Publier maintenant</label>
-							<input type="radio" class="btn-check" id="draft" name="published" value="0" {% if post.published == 0 %}checked{% endif %}>
-							<label class="btn btn-outline-secondary" for="draft">Enregistrer en tant que brouillon</label>
+		<div class="card mb-4">
+			<div class="card-header" style="background-color: #865353; color: #ffffff;">
+				Nouveau Post
+			</div>
+			<div class="card-body" style="background-color: rgba(34, 34, 34, 0.8); color: #ffffff;">
+				<form action="/Blog/admin/createPost" method="post" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label for="title" class="form-label">Titre</label>
+						<input type="text" class="form-control" id="title" name="title" required>
+					</div>
+					<div class="mb-3">
+						<label for="chapo" class="form-label">Chapo</label>
+						<input type="text" class="form-control" id="chapo" name="chapo" required>
+					</div>
+					<div class="mb-3">
+						<label for="author" class="form-label">Auteur</label>
+						<input type="text" class="form-control" id="author" name="author" required>
+					</div>
+					<div class="mb-3">
+						<label for="content" class="form-label">Contenu</label>
+						<textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+					</div>
+					<div class="mb-3">
+						<label for="image" class="form-label">Image</label>
+						<input type="file" class="form-control" id="image" name="image">
+					</div>
+					<div class="mb-3">
+						<label for="user_id" class="form-label"></label>
+						<input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ session.user_id }}" disabled>
+					</div>
+					<div class="mb-3 row">
+						<label for="published" class="col-sm-2 col-form-label">Publication</label>
+						<div class="col-sm-10">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" id="published" name="published" value="1" {% if post.published == 1 %}checked{% endif %}>
+								<label class="form-check-label" for="published">
+									Publier maintenant
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" id="draft" name="published" value="0" {% if post.published == 0 %}checked{% endif %}>
+								<label class="form-check-label" for="draft">
+									Enregistrer en tant que brouillon
+								</label>
+							</div>
 						</div>
 					</div>
-				</div>
-				<button type="submit" class="btn btn-secondary">Submit</button>
-			</form>
+					<button type="submit" class="btn btn-dark">Créer le Post</button>
+				</form>
+			</div>
 		</div>
 	</div>
 {% endblock %}

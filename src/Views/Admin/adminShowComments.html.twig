@@ -94,36 +94,40 @@
 	</div>														{#	modal validation #}
 	<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content" style="background-color: rgba(34, 34, 34, 0.8); color: #ffffff;">
-				<div class="modal-header" style="border-color: #865353; background-color: #865353; color: #ffffff;">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #865353; color: #fff;">
 					<h5 class="modal-title" id="commentModalLabel">Validation du commentaire</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: #ffffff;"></button>
 				</div>
-				<div class="modal-body">
-					<p class="fw-bold">Commentaire ajouté le {{ comment.createdAt|date('d/m/Y') }}</p>
-					<p class="fw-bold">Post : {{ post.title|upper }} par {{ post.author|capitalize }}</p>
+				<div class="modal-body" style="background-color: #f8f9fa; color: #212529;">
+					<p class="fw-bold">Commentaire ajouté le {{ comment.createdAt|date('d/m/Y') }} par {{ comment.user_id }}</p>
+					<p class="fw-bold">Post : {{ post.title|upper }}</p>
+					<p class="fw-bold">Auteur: {{ post.author|capitalize }} </p>
 					<hr style="border-color: #865353;">
-					<div id="commentContentDisplay" class="mb-3">{{ comment.content }}</div>
+					<h5>Commentaire :</h5>
+					<div id="commentContentDisplay" class="mb-3">{{ comment.content|capitalize }} </div>
 					<form action="/Blog/admin/handleCommentValidation" method="post" enctype="multipart/form-data">
 						<div class="mb-3">
-							<label for="validationOption" class="form-label" style="color: #ffffff;">Action à effectuer :</label>
+							<label for="validationOption" class="form-label">Action à effectuer :</label>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="validationOption" id="validateOption_{{ comment.id }}" value="approved" style="appearance: none;">
-								<label class="form-check-label" for="validateOption_{{ comment.id }}" style="color: #ffffff;">Valider le commentaire</label>
+								<label class="form-check-label" for="validateOption_{{ comment.id }}">Valider le commentaire</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="validationOption" id="rejectOption_{{ comment.id }}" value="rejected" style="appearance: none;">
-								<label class="form-check-label" for="rejectOption_{{ comment.id }}" style="color: #ffffff;">Rejeter le commentaire</label>
+								<label class="form-check-label" for="rejectOption_{{ comment.id }}">Rejeter le commentaire</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="validationOption" id="pendingOption_{{ comment.id }}" value="pending" checked style="appearance: none;">
-								<label class="form-check-label" for="pendingOption_{{ comment.id }}" style="color: #ffffff;">Laisser en attente</label>
+								<label class="form-check-label" for="pendingOption_{{ comment.id }}">Laisser en attente</label>
 							</div>
 						</div>
 						<input type="hidden" name="postId" value="{{ post.id }}">
 						<input type="hidden" id="commentIdInput" name="commentId" value="{{ comment.id }}">
 						<input type="hidden" id="commentContentInput" name="commentContent" value="{{ comment.content }}">
+						<div class="d-flex justify-content-end">
 						<button type="submit" class="btn btn-secondary">Valider</button>
+						</div>
 					</form>
 				</div>
 			</div>

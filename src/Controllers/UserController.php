@@ -96,7 +96,6 @@
 				$lastName = $_POST['lastName'] ?? '';
 				$pseudo = $_POST['pseudo'] ?? '';
 				$email = $_POST['email'] ?? '';
-				$role = $_POST['role'] ?? '';
 				$currentPassword = $_POST['currentPassword'] ?? '';
 				$newPassword = $_POST['newPassword'] ?? '';
 				$confirmPassword = $_POST['confirmPassword'] ?? '';
@@ -137,7 +136,7 @@
 									$_SESSION['flash_type'] = "danger";
 								}
 							}
-							$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role);
+							$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo);
 							if (!empty($newPassword)) {
 								$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 								$this->userRepository->updatePassword($email, $hashedPassword);
@@ -147,10 +146,12 @@
 							header("Location: /Blog/user/{$userId}");
 							exit();
 						} else {
-							$_SESSION['alert_message'] = "Le nouveau mot de passe et la confirmation ne correspondent pas.";
+							$_SESSION['flash_message'] = "Le nouveau mot de passe et la confirmation ne correspondent pas.";
 						}
 					} else {
-						$_SESSION['alert_message'] = "L'utilisateur n'existe pas ou le mot de passe actuel est incorrect.";
+						$_SESSION['flash_message'] = "Les données ne sont pas correctes ou le mot de passe actuel est incorrect.";
+						$_SESSION['flash_type'] = "danger";
+						header("Location: /Blog/user/{$userId}");
 					}
 				}
 			}
