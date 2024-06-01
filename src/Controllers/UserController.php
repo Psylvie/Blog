@@ -5,6 +5,7 @@
 	
 	use App\Repository\UserRepository;
 	use Exception;
+	use JetBrains\PhpStorm\NoReturn;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
@@ -36,24 +37,24 @@
 		/**
 		 * @throws Exception
 		 */
-		public function deleteUser($userId): void
+		#[NoReturn] public function deleteUser($userId): void
 		{
-			if (!isset($_SESSION['user_id'])) {
+			$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
+			
+			if (!$userId) {
 				header("Location: /Blog/login");
 				exit();
 			}
 			
 			$user = $this->userRepository->find($userId);
 			if ($user === null) {
-				$_SESSION['flash_message'] = "L'utilisateur n'existe pas.";
-				$_SESSION['flash_type'] = "danger";
+				$this->setFlashMessage("danger", "L'utilisateur n'existe pas.");
 				header("Location: /Blog/user/{$userId}");
 				exit();
 			}
 			
 			if (!password_verify($_POST['currentPassword'], $user->getPassword())) {
-				$_SESSION['flash_message'] = "Le mot de passe actuel est incorrect.";
-				$_SESSION['flash_type'] = "danger";
+				$this->setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
 				header("Location: /Blog/user/{$userId}");
 				exit();
 			}
@@ -62,9 +63,7 @@
 			if ($user->getImage() !== null) {
 				unlink(UPLOADS_PROFILE_PATH . $user->getImage());
 			}
-			
-			$_SESSION['flash_message'] = "Votre profil a été supprimé avec succès.";
-			$_SESSION['flash_type'] = "success";
+			$this->setFlashMessage("success", "Votre compte a été supprimé avec succès.");
 			session_destroy();
 			header("Location: /Blog/");
 			exit();
@@ -80,8 +79,7 @@
 		public function updateProfile(): void
 		{
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$userId = $_SESSION['user_id'] ?? null;
-				$name = $_POST['name'] ?? '';
+				$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);				$name = $_POST['name'] ?? '';
 				$lastName = $_POST['lastName'] ?? '';
 				$pseudo = $_POST['pseudo'] ?? '';
 				$email = $_POST['email'] ?? '';
@@ -103,12 +101,10 @@
 								
 								$extension = pathinfo($filename, PATHINFO_EXTENSION);
 								if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-									$_SESSION['flash_message'] = "Erreur de type de fichier";
-									$_SESSION['flash_type'] = "danger";
+									$this->setFlashMessage("danger", "Le type de fichier n'est pas autorisé.");
 								}
 								if ($filesize > 1024 * 1024) {
-									$_SESSION['flash_message'] = "Erreur de taille de fichier";
-									$_SESSION['flash_type'] = "danger";
+									$this->setFlashMessage("danger", "Le fichier est trop volumineux.");
 								}
 								$newname = md5(uniqid());
 								$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
@@ -121,8 +117,7 @@
 									}
 									$image = $newname . '.' . $extension;
 								} else {
-									$_SESSION['flash_message'] = "Erreur lors du téléchargement de l'image.";
-									$_SESSION['flash_type'] = "danger";
+									$this->setFlashMessage("danger", "Une erreur est survenue lors de l'envoi du fichier.");
 								}
 							}
 							$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo);
@@ -130,16 +125,18 @@
 								$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 								$this->userRepository->updatePassword($email, $hashedPassword);
 							}
-							$_SESSION['flash_message'] = "Les informations du profil ont été mises à jour avec succès.";
-							$_SESSION['flash_type'] = "success";
+							$this->setSessionData('user_name', $name);
+							$this->setSessionData('user_last_name', $lastName);
+							$this->setSessionData('user_email', $email);
+							$this->setSessionData('user_pseudo', $pseudo);
+							$this->setFlashMessage("success", "Vos informations ont été mises à jour avec succès.");
 							header("Location: /Blog/user/{$userId}");
 							exit();
 						} else {
-							$_SESSION['flash_message'] = "Le nouveau mot de passe et la confirmation ne correspondent pas.";
+							$this->setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
 						}
 					} else {
-						$_SESSION['flash_message'] = "Les données ne sont pas correctes ou le mot de passe actuel est incorrect.";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
 						header("Location: /Blog/user/{$userId}");
 					}
 				}
