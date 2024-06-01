@@ -126,6 +126,7 @@
 		 */
 		public function createUser()
 		{
+			
 			$this->render('Admin/adminCreateUser.html.twig');
 		}
 		

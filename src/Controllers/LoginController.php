@@ -245,6 +245,7 @@
 			$this->setFlashMessage("success", "Vous êtes déconnecté");
 			session_unset();
 			session_destroy();
+			$this->setSessionData('csrfToken', null);
 //		if (isset($_COOKIE['user_id'])) {
 //			setcookie('user_id', '', time() - 3600, '/');
 //		}

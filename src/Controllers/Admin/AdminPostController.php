@@ -49,12 +49,19 @@
 		 */
 		public function createPost()
 		{
-			if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-				$title = isset($_POST['title']) ? trim(filter_var($_POST['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$chapo = isset($_POST['chapo']) ? trim(filter_var($_POST['chapo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$author = isset($_POST['author']) ? trim(filter_var($_POST['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$content = isset($_POST['content']) ? trim(filter_var($_POST['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$published = isset($_POST['published']) ? filter_var($_POST['published'], FILTER_VALIDATE_INT) : 1;
+			$requestMethod = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			
+			if ($requestMethod === 'POST') {
+				$title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$title = trim($title);
+				$chapo = filter_input(INPUT_POST, 'chapo', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$chapo = trim($chapo);
+				$author = filter_input(INPUT_POST, 'author', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$author = trim($author);
+				$content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$content = trim($content);
+				$published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_INT);
+				$published = $published ?? 1;
 				$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
 				$image = null;
 				if (empty($title) || empty($chapo) || empty($author) || empty($content)) {

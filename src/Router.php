@@ -1,8 +1,10 @@
 <?php
-	
 	namespace App;
 	
-	class Router {
+	use Exception;
+	
+	class Router
+	{
 		protected array $routes = [];
 		
 		public function addRoute($route, $controller, $action): void
@@ -14,7 +16,7 @@
 		}
 		
 		/**
-		 * @throws \Exception
+		 * @throws Exception
 		 */
 		public function dispatch($uri): void
 		{
@@ -39,7 +41,7 @@
 				}
 			}
 			if (!$found) {
-				throw new \Exception('No route defined for this URI: ' . $uri);
+				throw new Exception('No route defined for this URI: ' . $uri);
 			}
 		}
 	}

@@ -67,9 +67,10 @@
 		public function handleCommentValidation()
 		{
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-				$validationOption = $_POST['validationOption'] ?? null;
-				$commentId = $_POST['commentId'] ?? null;
-				$commentContent = $_POST['commentContent'] ?? null;
+				$validationOption = isset($_POST['validationOption']) ? filter_var($_POST['validationOption'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+				$commentId = isset($_POST['commentId']) ? filter_var($_POST['commentId'], FILTER_VALIDATE_INT) : null;
+				$commentContent = isset($_POST['commentContent']) ? filter_var($_POST['commentContent'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+				$postId = isset($_POST['postId']) ? filter_var($_POST['postId'], FILTER_VALIDATE_INT) : null;
 				if ($validationOption !== null && $commentId !== null) {
 					switch ($validationOption) {
 						case 'approved':

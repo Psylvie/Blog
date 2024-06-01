@@ -21,10 +21,15 @@
 		 * @throws SyntaxError
 		 * @throws RuntimeError
 		 * @throws LoaderError
+		 * @throws Exception
 		 */
 		public function registrationForm()
 		{
-			$this->render('Auth/register.html.twig');
+			$csrfToken = bin2hex(random_bytes(32));
+			$this->setSessionData('csrfToken', $csrfToken);
+			$this->render('Auth/register.html.twig',[
+				'csrfToken' => $csrfToken
+			]);
 		}
 		
 		/**
@@ -33,12 +38,25 @@
 		public function register()
 		{
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$name = isset($_POST["name"]) ? trim($_POST["name"]) : '';
-				$lastName = isset($_POST["lastName"]) ? trim($_POST["lastName"]) : '';
-				$pseudo = isset($_POST["pseudo"]) ? trim($_POST["pseudo"]) : '';
-				$email = isset($_POST["email"]) ? trim($_POST["email"]) : '';
-				$role = isset($_POST["role"]) ? trim($_POST["role"]) : '';
-				$resetToken = isset($_POST["resetToken"]) ? trim($_POST["resetToken"]) : '';
+				$csrfToken = filter_input(INPUT_POST, 'csrfToken', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				if (!hash_equals($this->getSessionData('csrfToken'), $csrfToken)) {
+					$this->setFlashMessage("danger", "Jeton CSRF invalide");
+					header("Location: /Blog/inscription");
+					exit();
+				}
+				$name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$lastName = filter_input(INPUT_POST, "lastName", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$pseudo = filter_input(INPUT_POST, "pseudo", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+				$role = filter_input(INPUT_POST, "role", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$resetToken = filter_input(INPUT_POST, "resetToken", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				
+				if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/', $password)) {
+					$this->setFlashMessage("danger", "Le mot de passe doit contenir entre 8 et 15 caractères, dont au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.");
+					header("Location: /Blog/inscription");
+					exit();
+				}
 				$hashedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
 				$image = null;
 				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
