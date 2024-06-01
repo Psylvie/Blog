@@ -216,7 +216,7 @@
 		/**
 		 * @return bool
 		 */
-		public function isFirstLoginDone(): bool
+		public function getFirstLoginDone(): bool
 		{
 			return $this->firstLoginDone;
 		}

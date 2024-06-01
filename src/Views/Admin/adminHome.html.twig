@@ -20,8 +20,8 @@
 									<h5 class="card-title">{{ post.title|upper }}</h5>
 									<p class="card-text">{{ post.content|slice(0, 100) }}...</p>
 								</div>
-								<div class="card-footer text-muted">
-									Mise a jour  : {{ post.updateAt|date('d/m/Y') }} par {{ post.author }}
+								<div class="card-footer h-100">
+									Mise a jour: {{ post.updateAt|date('d/m/Y') }} par {{ post.author }}
 								</div>
 							</div>
 						</div>
@@ -47,13 +47,12 @@
 									{% else %}
 										<img src="/Blog/public/users/avatar.png" class="card-img-top img-fluid" alt="Post Image" style="height: 200px;">
 									{% endif %}
-{#									<img src="/Blog/public/users/{{ user.image }}" class="card-img-top img-fluid" alt="User Image" style="height: 200px;">#}
 									<h5 class="card-title">{{ user.name }} {{ user.lastName }}</h5>
 									<p class="card-text">Email: {{ user.email }}</p>
 									<p class="card-text">Rôle: {{ user.role|capitalize }}</p>
 									<p class="card-text">Pseudo: {{ user.pseudo }}</p>
 								</div>
-								<div class="card-footer text-muted">
+								<div class="card-footer h-100">
 									Inscrit le : {{ user.createdAt|date('d/m/Y') }}
 								</div>
 							</div>

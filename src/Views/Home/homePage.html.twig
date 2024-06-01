@@ -4,11 +4,10 @@
     <div class="container mt-5">
         <h1 class="text-center">Sylvie Peuzin, la développeuse qu'il vous faut !!!!</h1>
     </div>
-
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-4">
-                <div class="card">
+            <div class="col-md-4 d-flex flex-column">
+                <div class="card flex-grow-1">
                     <img src="public/images/photoMoi.jpg" class="card-img-top" alt="Photo de moi">
                     <div class="card-body">
                         <div class="container mt-3">
@@ -19,10 +18,18 @@
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <div class="card mt-3">
+            <div class="col-md-8 d-flex flex-column">
+                <div class="card flex-grow-1 mt-3 mt-md-0">
                     <div class="card-body">
-                        <p>Je suis Sylvie, développeuse d'applications PHP/Symfony en alternance. Passionnée par la programmation et le développement web, je cherche continuellement à apprendre et à m'améliorer. En dehors du code, j'adore la musique, les voyages et découvrir de nouvelles cultures.</p>
+                        <h5>Présentation</h5>
+                        <p>Je suis Sylvie, développeuse d'applications PHP/Symfony en alternance.
+                            Passionnée par la programmation et le développement web, je cherche continuellement à apprendre et à m'améliorer.
+                            En dehors du code, j'adore la musique, les voyages et découvrir de nouvelles cultures.
+                        </p>
+                        <h5>Résumé Professionnel</h5>
+                        <p>Avec plus de 2 années d'expérience en développement web,
+                            j'ai travaillé sur divers projets allant de sites web statiques à des applications web complexes.
+                            Mon expertise en PHP/Symfony m'a permis de créer des solutions robustes et performantes.</p>
                         <div class="row mt-4">
                             <div class="col-sm-3">
                                 <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" class="btn btn-secondary w-100 mb-2">Facebook</a>
@@ -57,31 +64,29 @@
 
     <div class="container mt-5">
         <h2 class="text-center mb-5">Découvrez les derniers articles</h2>
-        <div class="row align-items-start">
+        <div class="row">
             {% for post in posts %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
+                <div class="col-md-4 mb-4 d-flex">
+                    <div class="card h-100 d-flex flex-column">
                         {% if post.image %}
-                            <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="...">
+                            <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="image du post">
                         {% else %}
-                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;" alt="...">
+                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;" alt="image par defaut">
                         {% endif %}
-                        <div class="card-body">
+                        <div class="card-body flex-grow-1 d-flex flex-column">
                             <h5 class="card-title">{{ post.title|upper }}</h5>
-                            <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
+                            <p class="card-text flex-grow-1">{{ post.content|slice(0, 100) }}...</p>
                         </div>
-                        <div class="card-footer text-muted">
+                        <div class="card-footer h-100">
                             Mise à jour : {{ post.updateAt|date('d/m/Y') }} par {{ post.author|capitalize }}
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-
         <div class="text-center mt-5">
             <a href="/Blog/posts" class="btn btn-secondary">Voir tous les articles</a>
         </div>
     </div>
-
     {% include 'Home/_contactForm.html.twig' %}
 {% endblock %}

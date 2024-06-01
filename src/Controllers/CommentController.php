@@ -25,7 +25,7 @@
 				$mysqlClient = DatabaseConnect::connect();
 				$commentRepository = new CommentRepository($mysqlClient);
 				$commentRepository->addComment($commentContent, $postId, $userId);
-				$_SESSION['flash_message'] = "Votre commentaire est en attente de validation.";
+				$_SESSION['flash_message'] = "Votre commentaire a été soumis avec succès et est en attente de validation.";
 				$_SESSION['flash_type'] = "info";
 				header('Location: /Blog/post/' . $postId);
 				exit();

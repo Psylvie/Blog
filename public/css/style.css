@@ -2,25 +2,30 @@ body {
     background-color: rgba(34, 34, 34, 0.8);
     color: #ffffff;
 }
-.content-container {
-    margin-top: 20px;
-}
 .card {
     border-color: #865353;
     box-shadow: 0 0 10px #865353;
+}
+.card-footer {
+    background-color: white;
+    border-color: #865353;
+    color: black;
+}
+a {
+    color: #865353;
+}
+a:hover {
+    color: black;
 }
 .btn  {
     background-color: #865353;
     border-color: #c0c7c7;
     color: #ffffff;
 }
-a {
+.btn:hover {
+    background-color: black;
     color: #865353;
 }
-a:hover {
-    color: #865353;
-}
-
 .accordion-button:focus {
     box-shadow: none;
     --bs-accordion-btn-focus-border-color: #865353;
@@ -43,12 +48,8 @@ a:hover {
     color: white;
     border-color:  #d32222;
 }
-.alert-info {
-    background-color: #000000;
-    color: white;
-    border-color: #000000;
-}
-.alert-success {
+
+.alert-success, .alert-info {
     background-color: #865353;
     color: white;
     border-color: #865353;
@@ -65,5 +66,34 @@ a:hover {
 }
 .navbar-brand img {
     width: 150px;
+}
+.form-control:focus {
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: #865353;
+    box-shadow: 0 0 0 0.2rem rgba(236, 136, 136, 0.25);
+}
+.form-control:focus,
+.form-control:valid {
+    background-color: white;
+}
+/* footer */
+footer {
+    padding: 2px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .card img {
+        max-width: 100%;
+        height: auto;
+    }
+    footer {
+        font-size: 11px;
+    }
 }
 
