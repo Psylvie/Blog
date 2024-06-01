@@ -2,6 +2,9 @@
 //	error_reporting(E_ALL);
 //	ini_set('display_errors', true);
 	session_start();
+	header('X-Content-Type-Options: nosniff');
+	header('X-Frame-Options: SAMEORIGIN');
+	header('X-XSS-Protection: 1; mode=block');
 	print_r($_SESSION);
 	require __DIR__ . '/../vendor/autoload.php';
 	
