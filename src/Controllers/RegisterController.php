@@ -49,12 +49,10 @@
 					
 					$extension = pathinfo($filename, PATHINFO_EXTENSION);
 					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-						$_SESSION['flash_message'] = "Erreur de type de fichier";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Erreur de type de fichier");
 					}
 					if ($filesize > 1024 * 1024) {
-						$_SESSION['flash_message'] = "Erreur de taille de fichier";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Erreur de taille de fichier");
 					}
 					$newname = md5(uniqid());
 					$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
@@ -65,13 +63,11 @@
 				try {
 					$userRepository = new UserRepository();
 					$userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
-					$_SESSION['flash_message'] = "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.";
-					$_SESSION['flash_type'] = "success";
+					$this->setFlashMessage("success", "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.");
 					header("Location: /Blog/");
 					exit();
 				} catch (Exception $e) {
-					$_SESSION['flash_message'] = "Erreur lors de la création de votre compte : " . $e->getMessage();
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Erreur lors de la création de votre compte : " . $e->getMessage());
 					header("Location: /Blog/inscription");
 					exit();
 				}

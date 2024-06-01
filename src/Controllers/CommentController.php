@@ -10,23 +10,20 @@
 	{
 		public function addComment(): void
 		{
-			if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] !== 'subscriber' && $_SESSION['user_role'] !== 'admin')) {
-				$_SESSION['flash_message'] = "Veuillez vous connecter pour soumettre un commentaire.";
-				$_SESSION['flash_type'] = "danger";
+			$userRole = $this->getSessionData('user_role');
+			$userId = $this->getSessionData('user_id');
+			if (!$userRole || $userRole !== 'subscriber' && $userRole !== 'admin') {
+				$this->setFlashMessage("danger", "Veuillez vous connecter pour soumettre un commentaire.");
 				header('Location: /Blog/post/' . $_POST['postId']);
 				exit();
 			}
-			
 			$commentContent = $_POST['comment'];
 			$postId = $_POST['postId'];
-			$userId = $_SESSION['user_id'];
-			
 			try {
 				$mysqlClient = DatabaseConnect::connect();
 				$commentRepository = new CommentRepository($mysqlClient);
 				$commentRepository->addComment($commentContent, $postId, $userId);
-				$_SESSION['flash_message'] = "Votre commentaire a été soumis avec succès et est en attente de validation.";
-				$_SESSION['flash_type'] = "info";
+				$this->setFlashMessage("info", "Votre commentaire a été soumis avec succès et est en attente de validation.");
 				header('Location: /Blog/post/' . $postId);
 				exit();
 			} catch (PDOException $e) {

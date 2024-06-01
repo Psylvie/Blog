@@ -85,8 +85,7 @@
 					$postId = $_POST['postId'] ?? null;
 					if ($postId !== null) {
 						$redirectUrl = "/Blog/admin/showAllComments/$postId";
-						$_SESSION['flash_message'] = 'Commentaire mis à jour avec succès !';
-						$_SESSION['flash_type'] = 'success';
+						$this->setFlashMessage('success', 'Commentaire validé avec succès !');
 						header("Location: $redirectUrl");
 						exit();
 					}

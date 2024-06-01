@@ -19,6 +19,7 @@
 	use App\Router;
 	
 	$uri = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
+	
 	$userRole = filter_var($_SESSION['user_role'] ?? null);
 
 	$router = new Router();
@@ -70,7 +71,6 @@
 	} catch (\Exception $e) {
 		if (str_starts_with($uri, '/Blog/')){
 			header('Location: /Blog/Error/');
-			exit();
 		}
-		echo 'Error: ' . $e->getMessage();
+		error_log('Error: ' . $e->getMessage());
 	}

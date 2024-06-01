@@ -55,5 +55,31 @@
 			}
 			$this->render('Error/error.html.twig', ['is_admin' => $isAdmin]);
 		}
+		
+		public function getSessionData($key, $filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS)
+		{
+			$data = $_SESSION[$key] ?? null;
+			return filter_var($data, $filter);
+		}
+		public function setSessionData($key, $value): void
+		{
+			$_SESSION[$key] = $value;
+		}
+		public function setFlashMessage($type, $message): void
+		{
+			$_SESSION['flash_type'] = $type;
+			$_SESSION['flash_message'] = $message;
+		}
+		
+		public function getFlashMessage(): array
+		{
+			$flash = [];
+			if (isset($_SESSION['flash_type']) && isset($_SESSION['flash_message'])) {
+				$flash['type'] = $_SESSION['flash_type'];
+				$flash['message'] = $_SESSION['flash_message'];
+				unset($_SESSION['flash_type'], $_SESSION['flash_message']);
+			}
+			return $flash;
+		}
 	}
 	

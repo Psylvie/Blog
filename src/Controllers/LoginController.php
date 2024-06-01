@@ -39,18 +39,16 @@
 				$user = $userRepository->findByEmail($email);
 				if ($user) {
 					if (!password_verify($password, $user->getPassword())) {
-						$_SESSION['flash_message'] = "Mot de passe incorrect";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Mot de passe incorrect");
 						header('Location: /MonBlog/login');
 					} else {
-						$_SESSION['user_id'] = $user->getId();
-						$_SESSION['user_name'] = $user->getName();
-						$_SESSION['user_last_name'] = $user->getLastName();
-						$_SESSION['user_pseudo'] = $user->getPseudo();
-						$_SESSION['user_role'] = $user->getRole();
-						$_SESSION['user_email'] = $user->getEmail();
-						$_SESSION['flash_message'] = "Bienvenue, " . $user->getName() . " ! Connexion réussie !";
-						$_SESSION['flash_type'] = "success";
+						$this->setSessionData('user_id', $user->getId());
+						$this->setSessionData('user_name', $user->getName());
+						$this->setSessionData('user_last_name', $user->getLastName());
+						$this->setSessionData('user_pseudo', $user->getPseudo());
+						$this->setSessionData('user_role', $user->getRole());
+						$this->setSessionData('user_email', $user->getEmail());
+						$this->setFlashMessage("success", "Bienvenue, " . $user->getName() . " ! Connexion réussie !");
 						if (!$user->getFirstLoginDone()) {
 							$userRepository->updateFirstLoginDone($user->getId(), true);
 						}
@@ -65,8 +63,7 @@
 						}
 					}
 				} else {
-					$_SESSION['flash_message'] = "Utilisateur non trouvé";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Utilisateur non trouvé");
 					header('Location: /Blog/login');
 				}
 				exit();
@@ -100,20 +97,15 @@
 					$userRepository->setResetToken($user->getEmail(), $resetToken);
 					
 					$this->sendPasswordResetEmail($email, $resetToken);
-					
-					$_SESSION['flash_message'] = "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.";
-					$_SESSION['flash_type'] = "success";
+					$this->setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
 				} else {
-					
-					$_SESSION['flash_message'] = "Aucun utilisateur trouvé avec cette adresse e-mail.";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
 				}
 				
 				header('Location: /Blog/login');
 				exit();
 			}
 		}
-		
 		
 		private function sendPasswordResetEmail($email, $token)
 		{
@@ -164,14 +156,12 @@
 					]);
 					return;
 				} else {
-					$_SESSION['flash_message'] = "Utilisateur non trouvé.";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Utilisateur non trouvé.");
 					header('Location: /Blog/login');
 					exit();
 				}
 			} else {
-				$_SESSION['flash_message'] = "Token de réinitialisation invalide.";
-				$_SESSION['flash_type'] = "danger";
+				$this->setFlashMessage("danger", "Token de réinitialisation invalide.");
 				header('Location: /Blog/login');
 				exit();
 			}
@@ -189,8 +179,7 @@
 				$password = $_POST['password'];
 				$confirmPassword = $_POST['confirm_password'];
 				if ($password !== $confirmPassword) {
-					$_SESSION['flash_message'] = "Les mots de passe ne correspondent pas.";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
 					header('Location: /Blog/newPassword/' . $resetToken);
 					exit();
 					
@@ -201,8 +190,7 @@
 				if ($user) {
 					$userRepository->updatePassword($user->getEmail(), password_hash($password, PASSWORD_DEFAULT));
 					$userRepository->setResetToken($user->getEmail(), null);
-					$_SESSION['flash_message'] = "Votre mot de passe a été reinitialisé avec succès.";
-					$_SESSION['flash_type'] = "success";
+					$this->setFlashMessage("success", "Votre mot de passe a été réinitialisé avec succès.");
 					header('Location: /Blog/');
 					exit();
 				}
@@ -236,14 +224,10 @@
 					$userRepository->setResetToken($user->getEmail(), $resetToken);
 					
 					$this->sendPasswordResetEmail($email, $resetToken);
-					
-					$_SESSION['flash_message'] = "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.";
-					$_SESSION['flash_type'] = "success";
-					
+					$this->setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
 					header('Location: /Blog/login');
 				} else {
-					$_SESSION['flash_message'] = "Aucun utilisateur trouvé avec cette adresse e-mail.";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
 					header('Location: /Blog/first-connection');
 				}
 				exit();
@@ -258,8 +242,7 @@
 		 */
 		public function logout(): void
 		{
-						$_SESSION['flash_message'] = "Vous êtes déconnecté";
-			$_SESSION['flash_type'] = "success";
+			$this->setFlashMessage("success", "Vous êtes déconnecté");
 			session_unset();
 			session_destroy();
 //		if (isset($_COOKIE['user_id'])) {

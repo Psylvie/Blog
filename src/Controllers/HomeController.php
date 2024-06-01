@@ -30,8 +30,8 @@
 		public function homePage()
 		{
 			$userRepository = new UserRepository();
-			$user = isset($_SESSION['user_id']) ? $userRepository->find($_SESSION['user_id']) : null;
-			
+			$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
+			$user = $userId ? $userRepository->find($userId) : null;
 			$posts = $this->postRepository->findLatestPosts(3);
 			$this->render('Home/homePage.html.twig', ['user' => $user, 'posts' => $posts]);
 		}
@@ -50,21 +50,18 @@
 				$message = isset($_POST['message']) ? trim($_POST['message']) : '';
 				
 				if (empty($firstName) || empty($lastName) || empty($email) || empty($message)) {
-					$_SESSION['flash_message'] = "Tous les champs sont obligatoires !";
-					$_SESSION['flash_type'] = "info";
+					$this->setFlashMessage("info", "Tous les champs sont obligatoires !");
 					header('Location: /Blog/');
 					exit;
 				}
 				if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$_SESSION['flash_message'] = "L'adresse email n'est pas valide !";
-					$_SESSION['flash_type'] = "info";
+					$this->setFlashMessage("info", "L'adresse email n'est pas valide !");
 					header('Location: /Blog/');
 					exit;
 				}
 				$recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
 				if (empty($recaptchaResponse)) {
-					$_SESSION['flash_message'] = "Veuillez cocher la case reCAPTCHA !";
-					$_SESSION['flash_type'] = "info";
+					$this->setFlashMessage("info", "Veuillez cocher la case reCAPTCHA !");
 					header('Location: /Blog/');
 					exit;
 				}
@@ -74,8 +71,7 @@
 				$recaptchaData = json_decode($recaptchaVerifyResponse);
 				
 				if (!$recaptchaData->success) {
-					$_SESSION['flash_message'] = "Erreur de validation reCAPTCHA !";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Erreur de validation reCAPTCHA !");
 					header('Location: /Blog/');
 					
 					exit;
@@ -108,11 +104,10 @@
 					$mail->Body = $htmlMessage;
 					
 					$mail->send();
-					$_SESSION['flash_message'] = "Le formulaire a été envoyé avec succès !";
-					$_SESSION['flash_type'] = "success";
+					$this->setFlashMessage("success", "Le formulaire a été envoyé avec succès !");
 				} catch (Exception $e) {
-					$_SESSION['flash_message'] = "Erreur d'envoi de mail !";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Erreur d'envoi de mail !");
+
 				}
 				$this->homePage();
 			}

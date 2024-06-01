@@ -9,6 +9,7 @@
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
 	include __DIR__ . '/../../config/Config.php';
+	
 	class AdminUserController extends Controller
 	{
 		private UserRepository $userRepository;
@@ -51,11 +52,9 @@
 				if ($user && $user->getImage()) {
 					unlink(UPLOADS_PROFILE_PATH . $user->getImage());
 				}
-				$_SESSION['flash_message'] = "L'utilisateur $userId a été supprimé avec succès.";
-				$_SESSION['flash_type'] = "success";
+				$this->setFlashMessage('success', "L'utilisateur $userId a été supprimé avec succès.");
 			} catch (Exception $e) {
-				$_SESSION['flash_message'] = "Une erreur s'est produite lors de la suppression de l'utilisateur.";
-				$_SESSION['flash_type'] = "danger";
+				$this->setFlashMessage('danger', "Une erreur s'est produite lors de la suppression de l'utilisateur.");
 			}
 			header("Location: /Blog/admin/users/list");
 			exit();
@@ -74,8 +73,7 @@
 				$role = $_POST['role'] ?? '';
 				$user = $this->userRepository->find($userId);
 				if ($user === null) {
-					$_SESSION['flash_message'] = "L'utilisateur n'existe pas.";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "L'utilisateur n'existe pas.");
 					header("Location: /Blog/admin/users/list");
 					exit();
 				}
@@ -89,11 +87,9 @@
 					
 					$extension = pathinfo($filename, PATHINFO_EXTENSION);
 					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-						$_SESSION['flash_message'] = "Erreur de type de fichier";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Erreur de type de fichier");
 					} elseif ($filesize > 1024 * 1024) {
-						$_SESSION['flash_message'] = "Erreur de taille de fichier";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Erreur de taille de fichier");
 					} else {
 						$newname = md5(uniqid());
 						$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
@@ -106,19 +102,16 @@
 							}
 							$image = $newname . '.' . $extension;
 						} else {
-							$_SESSION['flash_message'] = "Erreur lors du téléchargement de l'image.";
-							$_SESSION['flash_type'] = "danger";
+							$this->setFlashMessage("danger", "Une erreur est survenue lors de l'envoi du fichier.");
 						}
 					}
 				}
 				
 				try {
 					$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role);
-					$_SESSION['flash_message'] = "Les informations de l'utilisateur $name $lastName ont été mises à jour avec succès.";
-					$_SESSION['flash_type'] = "success";
+					$this->setFlashMessage("success", "Les informations de l'utilisateur $name $lastName ont été mises à jour avec succès.");
 				} catch (Exception $e) {
-					$_SESSION['flash_message'] = "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur.";
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur.");
 				}
 				header("Location: /Blog/admin/users/list");
 				exit();
@@ -157,12 +150,10 @@
 					
 					$extension = pathinfo($filename, PATHINFO_EXTENSION);
 					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-						$_SESSION['flash_message'] = "Erreur de type de fichier";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Erreur de type de fichier");
 					}
 					if ($filesize > 1024 * 1024) {
-						$_SESSION['flash_message'] = "Erreur de taille de fichier";
-						$_SESSION['flash_type'] = "danger";
+						$this->setFlashMessage("danger", "Erreur de taille de fichier");
 					}
 					$newname = md5(uniqid());
 					$newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
@@ -172,17 +163,15 @@
 				try {
 					$userRepository = new UserRepository();
 					$userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
-					$_SESSION['flash_message'] = "L'utilisateur a été créé avec succès.";
-					$_SESSION['flash_type'] = "success";
+					$this->setFlashMessage("success", "L'utilisateur a été créé avec succès !");
 					header("Location: /Blog/admin/users/list");
 					exit();
 				} catch (Exception $e) {
-					$_SESSION['flash_message'] = "Erreur lors de la création de l'utilisateur : " . $e->getMessage();
-					$_SESSION['flash_type'] = "danger";
+					$this->setFlashMessage("danger", "Une erreur s'est produite lors de la création de l'utilisateur : " . $e->getMessage());
 					header("Location: /Blog/admin/users/create");
 					exit();
 				}
 			}
 		}
-		
 	}
+	

@@ -29,7 +29,6 @@
 		public function list(){
 			$posts = $this->postRepository->getAllPosts();
 			$this->render('Posts/listPosts.html.twig', ['posts' => $posts]);
-			
 		}
 		
 		/**
