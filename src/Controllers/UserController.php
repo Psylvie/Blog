@@ -29,17 +29,6 @@
 		 */
 		public function show($userId)
 		{
-			session_start();
-			if (!isset($_SESSION['user_id'])) {
-				header("Location: /Blog/login");
-				exit();
-			}
-			
-			if ($userId != $_SESSION['user_id']) {
-				header('Location: /Blog/user/' . $_SESSION['user_id']);
-				exit();
-			}
-			
 			$user = $this->userRepository->find($userId);
 			$this->render('Users/user.html.twig', ['user' => $user]);
 		}

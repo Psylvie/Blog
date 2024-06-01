@@ -2,7 +2,7 @@
 //	error_reporting(E_ALL);
 //	ini_set('display_errors', true);
 	session_start();
-//	print_r($_SESSION);
+	print_r($_SESSION);
 	require __DIR__ . '/../vendor/autoload.php';
 	
 	use App\Controllers\Admin\AdminCommentController;
@@ -74,5 +74,3 @@
 		}
 		echo 'Error: ' . $e->getMessage();
 	}
-
-

@@ -22,7 +22,7 @@
 					</div>
 					<div class="mb-3">
 						<label for="author" class="form-label">Auteur</label>
-						<input type="text" class="form-control" id="author" name="author" required>
+						<input type="text" class="form-control" id="author" name="author" value="{{ session.user_name }} {{ session.user_last_name }}" required>
 					</div>
 					<div class="mb-3">
 						<label for="content" class="form-label">Contenu</label>

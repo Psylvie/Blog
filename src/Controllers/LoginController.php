@@ -44,9 +44,16 @@
 						header('Location: /MonBlog/login');
 					} else {
 						$_SESSION['user_id'] = $user->getId();
+						$_SESSION['user_name'] = $user->getName();
+						$_SESSION['user_last_name'] = $user->getLastName();
+						$_SESSION['user_pseudo'] = $user->getPseudo();
 						$_SESSION['user_role'] = $user->getRole();
+						$_SESSION['user_email'] = $user->getEmail();
 						$_SESSION['flash_message'] = "Bienvenue, " . $user->getName() . " ! Connexion réussie !";
 						$_SESSION['flash_type'] = "success";
+						if (!$user->getFirstLoginDone()) {
+							$userRepository->updateFirstLoginDone($user->getId(), true);
+						}
 						if ($user->getRole() == 'admin') {
 							header('Location: /Blog/admin');
 						} else {
@@ -202,6 +209,48 @@
 			}
 		}
 		
+		/**
+		 * @throws SyntaxError
+		 * @throws RuntimeError
+		 * @throws LoaderError
+		 */
+		public function firstConnectionForm()
+		{
+			$this->render('Auth/firstConnection.html.twig');
+		}
+		
+		/**
+		 * @throws Exception
+		 */
+		public function handleFirstConnection()
+		{
+			
+			if ($_SERVER["REQUEST_METHOD"] === "POST") {
+				$email = $_POST['email'];
+				
+				$userRepository = new UserRepository();
+				$user = $userRepository->findByEmail($email);
+				
+				if($user && $user->getFirstLoginDone() === false) {
+					$resetToken = uniqid();
+					$userRepository->setResetToken($user->getEmail(), $resetToken);
+					
+					$this->sendPasswordResetEmail($email, $resetToken);
+					
+					$_SESSION['flash_message'] = "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.";
+					$_SESSION['flash_type'] = "success";
+					
+					header('Location: /Blog/login');
+				} else {
+					$_SESSION['flash_message'] = "Aucun utilisateur trouvé avec cette adresse e-mail.";
+					$_SESSION['flash_type'] = "danger";
+					header('Location: /Blog/first-connection');
+				}
+				exit();
+				
+			}
+		}
+		
 		
 		
 		/**
@@ -218,8 +267,6 @@
 //		}
 
 			header('Location: /Blog/');
-//		session_unset();
-//		session_destroy();
 			exit();
 		}
 

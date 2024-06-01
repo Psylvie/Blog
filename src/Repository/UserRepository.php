@@ -127,7 +127,8 @@
 		{
 			try {
 				$pdo = DatabaseConnect::connect();
-				$stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, pseudo, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");				$stmt->execute([$name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken]);
+				$stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, pseudo, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				$stmt->execute([$name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken]);
 			} catch (PDOException $e) {
 				if ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_email') !== false) {
 					throw new Exception("L'adresse e-mail est déjà utilisée.");
@@ -176,7 +177,6 @@
 					'image' => $image,
 					'pseudo' => $pseudo,
 					'email' => $email,
-//					'role' => $role,
 					'id' => $userId,
 				]);
 			} catch (PDOException $e) {
