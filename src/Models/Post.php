@@ -14,7 +14,7 @@
 		private bool $published;
 		private DateTime $createdAt;
 		private \DateTime $updatedAt;
-		private ?array $comments = [];
+		private ?array $comments;
 		
 		/**
 		 * @param int|null $id
@@ -27,7 +27,7 @@
 		 * @param bool|null $published
 		 * @param DateTime|null $createdAt
 		 * @param DateTime|null $updatedAt
-		 * @param array|null $comments
+		 * @param array|null $comments array
 		 */
 		public function __construct(?int $id, ?string $title, ?string $chapo, ?string $author, ?string $content, ?string $image, ?int $user_id, ?bool $published, ?DateTime $createdAt, ?DateTime $updatedAt, ?array $comments = [])
 		{
@@ -43,7 +43,6 @@
 			$this->updatedAt = $updatedAt;
 			$this->comments = [];
 		}
-		
 		
 		/**
 		 * @return int|null
@@ -68,6 +67,7 @@
 		{
 			$this->comments[] = $comment;
 		}
+		
 		public function getComments(): array{
 			return $this->comments;
 		}

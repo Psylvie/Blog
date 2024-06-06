@@ -7,23 +7,24 @@
 				<form action="/Blog/register" method="post" id="register" enctype="multipart/form-data">
 					<div class="mb-3">
 						<label for="name" class="form-label">Nom</label>
-						<input type="text" class="form-control" id="name" name="name" required>
+						<input type="text" class="form-control" id="name" name="name" minlength="3" maxlength="25" required >
 					</div>
 					<div class="mb-3">
 						<label for="lastName" class="form-label">Prénom</label>
-						<input type="text" class="form-control" id="lastName" name="lastName" required>
+						<input type="text" class="form-control" id="lastName" name="lastName" minlength="3" maxlength="25" required>
 					</div>
 					<div class="mb-3">
 						<label for="pseudo" class="form-label">Pseudo</label>
-						<input type="text" class="form-control" id="pseudo" name="pseudo" required>
+						<input type="text" class="form-control" id="pseudo" name="pseudo" minlength="3" maxlength="25" required>
 					</div>
 					<div class="mb-3">
 						<label for="image" class="form-label">Image</label>
 						<input type="file" class="form-control" id="image" name="image">
+						<i>*format acceptés : jpg, jpeg, png. Taille maximale : 2Mo</i>
 					</div>
 					<div class="mb-3">
 						<label for="email" class="form-label">Email</label>
-						<input type="email" class="form-control" id="email" name="email" required>
+						<input type="email" class="form-control" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"  required>
 					</div>
 					<div class="mb-3">
 						<label for="password" class="form-label">Mot de passe</label>

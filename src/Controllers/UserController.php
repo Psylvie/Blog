@@ -1,15 +1,15 @@
 <?php
 	
 	namespace App\Controllers;
-	
-	
 	use App\Repository\UserRepository;
 	use Exception;
 	use JetBrains\PhpStorm\NoReturn;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
-	include __DIR__ . '/../config/Config.php';
+	include __DIR__ . '/../Config/Config.php';
+	
+	
 	
 	class UserController extends Controller
 	{
@@ -45,7 +45,6 @@
 				header("Location: /Blog/login");
 				exit();
 			}
-			
 			$user = $this->userRepository->find($userId);
 			if ($user === null) {
 				$this->setFlashMessage("danger", "L'utilisateur n'existe pas.");
@@ -79,7 +78,8 @@
 		public function updateProfile(): void
 		{
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);				$name = $_POST['name'] ?? '';
+				$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
+				$name = $_POST['name'] ?? '';
 				$lastName = $_POST['lastName'] ?? '';
 				$pseudo = $_POST['pseudo'] ?? '';
 				$email = $_POST['email'] ?? '';
@@ -120,18 +120,24 @@
 									$this->setFlashMessage("danger", "Une erreur est survenue lors de l'envoi du fichier.");
 								}
 							}
-							$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo);
-							if (!empty($newPassword)) {
-								$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-								$this->userRepository->updatePassword($email, $hashedPassword);
+							try {
+								$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo);
+								if (!empty($newPassword)) {
+									$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+									$this->userRepository->updatePassword($email, $hashedPassword);
+								}
+								$this->setSessionData('user_name', $name);
+								$this->setSessionData('user_last_name', $lastName);
+								$this->setSessionData('user_email', $email);
+								$this->setSessionData('user_pseudo', $pseudo);
+								$this->setFlashMessage("success", "Vos informations ont été mises à jour avec succès.");
+								header("Location: /Blog/user/{$userId}");
+								exit();
+							}catch (Exception $e) {
+								header("Location: /Blog/user/{$userId}");
+								$this->setFlashMessage("danger", "pseudo ou email deja utilisé");
+							
 							}
-							$this->setSessionData('user_name', $name);
-							$this->setSessionData('user_last_name', $lastName);
-							$this->setSessionData('user_email', $email);
-							$this->setSessionData('user_pseudo', $pseudo);
-							$this->setFlashMessage("success", "Vos informations ont été mises à jour avec succès.");
-							header("Location: /Blog/user/{$userId}");
-							exit();
 						} else {
 							$this->setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
 						}

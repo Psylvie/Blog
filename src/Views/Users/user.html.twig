@@ -42,17 +42,29 @@
                             <strong><label for="currentPassword" class="form-label">Mot de passe actuel :</label></strong>
                             <input type="password" class="form-control" id="currentPassword" name="currentPassword" required >
                         </li>
-                    </ul>
-                    <div class="d-flex justify-content-between mt-3">
-                        <button type="submit" class="btn btn-secondary">Enregistrer les modifications</button>
                         <a href="/Blog/showPassword" class="btn btn-secondary">Modifier le mot de passe</a>
-                        <form action="/Blog/user/deleteUser/{{ user.id }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil?');">
-                            <button type="submit" class="btn btn-danger">Supprimer le compte</button>
-                        </form>
-                    </div>
+                    </ul>
+                    <button type="submit" class="btn btn-secondary mt-3">Enregistrer les modifications</button>
                 </form>
+                <div class="accordion" id="deleteAccountAccordion">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelete" aria-expanded="true" aria-controls="collapseDelete">
+                            Supprimer le compte
+                        </button>
+                    </h5>
+                    <div id="collapseDelete" class="collapse" aria-labelledby="headingDelete" data-parent="#deleteAccountAccordion">
+                        <div class="card-body">
+                            <form action="/Blog/user/deleteUser/{{ user.id }}" method="post">
+                                <div class="form-group">
+                                    <label for="currentPassword" class="form-label">Mot de passe :</label>
+                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger mt-3">Confirmer la suppression</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 {% endblock %}
-

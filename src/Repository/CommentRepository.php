@@ -19,22 +19,16 @@
 		
 		public function addComment(string $commentContent, int $postId, int $userId): void
 		{
-			$sql = 'INSERT INTO comments (content, status, createdAt, updateAt, user_id) VALUES (:content, :status, :createdAt, :updateAt, :userId)';
+			$sql = 'INSERT INTO comments (content, status, createdAt, updateAt, user_id, post_id) VALUES (:content, :status, :createdAt, :updateAt, :userId, :postId)';
 			$statement = $this->mysqlClient->prepare($sql);
 			$statement->bindParam(':content', $commentContent, PDO::PARAM_STR);
 			$statement->bindValue(':status', 'pending', PDO::PARAM_STR);
 			$statement->bindValue(':userId', $userId, PDO::PARAM_INT);
+			$statement->bindValue(':postId', $postId, PDO::PARAM_INT);
 			$createdAt = (new DateTime())->format('Y-m-d H:i:s');
 			$updatedAt = $createdAt;
 			$statement->bindValue(':createdAt', $createdAt, PDO::PARAM_STR);
 			$statement->bindValue(':updateAt', $updatedAt, PDO::PARAM_STR);
-			$statement->execute();
-			$commentId = $this->mysqlClient->lastInsertId();
-			
-			$sql = 'INSERT INTO posts_comments (post_id, comment_id) VALUES (:post_id, :comment_id)';
-			$statement = $this->mysqlClient->prepare($sql);
-			$statement->bindParam(':post_id', $postId, PDO::PARAM_INT);
-			$statement->bindValue(':comment_id', $commentId, PDO::PARAM_INT);
 			$statement->execute();
 		}
 		
@@ -43,9 +37,7 @@
 		 */
 		public function findAllByPostId(int $postId): array
 		{
-			$sql = 'SELECT comments.* FROM comments
-            INNER JOIN posts_comments ON comments.id = posts_comments.comment_id
-            WHERE posts_comments.post_id = :post_id';
+			$sql = 'SELECT * FROM comments WHERE post_id = :post_id';
 			
 			$statement = $this->mysqlClient->prepare($sql);
 			$statement->execute(['post_id' => $postId]);
@@ -61,7 +53,8 @@
 					$commentData['status'],
 					$createdAt,
 					$updatedAt,
-					$commentData['user_id']
+					$commentData['user_id'],
+					$postId
 				);
 				$comments[] = $comment;
 			}
@@ -91,10 +84,11 @@
 		
 		public function deleteCommentByPostId(int $postId): void
 		{
-			$sql = 'DELETE FROM comments WHERE id IN (SELECT comment_id FROM posts_comments WHERE post_id = :postId)';
+			$sql = 'DELETE FROM comments WHERE post_id = :postId';
 			$statement = $this->mysqlClient->prepare($sql);
 			$statement->execute(['postId' => $postId]);
 		}
+		
 		
 		public function findUserByComment(int $commentId): ?array
 		{

@@ -130,9 +130,12 @@
 				$stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, pseudo, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 				$stmt->execute([$name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken]);
 			} catch (PDOException $e) {
-				if ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_email') !== false) {
+				if ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_email') !== false ) {
 					throw new Exception("L'adresse e-mail est déjà utilisée.");
-				} else {
+				}
+					elseif ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_pseudo') !== false ) {
+						throw new Exception("Le pseudo est déjà utilisé.");
+					} else {
 					throw new Exception("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
 				}
 			}
@@ -182,6 +185,19 @@
 			} catch (PDOException $e) {
 				throw new Exception("Erreur lors de la mise à jour du profil : " . $e->getMessage());
 			}
+		}
+		public function updateProfileByAdmin($userId, $name, $lastName, $email, $pseudo, $role): void
+		{
+			$sql = 'UPDATE users SET name = :name, lastName = :lastName, pseudo = :pseudo, email = :email, role = :role WHERE id = :id';
+			$statement = $this->mysqlClient->prepare($sql);
+			$statement->execute([
+				'name' => $name,
+				'lastName' => $lastName,
+				'pseudo' => $pseudo,
+				'email' => $email,
+				'role' => $role,
+				'id' => $userId,
+			]);
 		}
 		
 		

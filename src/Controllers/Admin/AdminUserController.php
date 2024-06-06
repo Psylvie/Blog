@@ -78,7 +78,7 @@
 					exit();
 				}
 				
-				$image = $user->getImage(); // Conserver l'ancienne image si elle n'est pas modifiée
+				$image = $user->getImage();
 				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
 					$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
 					$filename = $_FILES['image']['name'];
@@ -108,7 +108,7 @@
 				}
 				
 				try {
-					$this->userRepository->updateProfile($userId, $name, $image, $lastName, $email, $pseudo, $role);
+					$this->userRepository->updateProfileByAdmin($userId, $name, $lastName, $email, $pseudo, $role);
 					$this->setFlashMessage("success", "Les informations de l'utilisateur $name $lastName ont été mises à jour avec succès.");
 				} catch (Exception $e) {
 					$this->setFlashMessage("danger", "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur.");
@@ -142,6 +142,13 @@
 				$hashedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
 				$image = null;
 				$firstLoginDone = false;
+				
+				$pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
+				if (!preg_match($pattern, $_POST["password"])) {
+					$this->setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
+					header("Location: /Blog/admin/users/create");
+					exit();
+				}
 				
 				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
 					$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
