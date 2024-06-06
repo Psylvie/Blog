@@ -4,11 +4,11 @@
 	require_once __DIR__ . '/../config/MailConfig.php';
 	use App\Repository\UserRepository;
 	use Exception;
+	use JetBrains\PhpStorm\NoReturn;
 	use PHPMailer\PHPMailer\PHPMailer;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
-	
 	
 	class LoginController extends Controller
 	{
@@ -178,6 +178,13 @@
 				$resetToken = $_POST['resetToken'];
 				$password = $_POST['password'];
 				$confirmPassword = $_POST['confirm_password'];
+				
+				$pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
+				if (!preg_match($pattern, $password)) {
+					$this->setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
+					header('Location: /Blog/newPassword/' . $resetToken);
+					exit();
+				}
 				if ($password !== $confirmPassword) {
 					$this->setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
 					header('Location: /Blog/newPassword/' . $resetToken);
@@ -240,11 +247,12 @@
 		/**
 		 * @return void
 		 */
-		public function logout(): void
+		#[NoReturn] public function logout(): void
 		{
-			$this->setFlashMessage("success", "Vous êtes déconnecté");
 			session_unset();
 			session_destroy();
+			session_start();
+			$this->setFlashMessage('success', 'Vous êtes déconnecté');
 			$this->setSessionData('csrfToken', null);
 //		if (isset($_COOKIE['user_id'])) {
 //			setcookie('user_id', '', time() - 3600, '/');

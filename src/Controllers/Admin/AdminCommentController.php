@@ -55,9 +55,13 @@
 		{
 			$comments = $this->commentRepository->findAllByPostId($postId);
 			$post = $this->postRepository->getPostById($postId);
+//			$commentsUsers = [];
+			
 			foreach ($comments as $comment) {
 				$user = $this->commentRepository->findUserByComment($comment->getId());
 				$comment->user = $user;
+//				$commentsUsers[$comment->getId()] = $user;
+				
 			}
 				$this->render('Admin/adminShowComments.html.twig', [
 					'comments' => $comments,
@@ -83,10 +87,11 @@
 							$this->commentRepository->updateCommentStatus($commentId, 'pending');
 							break;
 					}
+					
 					$postId = $_POST['postId'] ?? null;
 					if ($postId !== null) {
 						$redirectUrl = "/Blog/admin/showAllComments/$postId";
-						$this->setFlashMessage('success', 'Commentaire validé avec succès !');
+						$this->setFlashMessage('success', 'Commentaire mis a jour avec succès !');
 						header("Location: $redirectUrl");
 						exit();
 					}

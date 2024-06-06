@@ -3,16 +3,18 @@
 	namespace App\Config;
 	use PDO;
 	use PDOException;
-
 	require_once 'MySql.php';
-
+	
 	class DatabaseConnect
 	{
 		public static function connect(): PDO
 		{
 			try {
 				$mysqlClient = new PDO(
-					sprintf('mysql:host=%s;dbname=%s;port=%s;charset=utf8mb4', MYSQL_HOST, MYSQL_DBNAME, MYSQL_PORT),
+					sprintf('mysql:host=%s;dbname=%s;port=%s;charset=utf8mb4',
+						MYSQL_HOST,
+						MYSQL_DBNAME,
+						MYSQL_PORT),
 					MYSQL_USER,
 					MYSQL_PASSWORD
 				);

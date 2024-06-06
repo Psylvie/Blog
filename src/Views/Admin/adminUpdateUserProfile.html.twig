@@ -18,11 +18,11 @@
 					<ul class="list-group">
 						<li class="list-group-item">
 							<label for="name" class="form-label">Nom :</label>
-							<input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+							<input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" minlength="3" maxlength="30">
 						</li>
 						<li class="list-group-item">
 							<label for="lastName" class="form-label">Prénom :</label>
-							<input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
+							<input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}" minlength="3" maxlength="30">
 						</li>
 						<li class="list-group-item">
 							<label for="email" class="form-label">Email :</label>
@@ -31,22 +31,41 @@
 						<li class="list-group-item">
 							<label for="image" class="form-label">Image de profil :</label>
 							<input type="file" class="form-control" id="image" name="image">
+							<i>*format acceptés : jpg, jpeg, png. Taille maximale : 2Mo</i>
 						</li>
 						<li class="list-group-item">
 							<label for="role" class="form-label">Rôle :</label>
 							<select class="form-select" id="role" name="role" required>
-								<option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
-								<option value="subscriber" {% if user.role == 'subscriber' %}selected{% endif %}>Subscriber</option>
+								<option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Administrateur</option>
+								<option value="subscriber" {% if user.role == 'subscriber' %}selected{% endif %}>Abonné</option>
 							</select>
 						</li>
 						<li class="list-group-item">
 							<label for="pseudo" class="form-label">Pseudo :</label>
-							<input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ user.pseudo }}">
+							<input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ user.pseudo }}" minlength="3" maxlength="30">
 					</ul>
 					<button type="submit" class="btn btn-secondary mt-3">Enregistrer les modifications</button>
 				</form>
-				<form action="/Blog/admin/users/delete/{{ user.id }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre profil?');">
-					<button type="submit" class="btn btn-danger mt-3">Supprimer le compte </button>
+				<form action="/Blog/admin/users/delete/{{ user.id }}" method="post">
+					<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ user.id }}">Supprimer</button>
+					<div class="modal fade text-black" id="confirmDeleteModal{{ user.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+									<a href="/Blog/admin/users/delete/{{ user.id }}" class="btn btn-danger">Confirmer</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
 				</form>
 			</div>
 		</div>

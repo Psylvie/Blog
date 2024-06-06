@@ -52,11 +52,13 @@
 				$resetToken = filter_input(INPUT_POST, "resetToken", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 				$password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 				
-				if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/', $password)) {
-					$this->setFlashMessage("danger", "Le mot de passe doit contenir entre 8 et 15 caractères, dont au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.");
+				$pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
+				if (!preg_match($pattern, $password)) {
+					$this->setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
 					header("Location: /Blog/inscription");
 					exit();
 				}
+				
 				$hashedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
 				$image = null;
 				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
@@ -92,3 +94,4 @@
 			}
 		}
 	}
+	

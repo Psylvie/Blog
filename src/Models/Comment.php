@@ -11,6 +11,7 @@
 		private datetime $createdAt;
 		private datetime $updateAt;
 		private ?int $userId;
+		private ?int $postId;
 		
 		/**
 		 * @param int $id
@@ -19,9 +20,10 @@
 		 * @param DateTime $createdAt
 		 * @param DateTime $updateAt
 		 * @param ?int $userId
+		 * @param ?int $postId
 		 */
 		 
-		public function __construct(int $id, string $content, string $status, DateTime $createdAt, DateTime $updateAt, ?int $userId)
+		public function __construct(int $id, string $content, string $status, DateTime $createdAt, DateTime $updateAt, ?int $userId, ?int $postId)
 		{
 			$this->id = $id;
 			$this->content = $content;
@@ -29,6 +31,7 @@
 			$this->createdAt = $createdAt;
 			$this->updateAt = $updateAt;
 			$this->userId = $userId;
+			$this->postId = $postId;
 		}
 		
 		/**
@@ -125,6 +128,22 @@
 		public function setUserId(?int $userId): void
 		{
 			$this->userId = $userId;
+		}
+		
+		/**
+		 * @return int|null
+		 */
+		public function getPostId(): ?int
+		{
+			return $this->postId;
+		}
+		
+		/**
+		 * @param int|null $postId
+		 */
+		public function setPostId(?int $postId): void
+		{
+			$this->postId = $postId;
 		}
 		
 		
