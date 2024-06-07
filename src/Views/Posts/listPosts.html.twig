@@ -2,33 +2,35 @@
 {% block title %}
 {% endblock %}
 {% block content %}
-	<div class="mt-4">
-		<div class="row">
-			<h2 class="text-center mb-4">BLOG</h2>
-			{% for post in posts %}
-				{% if post.published == 1 %}
-					<div class="col-md-3 mb-1">
-						<div class="card h-100">
-							<div class="card-header bg-secondary text-white">
-								<h5 class="card-title mb-0">{{ post.title|upper }}</h5>
-							</div>
-							<div class="card-body d-flex flex-column">
-								{% if post.image %}
-									<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="Post Image">
-								{% else %}
-									<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top" style="height: 250px;" alt="Post Image">
-								{% endif %}
-								<p class="card-text">{{ post.chapo|capitalize }}</p>
-								<p class="card-text">Auteur: {{ post.author }}</p>
-								<p class="card-text">Dernière mise à jour: {{ post.updateAt|date("d/m/Y") }}</p>
-								<div class="mt-auto">
-									<a href="/Blog/post/{{ post.id }}" class="btn btn-secondary">Lire la suite</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div>
+    <div class="mt-4">
+        <div class="row">
+            <h2 class="text-center mb-4">BLOG</h2>
+            {% for post in posts %}
+                {% if post.published == 1 %}
+                    <div class="col-md-3 mb-1">
+                        <div class="card h-100">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="card-title mb-0">{{ post.title|upper }}</h5>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                {% if post.image %}
+                                    <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top"
+                                         style="height: 250px;" alt="Post Image">
+                                {% else %}
+                                    <img src="/Blog/public/images/defaultImage.jpg" class="card-img-top"
+                                         style="height: 250px;" alt="Post Image">
+                                {% endif %}
+                                <p class="card-text">{{ post.chapo|capitalize }}</p>
+                                <p class="card-text">Auteur: {{ post.author }}</p>
+                                <p class="card-text">Dernière mise à jour: {{ post.updateAt|date("d/m/Y") }}</p>
+                                <div class="mt-auto">
+                                    <a href="/Blog/post/{{ post.id }}" class="btn btn-secondary">Lire la suite</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

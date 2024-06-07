@@ -1,24 +1,28 @@
 <div class="container mt-5">
-	<h2>Contactez-nous</h2>
-	<form action="/Blog/contactForm" method="post" id="contactForm">
-		<div class="mb-3">
-			<label for="firstName" class="form-label">Prénom:</label>
-			<input type="text" id="firstName" name="firstName" placeholder="Votre prénom" class="form-control" value="{{ session.user_name }}" required>
-		</div>
-		<div class="mb-3">
-			<label for="lastName" class="form-label">Nom:</label>
-			<input type="text" id="lastName" name="lastName" placeholder="Votre nom" class="form-control" value="{{ session.user_last_name }}" required>
-		</div>
-		<div class="mb-3">
-			<label for="email" class="form-label">Email:</label>
-			<input type="email" id="email" name="email" placeholder="Votre email" class="form-control" value="{{ session.user_email }}" required>
-		</div>
-		<div class="mb-3">
-			<label for="message" class="form-label">Message:</label>
-			<textarea id="message" name="message" placeholder="Votre message" class="form-control" rows="5" required></textarea>
-		</div>
-		<div class="g-recaptcha" data-sitekey="{{ recaptchaSiteKey }}" data-callback="onSubmit" data-theme="dark"></div>
-		<br/>
-		<button type="submit" class="btn btn-dark">Envoyer</button>
-	</form>
+    <h2>Contactez-nous</h2>
+    <form action="/Blog/contactForm" method="post" id="contactForm">
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Prénom:</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Votre prénom" class="form-control"
+                   value="{{ session.user_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Nom:</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Votre nom" class="form-control"
+                   value="{{ session.user_last_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Votre email" class="form-control"
+                   value="{{ session.user_email }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Message:</label>
+            <textarea id="message" name="message" placeholder="Votre message" class="form-control" rows="5"
+                      required></textarea>
+        </div>
+        <div class="g-recaptcha" data-sitekey="{{ recaptchaSiteKey }}" data-callback="onSubmit" data-theme="dark"></div>
+        <br/>
+        <button type="submit" class="btn btn-dark">Envoyer</button>
+    </form>
 </div>

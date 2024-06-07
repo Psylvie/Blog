@@ -6,21 +6,24 @@
         <div class="row">
             <div class="col-md-4">
                 {% if user.image %}
-                    <img src="/Blog/public/users/{{ user.image }}" class="card-img-top" style="height: 250px;" alt="Image du profil "/>
-                    {% else %}
-                <img src="/Blog/public/users/avatar.png" class="card-img-top img-fluid" alt="Post Image">
-                 {% endif %}
+                    <img src="/Blog/public/users/{{ user.image }}" class="card-img-top" style="height: 250px;"
+                         alt="Image du profil "/>
+                {% else %}
+                    <img src="/Blog/public/users/avatar.png" class="card-img-top img-fluid" alt="Post Image">
+                {% endif %}
             </div>
             <div class="col-md-8">
                 <form action="/Blog/user/updateProfile/{{ user.id }}" method="post" enctype="multipart/form-data">
                     <ul class="list-group">
                         <li class="list-group-item">
                             <strong><label for="name" class="form-label">Nom :</label></strong>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ user.name|capitalize }}">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   value="{{ user.name|capitalize }}">
                         </li>
                         <li class="list-group-item">
                             <strong><label for="lastName" class="form-label">Prénom :</label></strong>
-                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ user.lastName|capitalize }}">
+                            <input type="text" class="form-control" id="lastName" name="lastName"
+                                   value="{{ user.lastName|capitalize }}">
                         </li>
                         <li class="list-group-item">
                             <strong><label for="email" class="form-label">Email :</label></strong>
@@ -32,15 +35,19 @@
                         </li>
                         <li class="list-group-item">
                             <strong><label for="role" class="form-label">Rôle :</label></strong>
-                            <input type="text" class="form-control" id="role" name="role" value="{{ user.role|capitalize }}" disabled >
+                            <input type="text" class="form-control" id="role" name="role"
+                                   value="{{ user.role|capitalize }}" disabled>
                         </li>
                         <li class="list-group-item">
                             <strong><label for="pseudo" class="form-label">Pseudo :</label></strong>
-                            <input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ user.pseudo|capitalize }}">
+                            <input type="text" class="form-control" id="pseudo" name="pseudo"
+                                   value="{{ user.pseudo|capitalize }}">
                         </li>
                         <li class="list-group-item">
-                            <strong><label for="currentPassword" class="form-label">Mot de passe actuel :</label></strong>
-                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required >
+                            <strong><label for="currentPassword" class="form-label">Mot de passe actuel
+                                    :</label></strong>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                                   required>
                         </li>
                         <a href="/Blog/showPassword" class="btn btn-secondary">Modifier le mot de passe</a>
                     </ul>
@@ -48,18 +55,21 @@
                 </form>
                 <div class="accordion" id="deleteAccountAccordion">
                     <h5 class="mb-0">
-                        <button class="btn btn-link btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelete" aria-expanded="true" aria-controls="collapseDelete">
+                        <button class="btn btn-link btn-danger" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseDelete" aria-expanded="true" aria-controls="collapseDelete">
                             Supprimer le compte
                         </button>
                     </h5>
-                    <div id="collapseDelete" class="collapse" aria-labelledby="headingDelete" data-parent="#deleteAccountAccordion">
+                    <div id="collapseDelete" class="collapse" aria-labelledby="headingDelete"
+                         data-parent="#deleteAccountAccordion">
                         <div class="card-body">
                             <form action="/Blog/user/deleteUser/{{ user.id }}" method="post">
                                 <div class="form-group">
                                     <label for="currentPassword" class="form-label">Mot de passe :</label>
-                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-danger mt-3">Confirmer la suppression</button>
+                                    <input type="password" class="form-control" id="currentPassword"
+                                           name="currentPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger mt-3">Confirmer la suppression</button>
                             </form>
                         </div>
                     </div>

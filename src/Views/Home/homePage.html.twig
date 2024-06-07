@@ -11,7 +11,8 @@
                     <img src="public/images/photoMoi.jpg" class="card-img-top" alt="Photo de moi">
                     <div class="card-body">
                         <div class="container mt-3">
-                            <a href="public/images/cv.pdf" target="_blank" class="btn btn-secondary mb-2 w-100">Afficher mon CV</a>
+                            <a href="public/images/cv.pdf" target="_blank" class="btn btn-secondary mb-2 w-100">Afficher
+                                mon CV</a>
                             <a href="public/images/cv.pdf" download class="btn btn-secondary w-100">Télécharger</a>
                         </div>
                     </div>
@@ -23,25 +24,31 @@
                     <div class="card-body">
                         <h5>Présentation</h5>
                         <p>Je suis Sylvie, développeuse d'applications PHP/Symfony en alternance.
-                            Passionnée par la programmation et le développement web, je cherche continuellement à apprendre et à m'améliorer.
+                            Passionnée par la programmation et le développement web, je cherche continuellement à
+                            apprendre et à m'améliorer.
                             En dehors du code, j'adore la musique, les voyages et découvrir de nouvelles cultures.
                         </p>
                         <h5>Résumé Professionnel</h5>
                         <p>Avec plus de 2 années d'expérience en développement web,
-                            j'ai travaillé sur divers projets allant de sites web statiques à des applications web complexes.
+                            j'ai travaillé sur divers projets allant de sites web statiques à des applications web
+                            complexes.
                             Mon expertise en PHP/Symfony m'a permis de créer des solutions robustes et performantes.</p>
                         <div class="row mt-4">
                             <div class="col-sm-3">
-                                <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" class="btn btn-secondary w-100 mb-2">Facebook</a>
+                                <a href="https://www.facebook.com/?locale=fr_FR" target="_blank"
+                                   class="btn btn-secondary w-100 mb-2">Facebook</a>
                             </div>
                             <div class="col-sm-3">
-                                <a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr" target="_blank" class="btn btn-secondary w-100 mb-2">LinkedIn</a>
+                                <a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr"
+                                   target="_blank" class="btn btn-secondary w-100 mb-2">LinkedIn</a>
                             </div>
                             <div class="col-sm-3">
-                                <a href="https://www.instagram.com/" target="_blank" class="btn btn-secondary w-100 mb-2">Instagram</a>
+                                <a href="https://www.instagram.com/" target="_blank"
+                                   class="btn btn-secondary w-100 mb-2">Instagram</a>
                             </div>
                             <div class="col-sm-3">
-                                <a href="https://github.com/Psylvie" target="_blank" class="btn btn-secondary w-100 mb-2">Github</a>
+                                <a href="https://github.com/Psylvie" target="_blank"
+                                   class="btn btn-secondary w-100 mb-2">Github</a>
                             </div>
                         </div>
                     </div>
@@ -69,9 +76,11 @@
                 <div class="col-md-4 mb-4 d-flex">
                     <div class="card h-100 d-flex flex-column">
                         {% if post.image %}
-                            <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="image du post">
+                            <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;"
+                                 alt="image du post">
                         {% else %}
-                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;" alt="image par defaut">
+                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;"
+                                 alt="image par defaut">
                         {% endif %}
                         <div class="card-body flex-grow-1 d-flex flex-column">
                             <h5 class="card-title">{{ post.title|upper }}</h5>
