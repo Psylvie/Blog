@@ -33,7 +33,10 @@
 			$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
 			$user = $userId ? $userRepository->find($userId) : null;
 			$posts = $this->postRepository->findLatestPosts(3);
-			$this->render('Home/homePage.html.twig', ['user' => $user, 'posts' => $posts]);
+			$this->render('Home/homePage.html.twig', [
+				'user' => $user,
+				'posts' => $posts,
+				'recaptchaSiteKey' => RECAPTCHA_SITE_KEY]);
 		}
 		
 		/**
@@ -120,7 +123,8 @@
 		 */
 		public function contact()
 		{
-			$this->render('Home/contact.html.twig');
+			$this->render('Home/contact.html.twig',
+				['recaptchaSiteKey' => RECAPTCHA_SITE_KEY]);
 		}
 		
 		/**
