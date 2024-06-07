@@ -8,6 +8,7 @@
 	use Twig\Error\SyntaxError;
 	use Twig\Extension\DebugExtension;
 	use Twig\Loader\FilesystemLoader;
+	require_once __DIR__ . '/../Config/Recaptcha.php';
 	
 	class Controller {
 		
@@ -53,7 +54,9 @@
 			if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
 				$isAdmin = true;
 			}
-			$this->render('Error/error.html.twig', ['is_admin' => $isAdmin]);
+			$this->render('Error/error.html.twig', [
+				'is_admin' => $isAdmin,
+				'recaptchaSiteKey' => RECAPTCHA_SITE_KEY]);
 		}
 		
 		public function getSessionData($key, $filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS)

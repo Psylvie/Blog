@@ -17,7 +17,7 @@
 			<label for="message" class="form-label">Message:</label>
 			<textarea id="message" name="message" placeholder="Votre message" class="form-control" rows="5" required></textarea>
 		</div>
-		<div class="g-recaptcha" data-sitekey="6LflI6MpAAAAAAxmwq2_BzPHU6EL2tKLJGLvFCk-" data-callback="onSubmit" data-theme="dark"></div>
+		<div class="g-recaptcha" data-sitekey="{{ recaptchaSiteKey }}" data-callback="onSubmit" data-theme="dark"></div>
 		<br/>
 		<button type="submit" class="btn btn-dark">Envoyer</button>
 	</form>

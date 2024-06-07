@@ -35,7 +35,7 @@
 									{% if comment.status == 'pending' %}
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											Le {{ comment.createdAt|date('d/m/Y') }} : {{ comment.content|slice(0, 10) ~ '...' }} par {{ comment.user.pseudo }}
-											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}" data-comment-user="{{ comment.user.pseudo }}">
 												Examiner
 											</button>
 										</li>
@@ -58,7 +58,7 @@
 									{% if comment.status == 'approved' %}
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											Le {{ comment.createdAt|date('d/m/Y') }} : {{ comment.content|slice(0, 10) ~ '...' }} par {{ comment.user.pseudo }}
-											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}" data-comment-user="{{ comment.user.pseudo }}">
 												Examiner
 											</button> </li>
 									{% endif %}
@@ -80,7 +80,7 @@
 									{% if comment.status == 'rejected' %}
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											Le {{ comment.createdAt|date('d/m/Y') }} : {{ comment.content|slice(0, 10) ~ '...' }} par {{ comment.user.pseudo }}
-											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}" data-comment-user="{{ comment.user.pseudo }}">
 												Examiner
 											</button>
 									{% endif %}
@@ -100,7 +100,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: #ffffff;"></button>
 				</div>
 				<div class="modal-body" style="background-color: #f8f9fa; color: #212529;">
-					<p class="fw-bold">Commentaire ajouté le {{ comment.createdAt|date('d/m/Y') }} par {{ comment.user_id }}</p>
+					<p class="fw-bold">Commentaire ajouté le {{ comment.createdAt|date('d/m/Y') }} par <span id="commentUserDisplay"></span></p>
 					<p class="fw-bold">Post : {{ post.title|upper }}</p>
 					<p class="fw-bold">Auteur: {{ post.author|capitalize }} </p>
 					<hr style="border-color: #865353;">
@@ -133,7 +133,6 @@
 			</div>
 		</div>
 	</div>
-
 	<script>
         document.addEventListener("DOMContentLoaded", function() {
             let commentButtons = document.querySelectorAll("[data-comment-id]");
@@ -149,6 +148,9 @@
 
                     let commentContentDisplay = document.getElementById("commentContentDisplay");
                     commentContentDisplay.textContent = commentContent;
+                    let commentUser = button.dataset.commentUser;
+                    let commentUserDisplay = document.getElementById("commentUserDisplay");
+                    commentUserDisplay.textContent = commentUser;
                 });
             });
         });
