@@ -40,7 +40,10 @@
 		{
 			$posts = $this->postRepository->findLatestPosts(3);
 			$users = $this->userRepository->findLatestUsers(3);
-				$this->render('Admin/adminHome.html.twig', ['posts' => $posts, 'users' => $users]);
+				$this->render('Admin/adminHome.html.twig', [
+					'posts' => $posts,
+					'users' => $users
+				]);
 		}
 	}
 	

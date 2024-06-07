@@ -5,6 +5,7 @@
 	use App\Controllers\Controller;
 	use App\Repository\CommentRepository;
 	use App\Repository\PostRepository;
+	use App\Utils\Superglobals;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
 	use Twig\Error\SyntaxError;
@@ -55,26 +56,26 @@
 		{
 			$comments = $this->commentRepository->findAllByPostId($postId);
 			$post = $this->postRepository->getPostById($postId);
-//			$commentsUsers = [];
-			
 			foreach ($comments as $comment) {
 				$user = $this->commentRepository->findUserByComment($comment->getId());
-				$comment->user = $user;
-//				$commentsUsers[$comment->getId()] = $user;
-				
+				$commentsUsers[$comment->getId()] = $user;
 			}
 				$this->render('Admin/adminShowComments.html.twig', [
+					'commentsUsers' => $commentsUsers,
 					'comments' => $comments,
 					'post' => $post]);
 		}
 		
 		public function handleCommentValidation()
 		{
-			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-				$validationOption = isset($_POST['validationOption']) ? filter_var($_POST['validationOption'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
-				$commentId = isset($_POST['commentId']) ? filter_var($_POST['commentId'], FILTER_VALIDATE_INT) : null;
-				$commentContent = isset($_POST['commentContent']) ? filter_var($_POST['commentContent'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
-				$postId = isset($_POST['postId']) ? filter_var($_POST['postId'], FILTER_VALIDATE_INT) : null;
+			$requestMethod = Superglobals::getServer('REQUEST_METHOD');
+			
+			if ($requestMethod === 'POST') {
+				$validationOption = Superglobals::getPost('validationOption');
+				$commentId = Superglobals::getPost('commentId');
+				$commentContent = Superglobals::getPost('commentContent');
+				$postId = Superglobals::getPost('postId');
+				
 				if ($validationOption !== null && $commentId !== null) {
 					switch ($validationOption) {
 						case 'approved':
@@ -88,14 +89,12 @@
 							break;
 					}
 					
-					$postId = $_POST['postId'] ?? null;
 					if ($postId !== null) {
 						$redirectUrl = "/Blog/admin/showAllComments/$postId";
-						$this->setFlashMessage('success', 'Commentaire mis a jour avec succès !');
+						Superglobals::setFlashMessage('success', 'Commentaire mis à jour avec succès !');
 						header("Location: $redirectUrl");
 						exit();
 					}
-					header('Location: /Blog/admin/showAllComments/{id}');
 				}
 			}
 		}

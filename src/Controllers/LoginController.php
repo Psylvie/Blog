@@ -3,6 +3,7 @@
 	namespace App\Controllers;
 	require_once __DIR__ . '/../config/MailConfig.php';
 	use App\Repository\UserRepository;
+	use App\Utils\Superglobals;
 	use Exception;
 	use JetBrains\PhpStorm\NoReturn;
 	use PHPMailer\PHPMailer\PHPMailer;
@@ -33,22 +34,24 @@
 		public function login()
 		{
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$email = $_POST['email'];
-				$password = $_POST['password'];
+				$email = Superglobals::getPost('email');
+				$password = Superglobals::getPost('password');
 				$userRepository = new UserRepository();
 				$user = $userRepository->findByEmail($email);
 				if ($user) {
 					if (!password_verify($password, $user->getPassword())) {
-						$this->setFlashMessage("danger", "Mot de passe incorrect");
+						Superglobals::setFlashMessage("danger", "Mot de passe incorrect");
+						
 						header('Location: /MonBlog/login');
 					} else {
-						$this->setSessionData('user_id', $user->getId());
-						$this->setSessionData('user_name', $user->getName());
-						$this->setSessionData('user_last_name', $user->getLastName());
-						$this->setSessionData('user_pseudo', $user->getPseudo());
-						$this->setSessionData('user_role', $user->getRole());
-						$this->setSessionData('user_email', $user->getEmail());
-						$this->setFlashMessage("success", "Bienvenue, " . $user->getName() . " ! Connexion réussie !");
+						Superglobals::setSession('user_id', $user->getId());
+						Superglobals::setSession('user_name', $user->getName());
+						Superglobals::setSession('user_last_name', $user->getLastName());
+						Superglobals::setSession('user_pseudo', $user->getPseudo());
+						Superglobals::setSession('user_role', $user->getRole());
+						Superglobals::setSession('user_email', $user->getEmail());
+						Superglobals::setFlashMessage("success", "Bienvenue, " . $user->getName() . " ! Connexion réussie !");
+						
 						if (!$user->getFirstLoginDone()) {
 							$userRepository->updateFirstLoginDone($user->getId(), true);
 						}
@@ -63,7 +66,7 @@
 						}
 					}
 				} else {
-					$this->setFlashMessage("danger", "Utilisateur non trouvé");
+					Superglobals::setFlashMessage("danger", "Utilisateur non trouvé");
 					header('Location: /Blog/login');
 				}
 				exit();
@@ -87,7 +90,7 @@
 		public function requestPasswordReset()
 		{
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$email = $_POST['email'];
+				$email = Superglobals::getPost('email');
 				
 				$userRepository = new UserRepository();
 				$user = $userRepository->findByEmail($email);
@@ -97,11 +100,10 @@
 					$userRepository->setResetToken($user->getEmail(), $resetToken);
 					
 					$this->sendPasswordResetEmail($email, $resetToken);
-					$this->setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
+					Superglobals::setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
 				} else {
-					$this->setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
+					Superglobals::setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
 				}
-				
 				header('Location: /Blog/login');
 				exit();
 			}
@@ -128,9 +130,9 @@
 				$mail->Body = "Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost/Blog/newPassword/$token'>Réinitialiser le mot de passe</a>";
 				
 				$mail->send();
-				echo "Le message a bien été envoyé";
+				Superglobals::setFlashMessage("success", "Le message a bien été envoyé");
 			}catch (Exception $e) {
-				echo "Erreur d'envoi de mail : " . $mail->ErrorInfo;
+				Superglobals::setFlashMessage("danger", "Erreur d'envoi de mail : " . $mail->ErrorInfo);
 			}
 		}
 		
@@ -156,12 +158,12 @@
 					]);
 					return;
 				} else {
-					$this->setFlashMessage("danger", "Utilisateur non trouvé.");
+					Superglobals::setFlashMessage("danger", "Utilisateur non trouvé");
 					header('Location: /Blog/login');
 					exit();
 				}
 			} else {
-				$this->setFlashMessage("danger", "Token de réinitialisation invalide.");
+				Superglobals::setFlashMessage("danger", "Token de réinitialisation invalide.");
 				header('Location: /Blog/login');
 				exit();
 			}
@@ -175,18 +177,18 @@
 		public function resetPassword()
 		{
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$resetToken = $_POST['resetToken'];
-				$password = $_POST['password'];
-				$confirmPassword = $_POST['confirm_password'];
+				$resetToken = Superglobals::getPost('resetToken');
+				$password = Superglobals::getPost('password');
+				$confirmPassword = Superglobals::getPost('confirm_password');
 				
 				$pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
 				if (!preg_match($pattern, $password)) {
-					$this->setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
+					Superglobals::setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
 					header('Location: /Blog/newPassword/' . $resetToken);
 					exit();
 				}
 				if ($password !== $confirmPassword) {
-					$this->setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
+					Superglobals::setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
 					header('Location: /Blog/newPassword/' . $resetToken);
 					exit();
 					
@@ -197,7 +199,7 @@
 				if ($user) {
 					$userRepository->updatePassword($user->getEmail(), password_hash($password, PASSWORD_DEFAULT));
 					$userRepository->setResetToken($user->getEmail(), null);
-					$this->setFlashMessage("success", "Votre mot de passe a été réinitialisé avec succès.");
+					Superglobals::setFlashMessage("success", "Votre mot de passe a été réinitialisé avec succès.");
 					header('Location: /Blog/');
 					exit();
 				}
@@ -221,7 +223,7 @@
 		{
 			
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$email = $_POST['email'];
+				$email = Superglobals::getPost('email');
 				
 				$userRepository = new UserRepository();
 				$user = $userRepository->findByEmail($email);
@@ -231,10 +233,10 @@
 					$userRepository->setResetToken($user->getEmail(), $resetToken);
 					
 					$this->sendPasswordResetEmail($email, $resetToken);
-					$this->setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
+					Superglobals::setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
 					header('Location: /Blog/login');
 				} else {
-					$this->setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
+					Superglobals::setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
 					header('Location: /Blog/first-connection');
 				}
 				exit();
@@ -242,22 +244,20 @@
 			}
 		}
 		
-		
-		
 		/**
 		 * @return void
 		 */
 		#[NoReturn] public function logout(): void
 		{
-			session_unset();
+			Superglobals::unsetSession('user_id');
 			session_destroy();
 			session_start();
-			$this->setFlashMessage('success', 'Vous êtes déconnecté');
-			$this->setSessionData('csrfToken', null);
-//		if (isset($_COOKIE['user_id'])) {
-//			setcookie('user_id', '', time() - 3600, '/');
-//		}
-
+			Superglobals::setFlashMessage('success', 'Vous êtes déconnecté');
+			$defaultCsrfToken = '';
+			Superglobals::setSession('csrfToken', $defaultCsrfToken);
+		if (isset($_COOKIE['user_id'])) {
+			setcookie('user_id', '', time() - 3600, '/');
+		}
 			header('Location: /Blog/');
 			exit();
 		}

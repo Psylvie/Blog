@@ -1,8 +1,9 @@
 <?php
 
-	namespace App\Config;
-	use PDO;
-	use PDOException;
+namespace App\Config;
+use PDO;
+use PDOException;
+	
 	require_once 'MySql.php';
 	
 	class DatabaseConnect
