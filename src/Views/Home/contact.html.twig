@@ -1,39 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-8">
-				<div class="card">
-					<div class="card-header">
-						<h2>Contactez-nous</h2>
-						<p>Nous serons toujours ravis de vous répondre ! Si vous souhaitez nous contacter, vous pouvez utiliser l'une des méthodes ci-dessous.</p>
-					</div>
-					<div class="card-body">
-						<h4>Par Email</h4>
-						<p><a href="mailto:peuzin.sylvie.sp@gmail.com">peuzin.sylvie.sp@gmail.com</a></p>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Contactez-nous</h2>
+                        <p>Nous serons toujours ravis de vous répondre ! Si vous souhaitez nous contacter, vous pouvez
+                            utiliser l'une des méthodes ci-dessous.</p>
+                    </div>
+                    <div class="card-body">
+                        <h4>Par Email</h4>
+                        <p><a href="mailto:peuzin.sylvie.sp@gmail.com">peuzin.sylvie.sp@gmail.com</a></p>
 
-						<h4>Par Téléphone</h4>
-						<p>+33 1 23 45 67 89</p>
+                        <h4>Par Téléphone</h4>
+                        <p>+33 1 23 45 67 89</p>
 
-						<h4>Adresse</h4>
-						<p>123 Rue de la Ville, 75000 Paris, France</p>
+                        <h4>Adresse</h4>
+                        <p>123 Rue de la Ville, 75000 Paris, France</p>
 
-						<h4>Retrouvez nous sur les réseaux sociaux </h4>
-						<ul>
-							<li><a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr" target="_blank">LinkedIn</a></li>
-							<li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
-							<li><a href="https://github.com/Psylvie" target="_blank">GitHub</a></li>
-							<li><a href="https://www.facebook.com/?locale=fr_FR" target="_blank">Facebook</a></li>
-						</ul>
+                        <h4>Retrouvez nous sur les réseaux sociaux </h4>
+                        <ul>
+                            <li><a href="https://www.linkedin.com/in/sylvie-peuzin/?originalSubdomain=fr"
+                                   target="_blank">LinkedIn</a></li>
+                            <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
+                            <li><a href="https://github.com/Psylvie" target="_blank">GitHub</a></li>
+                            <li><a href="https://www.facebook.com/?locale=fr_FR" target="_blank">Facebook</a></li>
+                        </ul>
 
-					</div>
-					<div class="card-footer">
-						<h3>Formulaire de Contact</h3>
-						{% include 'Home/_contactForm.html.twig' %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                    </div>
+                    <div class="card-footer">
+                        <h3>Formulaire de Contact</h3>
+                        {% include 'Home/_contactForm.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

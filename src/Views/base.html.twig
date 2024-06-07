@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/Blog/public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Script reCAPTCHA -->
@@ -29,7 +30,8 @@
                     <a class="navbar-brand" href="/Blog/">
                         <img src="/Blog/public/images/logomatt.png" alt="Logo de mon Blog" width="200">
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
@@ -48,7 +50,8 @@
                                     <a class="nav-link ms-2 me-2 btn btn-secondary" href="/Blog/logout">Déconnexion</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link ms-2 me-2 btn btn-secondary" href="/Blog/user/{{ session.user_id }}">Mon Profil</a>
+                                    <a class="nav-link ms-2 me-2 btn btn-secondary"
+                                       href="/Blog/user/{{ session.user_id }}">Mon Profil</a>
                                 </li>
                             {% else %}
                                 <li class="nav-item">
@@ -72,46 +75,46 @@
                 {{ flash_message }}
             </div>
             <script>
-                setTimeout(function() {
+                setTimeout(function () {
                     document.querySelector('.alert').style.display = 'none';
                 }, 5000);
             </script>
         </div>
     {% endif %}
     <div class="container mt-4 mb-4">
-    {% block content %}
-    {% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 </main>
 <footer class="mt-auto bg-dark">
     {% block footer %}
-{% if session.user_role in ['admin'] %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/Blog/admin">Administration </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-{% else %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <ul class="navbar-nav ms-auto ">
-                <li class="nav-item">
-                    <a class="nav-link" href="/Blog/"> Accueil </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Blog/legalMention"> Mentions légales </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Blog/privacyPolicy"> Politique de Confidentialité</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-{% endif %}
+        {% if session.user_role in ['admin'] %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Blog/admin">Administration </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        {% else %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container">
+                    <ul class="navbar-nav ms-auto ">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Blog/"> Accueil </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Blog/legalMention"> Mentions légales </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Blog/privacyPolicy"> Politique de Confidentialité</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        {% endif %}
 
 
         <div class="container text-center bg-dark">
@@ -119,7 +122,9 @@
         </div>
     {% endblock %}
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

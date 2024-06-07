@@ -20,10 +20,11 @@
 	use App\Controllers\RegisterController;
 	use App\Controllers\UserController;
 	use App\Router;
+	use App\Utils\Superglobals;
 	
 	$uri = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
 	
-	$userRole = filter_var($_SESSION['user_role'] ?? null);
+	$userRole = filter_var(Superglobals::getSession('user_role') ?? null);
 
 	$router = new Router();
 	$router->addRoute('/Blog/', HomeController::class, 'homePage');

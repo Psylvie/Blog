@@ -1,39 +1,41 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<div class="card mt-5">
-					<div class="card-body">
-						<h1 class="card-title text-center mb-4">Un compte a été crée pour vous </h1>
-							<div class="mb-3">
-								<h5 class="text-center"> Pour plus de sécurité, un lien pour initaliser votre mot de passe vous sera envoyé par email. </h5>
-							</div>
-							<div class="d-grid gap-2">
-							</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<div class="card mt-5">
-					<div class="card-body">
-						<h1 class="card-title text-center mb-4">Première Connexion</h1>
-						<form action="/Blog/first-connection-process" method="post" id="first-connection">
-							<div class="mb-3">
-								<label for="email" class="form-label">Adresse e-mail :</label>
-								<input type="email" class="form-control" id="email" name="email" required>
-							</div>
-							<div class="d-grid gap-2">
-								<button type="submit" class="btn btn-secondary">Envoyer le lien de première connexion</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">Un compte a été crée pour vous </h1>
+                        <div class="mb-3">
+                            <h5 class="text-center"> Pour plus de sécurité, un lien pour initaliser votre mot de passe
+                                vous sera envoyé par email. </h5>
+                        </div>
+                        <div class="d-grid gap-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">Première Connexion</h1>
+                        <form action="/Blog/first-connection-process" method="post" id="first-connection">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Adresse e-mail :</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-secondary">Envoyer le lien de première connexion
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -3,127 +3,160 @@
 {% block title %}Admin Home{% endblock %}
 
 {% block content %}
-	<div class="container">
-		<h1 class="my-4">LISTE DES POSTS</h1>
-		<div class="accordion" id="accordionPosts">
-			<div class="accordion-item">
-				<h2 class="accordion-header" id="headingPublies">
-					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePublies" aria-expanded="true" aria-controls="collapsePublies">
-						POSTS PUBLIÉS
-					</button>
-				</h2>
-				<div id="collapsePublies" class="accordion-collapse collapse show" aria-labelledby="headingPublies" data-bs-parent="#accordionPosts">
-					<div class="accordion-body">
-						<div class="row">
-							{% for post in posts %}
-								{% if post.published == 1 %}
-									<div class="col-md-6 mb-4">
-										<div class="card h-100">
-											<div class="card-header">
-												<h5 class="card-title">{{ post.title|upper }}</h5>
-												<p class="card-text">Mise a jour : {{ post.updateAt|date('d/m/Y')}} par {{ post.author }}</p>
-												<p class="card-text">{{ post.comments|length }} Commentaires</p>
-											</div>
-											<div class="card-body">
-												<div class="row">
-													<div class="col-md-4">
-														{% if post.image %}
-															<img src="/Blog/public/uploads/{{ post.image }}" class="img-fluid rounded" alt="Image du post">
-														{% else %}
-															<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image" style="max-width: 200px;">
-														{% endif %}
-													</div>
-													<div class="col-md-8">
-														<p class="card-text">{{ post.content}}...</p>
-													</div>
-												</div>
-											</div>
-											<div class="card-footer">
-												<a href="/Blog/admin/updatePost/{{ post.id }}" class="btn btn-secondary">Modifier</a>
-												<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ post.id }}">Supprimer</button>
-												<div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<div class="modal-header">
-																<h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>
-																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-															</div>
-															<div class="modal-body">
-																Êtes-vous sûr de vouloir supprimer ce post ?
-															</div>
-															<div class="modal-footer">
-																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-																<a href="/Blog/admin/deletePost/{{ post.id }}" class="btn btn-danger">Confirmer</a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								{% endif %}
-							{% endfor %}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="accordion-item" >
-				<h2 class="accordion-header" id="headingNonPublies">
-					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNonPublies" aria-expanded="true" aria-controls="collapseNonPublies" >
-						POSTS NON PUBLIÉS
-					</button>
-				</h2>
-				<div id="collapseNonPublies" class="accordion-collapse collapse" aria-labelledby="headingNonPublies" data-bs-parent="#accordionPosts">
-					<div class="accordion-body">
-						{% for post in posts %}
-							{% if post.published == 0 %}
-								<div class="card mb-3">
-									<div class="card-header">
-										<h5 class="card-title">{{ post.title|upper }}</h5>
-										<p class="card-text">Mise a jour : {{ post.updateAt|date('d/m/Y')}} par {{ post.author }}</p>
-										<p class="card-text">{{ post.comments|length }} Commentaires</p>
-									</div>
-									<div class="card-body">
-										<div class="row">
-											<div class="col-md-4">
-												{% if post.image %}
-													<img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid" alt="Post Image" style="max-width: 100px;">
-												{% else %}
-													<img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image" style="max-width: 100px;">
-												{% endif %}
-											</div>
-											<div class="col-md-8">
-												<p class="card-text">{{ post.content|slice(0, 100) }}...</p>
-											</div>
-										</div>
-									</div>
-									<div class="card-footer">
-										<a href="/Blog/admin/updatePost/{{ post.id }}" class="btn btn-secondary">Modifier</a>
-										<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ post.id }}">Supprimer</button>
-										<div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="modal-header">
-														<h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>
-														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-													</div>
-													<div class="modal-body">
-														Êtes-vous sûr de vouloir supprimer ce post ?
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-														<a href="/Blog/admin/deletePost/{{ post.id }}" class="btn btn-danger">Confirmer</a>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							{% endif %}
-						{% endfor %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <h1 class="my-4">LISTE DES POSTS</h1>
+        <div class="accordion" id="accordionPosts">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingPublies">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapsePublies" aria-expanded="true" aria-controls="collapsePublies">
+                        POSTS PUBLIÉS
+                    </button>
+                </h2>
+                <div id="collapsePublies" class="accordion-collapse collapse show" aria-labelledby="headingPublies"
+                     data-bs-parent="#accordionPosts">
+                    <div class="accordion-body">
+                        <div class="row">
+                            {% for post in posts %}
+                                {% if post.published == 1 %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5 class="card-title">{{ post.title|upper }}</h5>
+                                                <p class="card-text">Mise a jour : {{ post.updateAt|date('d/m/Y') }}
+                                                    par {{ post.author }}</p>
+                                                <p class="card-text">{{ post.comments|length }} Commentaires</p>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        {% if post.image %}
+                                                            <img src="/Blog/public/uploads/{{ post.image }}"
+                                                                 class="img-fluid rounded" alt="Image du post">
+                                                        {% else %}
+                                                            <img src="/Blog/public/images/defaultImage.jpg"
+                                                                 class="card-img-top img-fluid" alt="Post Image"
+                                                                 style="max-width: 200px;">
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <p class="card-text">{{ post.content }}...</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <a href="/Blog/admin/updatePost/{{ post.id }}"
+                                                   class="btn btn-secondary">Modifier</a>
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#confirmDeleteModal{{ post.id }}">Supprimer
+                                                </button>
+                                                <div class="modal fade" id="confirmDeleteModal{{ post.id }}"
+                                                     tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="confirmDeleteModalLabel">
+                                                                    Confirmation de suppression</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Êtes-vous sûr de vouloir supprimer ce post ?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Annuler
+                                                                </button>
+                                                                <a href="/Blog/admin/deletePost/{{ post.id }}"
+                                                                   class="btn btn-danger">Confirmer</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingNonPublies">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseNonPublies" aria-expanded="true"
+                            aria-controls="collapseNonPublies">
+                        POSTS NON PUBLIÉS
+                    </button>
+                </h2>
+                <div id="collapseNonPublies" class="accordion-collapse collapse" aria-labelledby="headingNonPublies"
+                     data-bs-parent="#accordionPosts">
+                    <div class="accordion-body">
+                        {% for post in posts %}
+                            {% if post.published == 0 %}
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title">{{ post.title|upper }}</h5>
+                                        <p class="card-text">Mise a jour : {{ post.updateAt|date('d/m/Y') }}
+                                            par {{ post.author }}</p>
+                                        <p class="card-text">{{ post.comments|length }} Commentaires</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                {% if post.image %}
+                                                    <img src="/Blog/public/uploads/{{ post.image }}"
+                                                         class="card-img-top img-fluid" alt="Post Image"
+                                                         style="max-width: 100px;">
+                                                {% else %}
+                                                    <img src="/Blog/public/images/defaultImage.jpg"
+                                                         class="card-img-top img-fluid" alt="Post Image"
+                                                         style="max-width: 100px;">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-8">
+                                                <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="/Blog/admin/updatePost/{{ post.id }}" class="btn btn-secondary">Modifier</a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#confirmDeleteModal{{ post.id }}">Supprimer
+                                        </button>
+                                        <div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1"
+                                             aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="confirmDeleteModalLabel">
+                                                            Confirmation de suppression</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Êtes-vous sûr de vouloir supprimer ce post ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Annuler
+                                                        </button>
+                                                        <a href="/Blog/admin/deletePost/{{ post.id }}"
+                                                           class="btn btn-danger">Confirmer</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

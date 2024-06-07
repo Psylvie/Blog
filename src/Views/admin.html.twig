@@ -1,108 +1,114 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/Blog/public/css/style.css">
-	<title>{% block title %}Administration{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Blog/public/css/style.css">
+    <title>{% block title %}Administration{% endblock %}</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header>
-	{% block header %}
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<a class="navbar-brand" href="/Blog/admin">Administration</a>
-		</nav>
-		{% if flash_message %}
-			<div class="alert-wrapper">
-				<div class="alert alert-{{ flash_type }}" role="alert">
-					{{ flash_message }}
-				</div>
-				<script>
-                    setTimeout(function() {
+    {% block header %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/Blog/admin">Administration</a>
+        </nav>
+        {% if flash_message %}
+            <div class="alert-wrapper">
+                <div class="alert alert-{{ flash_type }}" role="alert">
+                    {{ flash_message }}
+                </div>
+                <script>
+                    setTimeout(function () {
                         document.querySelector('.alert').style.display = 'none';
                     }, 5000);
-				</script>
-			</div>
-		{% endif %}
-	{% endblock %}
+                </script>
+            </div>
+        {% endif %}
+    {% endblock %}
 </header>
 <main class="flex-grow-1">
-	<div class="container-fluid">
-		<div class="row">
-			<aside class="col-md-2 col-sm-2 bg-dark text-white">
-				<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="sidebarMenu">
-						{% block sidebar %}
-						{% endblock %}
-						<div class="list-group">
-							<a class="list-group-item list-group-item-action">Menu</a>
-							<div class="list-group-item">
-								<div class="dropdown">
-									<button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-										Posts
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-										<li><a class="dropdown-item" href="/Blog/admin/showPost">Modifier/Supprimer</a></li>
-										<li><a class="dropdown-item" href="/Blog/admin/newPost">Nouveau</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="list-group-item">
-								<div class="dropdown">
-									<button class="btn btn-dark dropdown-toggle" type="button" id="dropdownComments" data-bs-toggle="dropdown" aria-expanded="false">
-										Commentaires
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="dropdownComments">
-										<li><a class="dropdown-item" href="/Blog/admin/showAllPosts">Liste</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="list-group-item">
-								<div class="dropdown">
-									<button class="btn btn-dark dropdown-toggle" type="button" id="dropdownUsers" data-bs-toggle="dropdown" aria-expanded="false">
-										Utilisateurs
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="dropdownUsers">
-										<li><a class="dropdown-item" href="/Blog/admin/users/list">Modifier/Supprimer</a></li>
-										<li><a class="dropdown-item" href="/Blog/admin/users/create">Nouveau</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</nav>
-			</aside>
-			<section class="col-md-10">
-				<div class="container mt-4 mb-4">
-					{% block content %}
-					{% endblock %}
-				</div>
-			</section>
-		</div>
-	</div>
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-2 col-sm-2 bg-dark text-white">
+                <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+                            aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="sidebarMenu">
+                        {% block sidebar %}
+                        {% endblock %}
+                        <div class="list-group">
+                            <a class="list-group-item list-group-item-action">Menu</a>
+                            <div class="list-group-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Posts
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="/Blog/admin/showPost">Modifier/Supprimer</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="/Blog/admin/newPost">Nouveau</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownComments"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Commentaires
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownComments">
+                                        <li><a class="dropdown-item" href="/Blog/admin/showAllPosts">Liste</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownUsers"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Utilisateurs
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownUsers">
+                                        <li><a class="dropdown-item"
+                                               href="/Blog/admin/users/list">Modifier/Supprimer</a></li>
+                                        <li><a class="dropdown-item" href="/Blog/admin/users/create">Nouveau</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+            <section class="col-md-10">
+                <div class="container mt-4 mb-4">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </section>
+        </div>
+    </div>
 </main>
 <footer class="mt-auto bg-dark">
-	{% block footer %}
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<div class="container">
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="/Blog/">Retour au blog </a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link ms-2 me-2 btn btn-secondary" href="/Blog/logout">Déconnexion</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-		<div class="container text-center bg-dark">
-			<p>&copy; 2024 - Blog - By Peuzin Sylvie</p>
-		</div>
-	{% endblock %}
+    {% block footer %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Blog/">Retour au blog </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ms-2 me-2 btn btn-secondary" href="/Blog/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container text-center bg-dark">
+            <p>&copy; 2024 - Blog - By Peuzin Sylvie</p>
+        </div>
+    {% endblock %}
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

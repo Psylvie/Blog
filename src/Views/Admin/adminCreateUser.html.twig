@@ -3,53 +3,54 @@
 {% block title %}Nouvel utilisateur{% endblock %}
 
 {% block content %}
-<div class="container">
-	<h2 class="mb-4 text-center">Enregistrement d'un nouvel utilisateur</h2>
-	<div class="card mb-4">
-		<div class="card-header" style="background-color: #865353; color: #ffffff;">
-			Nouvel utilisateur
-		</div>
-		<div class="card-body" style="background-color: rgba(34, 34, 34, 0.8); color: #ffffff;">
-				<form action="/Blog/admin/users/createUser" method="post" id="adminUser" enctype="multipart/form-data">
-					<div class="mb-3">
-						<label for="name" class="form-label">Nom</label>
-						<input type="text" class="form-control" id="name" name="name" required>
-					</div>
-					<div class="mb-3">
-						<label for="lastName" class="form-label">Prénom</label>
-						<input type="text" class="form-control" id="lastName" name="lastName" required>
-					</div>
-					<div class="mb-3">
-						<label for="image" class="form-label">Image</label>
-						<input type="file" class="form-control" id="image" name="image">
+    <div class="container">
+        <h2 class="mb-4 text-center">Enregistrement d'un nouvel utilisateur</h2>
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: #865353; color: #ffffff;">
+                Nouvel utilisateur
+            </div>
+            <div class="card-body" style="background-color: rgba(34, 34, 34, 0.8); color: #ffffff;">
+                <form action="/Blog/admin/users/createUser" method="post" id="adminUser" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image">
 
-					</div>
-					<div class="mb-3">
-						<label for="pseudo" class="form-label">Pseudo</label>
-						<input type="text" class="form-control" id="pseudo" name="pseudo">
-					</div>
-					<div class="mb-3">
-						<label for="email" class="form-label">Email</label>
-						<input type="email" class="form-control" id="email" name="email" required>
-					</div>
-					<div class="mb-3">
-						<label for="password" class="form-label">Mot de passe</label>
-						<input type="password" class="form-control" id="password" name="password" required>
-						<small id="passwordHelp" class="form-text text-white">
-							Le mot de passe doit contenir entre 8 et 15 caractères,
-							dont au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.
-						</small>
-					</div>
-					<div class="mb-3">
-						<label for="role" class="form-label">Rôle :</label>
-						<select class="form-select" id="role" name="role" required>
-							<option value="admin">Admin</option>
-							<option value="subscriber">Subscriber</option>
-						</select>
-					</div>
-					<button type="submit" class="btn btn-secondary">Créer l'utilisateur</button>
-				</form>
-			</div>
-		</div>
-	</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pseudo" class="form-label">Pseudo</label>
+                        <input type="text" class="form-control" id="pseudo" name="pseudo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <small id="passwordHelp" class="form-text text-white">
+                            Le mot de passe doit contenir entre 8 et 15 caractères,
+                            dont au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère
+                            spécial.
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Rôle :</label>
+                        <select class="form-select" id="role" name="role" required>
+                            <option value="admin">Admin</option>
+                            <option value="subscriber">Subscriber</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Créer l'utilisateur</button>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
