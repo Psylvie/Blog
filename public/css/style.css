@@ -2,51 +2,62 @@ body {
     background-color: rgba(34, 34, 34, 0.8);
     color: #ffffff;
 }
+
 .card {
     border-color: #865353;
     box-shadow: 0 0 10px #865353;
 }
+
 .card-footer {
     background-color: white;
     border-color: #865353;
     color: black;
 }
+
 a {
     color: #865353;
 }
+
 a:hover {
     color: black;
 }
-.btn  {
+
+.btn {
     background-color: #865353;
     border-color: #c0c7c7;
     color: #ffffff;
 }
+
 .btn:hover {
     background-color: black;
     color: #865353;
 }
+
 .accordion-button:focus {
     box-shadow: none;
     --bs-accordion-btn-focus-border-color: #865353;
 
 }
+
 .accordion-button:not(.collapsed) {
     background-color: #865353;
     color: white;
 }
+
 .accordion-button.collapsed {
     background-color: #865353;
     color: white;
 }
+
 /* Flash-message*/
 .alert {
     text-align: center;
 }
+
 .alert-danger {
     background-color: #d32222;
     color: white;
-    border-color:  #d32222;
+    border-color: #d32222;
 }
 
 .alert-success, .alert-info {
@@ -54,19 +65,24 @@ a:hover {
     color: white;
     border-color: #865353;
 }
+
 /* navbar*/
 .nav-link {
     font-weight: bold;
 }
+
 .nav-link:hover {
     color: #865353;
 }
+
 .navbar {
     padding: 0.5rem 1rem;
 }
+
 .navbar-brand img {
     width: 150px;
 }
+
 .form-control:focus {
     outline: none;
 }
@@ -75,10 +91,12 @@ a:hover {
     border-color: #865353;
     box-shadow: 0 0 0 0.2rem rgba(236, 136, 136, 0.25);
 }
+
 .form-control:focus,
 .form-control:valid {
     background-color: white;
 }
+
 /* footer */
 footer {
     padding: 2px;
@@ -92,6 +110,7 @@ footer {
         max-width: 100%;
         height: auto;
     }
+
     footer {
         font-size: 11px;
     }
