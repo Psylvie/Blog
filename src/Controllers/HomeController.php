@@ -5,6 +5,7 @@
 	require_once __DIR__ . '/../Config/Recaptcha.php';
 	use App\Repository\PostRepository;
 	use App\Repository\UserRepository;
+	use App\Utils\Superglobals;
 	use PHPMailer\PHPMailer\Exception;
 	use PHPMailer\PHPMailer\PHPMailer;
 	use Twig\Error\LoaderError;
@@ -19,6 +20,7 @@
 		{
 			parent::__construct();
 			$this->postRepository = new PostRepository();
+			
 		}
 		
 		/**
@@ -30,7 +32,7 @@
 		public function homePage()
 		{
 			$userRepository = new UserRepository();
-			$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
+			$userId = Superglobals::getSession('user_id', FILTER_VALIDATE_INT);
 			$user = $userId ? $userRepository->find($userId) : null;
 			$posts = $this->postRepository->findLatestPosts(3);
 			$this->render('Home/homePage.html.twig', [
@@ -47,24 +49,29 @@
 			
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				
-				$firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : '';
-				$lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
-				$email = isset($_POST['email']) ? trim($_POST['email']) : '';
-				$message = isset($_POST['message']) ? trim($_POST['message']) : '';
+				$firstName = Superglobals::getPost('firstName') ?? '';
+				$lastName = Superglobals::getPost('lastName') ?? '';
+				$email = Superglobals::getPost('email') ?? '';
+				$message = Superglobals::getPost('message') ?? '';
+				
+//				$firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : '';
+//				$lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
+//				$email = isset($_POST['email']) ? trim($_POST['email']) : '';
+//				$message = isset($_POST['message']) ? trim($_POST['message']) : '';
 				
 				if (empty($firstName) || empty($lastName) || empty($email) || empty($message)) {
-					$this->setFlashMessage("info", "Tous les champs sont obligatoires !");
+					Superglobals::setFlashMessage("info", "Tous les champs sont obligatoires !");
 					header('Location: /Blog/');
 					exit;
 				}
 				if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$this->setFlashMessage("info", "L'adresse email n'est pas valide !");
+					Superglobals::setFlashMessage("info", "L'adresse email n'est pas valide !");
 					header('Location: /Blog/');
 					exit;
 				}
 				$recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
 				if (empty($recaptchaResponse)) {
-					$this->setFlashMessage("info", "Veuillez cocher la case reCAPTCHA !");
+					Superglobals::setFlashMessage("info", "Veuillez cocher la case reCAPTCHA !");
 					header('Location: /Blog/');
 					exit;
 				}
@@ -74,7 +81,7 @@
 				$recaptchaData = json_decode($recaptchaVerifyResponse);
 				
 				if (!$recaptchaData->success) {
-					$this->setFlashMessage("danger", "Erreur de validation reCAPTCHA !");
+					Superglobals::setFlashMessage("danger", "Erreur de validation reCAPTCHA !");
 					header('Location: /Blog/');
 					
 					exit;
@@ -107,10 +114,9 @@
 					$mail->Body = $htmlMessage;
 					
 					$mail->send();
-					$this->setFlashMessage("success", "Le formulaire a été envoyé avec succès !");
+					Superglobals::setFlashMessage("success", "Le formulaire a été envoyé avec succès !");
 				} catch (Exception $e) {
-					$this->setFlashMessage("danger", "Erreur d'envoi de mail !");
-
+					Superglobals::setFlashMessage("danger", "Erreur d'envoi de mail !");
 				}
 				$this->homePage();
 			}

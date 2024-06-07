@@ -3,6 +3,7 @@
 	
 	use App\Controllers\Controller;
 	use App\Repository\PostRepository;
+	use App\Utils\Superglobals;
 	use PDOException;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
@@ -49,55 +50,48 @@
 		 */
 		public function createPost()
 		{
-			$requestMethod = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$requestMethod = Superglobals::getServer('REQUEST_METHOD');
 			
 			if ($requestMethod === 'POST') {
-				$title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-				$title = trim($title);
-				$chapo = filter_input(INPUT_POST, 'chapo', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-				$chapo = trim($chapo);
-				$author = filter_input(INPUT_POST, 'author', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-				$author = trim($author);
-				$content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-				$content = trim($content);
-				$published = filter_input(INPUT_POST, 'published', FILTER_VALIDATE_INT);
-				$published = $published ?? 1;
-				$userId = $this->getSessionData('user_id', FILTER_VALIDATE_INT);
+				$title = trim(htmlspecialchars(Superglobals::getPost('title') ?? ''));
+				$chapo = trim(htmlspecialchars(Superglobals::getPost('chapo') ?? ''));
+				$author = trim(htmlspecialchars(Superglobals::getPost('author') ?? ''));
+				$content = trim(htmlspecialchars(Superglobals::getPost('content') ?? ''));
+				$published = filter_var(Superglobals::getPost('published'), FILTER_VALIDATE_INT) ?? 0;
+				$userId = Superglobals::getSession('user_id');
 				$image = null;
 				if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
-					$this->setFlashMessage("danger", "All fields are required.");
+					Superglobals::setFlashMessage("danger", "Tous les champs sont requis.");
 					header('Location: /Blog/admin/newPost');
 					exit;
 				}
-				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-					$allowed = ['jpg' => 'image/jpeg',
-						'jpeg' => 'image/jpeg',
-						'png' => 'image/png'
-					];
-					$filename = $_FILES['image']['name'];
-					$filetype = $_FILES['image']['type'];
-					$filesize = $_FILES['image']['size'];
+				
+				if (Superglobals::getFiles('image')['error'] === 0) {
+					$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
+					$filename = Superglobals::getFiles('image')['name'];
+					$filetype = Superglobals::getFiles('image')['type'];
+					$filesize = Superglobals::getFiles('image')['size'];
 					
 					$extension = pathinfo($filename, PATHINFO_EXTENSION);
 					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-						$this->setFlashMessage("danger", "Erreur de type de fichier");
+						Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
 					}
 					if ($filesize > 1024 * 1024) {
-						$this->setFlashMessage("danger", "Erreur de taille de fichier");
+						Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
 					}
 					$newname = md5(uniqid());
 					$newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;
-					move_uploaded_file($_FILES['image']['tmp_name'], $newfilename);
+					move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename);
 					$image = $newname . '.' . $extension;
 				}
 				try {
 					$postRepository = new PostRepository();
 					$postRepository->createPost($title, $chapo, $author, $content, $image, $userId, $published);
-					$this->setFlashMessage("success", "Le post a été créé avec succès !");
+					Superglobals::setFlashMessage("success", "Le post a été créé avec succès !");
 					header('Location: /Blog/admin/showPost');
 					exit;
 				} catch (PDOException $e) {
-					$this->setFlashMessage("danger", "Une erreur s'est produite lors de la création du post : " . $e->getMessage());
+					Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la création du post : " . $e->getMessage());
 					header('Location: /Blog/admin');
 					exit;
 				}
@@ -120,11 +114,11 @@
 				if ($imageName !== null) {
 					unlink(UPLOADS_POST_PATH . $imageName);
 				}
-				$this->setFlashMessage("success", "Le post a été supprimé avec succès !");
+				Superglobals::setFlashMessage("success", "Le post a été supprimé avec succès !");
 				header('Location: /Blog/admin/showPost');
 				exit;
 			} catch (PDOException $e) {
-				$this->setFlashMessage("danger", "Une erreur s'est produite lors de la suppression du post : " . $e->getMessage());
+				Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la suppression du post : " . $e->getMessage());
 				header('Location: /Blog/admin/showPost');
 				exit;
 			}
@@ -137,13 +131,13 @@
 		 */
 		public function updatePost(int $postId)
 		{
-			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$title = isset($_POST['title']) ? trim(filter_var($_POST['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$chapo = isset($_POST['chapo']) ? trim(filter_var($_POST['chapo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$author = isset($_POST['author']) ? trim(filter_var($_POST['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$content = isset($_POST['content']) ? trim(filter_var($_POST['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) : '';
-				$published = isset($_POST['published']) ? filter_var($_POST['published'], FILTER_VALIDATE_INT) : 0;
-				
+			if (Superglobals::getServer('REQUEST_METHOD') === 'POST'){
+				$title = trim(htmlspecialchars(Superglobals::getPost('title') ?? ''));
+				$chapo = trim(htmlspecialchars(Superglobals::getPost('chapo') ?? ''));
+				$author = trim(htmlspecialchars(Superglobals::getPost('author') ?? ''));
+				$content = trim(htmlspecialchars(Superglobals::getPost('content') ?? ''));
+				$published = filter_var(Superglobals::getPost('published'), FILTER_VALIDATE_INT) ?? 0;
+
 				if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
 					throw new \Exception("Tous les champs sont requis.");
 				}
@@ -151,21 +145,21 @@
 				$currentImage = $post->getImage();
 				$image = $currentImage;
 				
-				if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+				if (Superglobals::getFiles('image')['error'] === 0) {
 					$allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-					$filename = $_FILES['image']['name'];
-					$filetype = $_FILES['image']['type'];
-					$filesize = $_FILES['image']['size'];
+					$filename = Superglobals::getFiles('image')['name'];
+					$filetype = Superglobals::getFiles('image')['type'];
+					$filesize = Superglobals::getFiles('image')['size'];
 					$extension = pathinfo($filename, PATHINFO_EXTENSION);
 					
 					if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-						$this->setFlashMessage("danger", "Erreur de type de fichier");
+						Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
 					} elseif ($filesize > 1024 * 1024) {
-						$this->setFlashMessage("danger", "Erreur de taille de fichier");
+						Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
 					} else {
 						$newname = md5(uniqid());
 						$newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;
-						if (move_uploaded_file($_FILES['image']['tmp_name'], $newfilename)) {
+						if (move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename)) {
 							$image = $newname . '.' . $extension;
 							if ($currentImage && $currentImage !== 'defaultImage.jpg') {
 								$currentImagePath = UPLOADS_POST_PATH . $currentImage;
@@ -174,13 +168,13 @@
 								}
 							}
 						} else {
-							$this->setFlashMessage("danger", "Erreur lors de l'envoi du fichier");
+							Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier");
 						}
 					}
 				}
-				
 				try {
-					$this->postRepository->updatePost($postId, $title, $chapo, $author, $content, $image,  $published);
+					$this->postRepository->updatePost($postId, $title, $chapo, $author, $content, $image, $published);
+					Superglobals::setFlashMessage("success", "Le post a été mis à jour avec succès !");
 				} catch (\PDOException $e) {
 					throw new \Exception("Erreur de connexion à la base de données : " . $e->getMessage());
 				}
@@ -192,6 +186,5 @@
 				$this->render('Admin/adminUpdatePost.html.twig', ['post' => $post]);
 			}
 		}
-		
 	}
 	

@@ -2,6 +2,7 @@
 	
 	namespace App\Controllers;
 	
+	use App\Utils\Superglobals;
 	use Twig\Environment;
 	use Twig\Error\LoaderError;
 	use Twig\Error\RuntimeError;
@@ -36,10 +37,10 @@
 		 */
 		protected function render($view, $data = []): void
 		{
-			$data['flash_message'] = $_SESSION['flash_message'] ?? null;
-			$data['flash_type'] = $_SESSION['flash_type'] ?? null;
-			unset($_SESSION['flash_message']);
-			unset($_SESSION['flash_type']);
+			$data['flash_message'] = Superglobals::getSession('flash_message');
+			$data['flash_type'] = Superglobals::getSession('flash_type');
+			Superglobals::unsetSession('flash_message');
+			Superglobals::unsetSession('flash_type');
 			echo $this->twig->render("$view", $data);
 		}
 		
@@ -50,39 +51,12 @@
 		 */
 		public function handleErrors(): void
 		{
-			$isAdmin = false;
-			if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
-				$isAdmin = true;
-			}
+			
+			$userRole = Superglobals::getSession('user_role');
+			$isAdmin = ($userRole === 'admin');
 			$this->render('Error/error.html.twig', [
 				'is_admin' => $isAdmin,
 				'recaptchaSiteKey' => RECAPTCHA_SITE_KEY]);
-		}
-		
-		public function getSessionData($key, $filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS)
-		{
-			$data = $_SESSION[$key] ?? null;
-			return filter_var($data, $filter);
-		}
-		public function setSessionData($key, $value): void
-		{
-			$_SESSION[$key] = $value;
-		}
-		public function setFlashMessage($type, $message): void
-		{
-			$_SESSION['flash_type'] = $type;
-			$_SESSION['flash_message'] = $message;
-		}
-		
-		public function getFlashMessage(): array
-		{
-			$flash = [];
-			if (isset($_SESSION['flash_type']) && isset($_SESSION['flash_message'])) {
-				$flash['type'] = $_SESSION['flash_type'];
-				$flash['message'] = $_SESSION['flash_message'];
-				unset($_SESSION['flash_type'], $_SESSION['flash_message']);
-			}
-			return $flash;
 		}
 	}
 	
