@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Repository\UserRepository;
+use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;
 use Twig\Error\LoaderError;
@@ -19,11 +20,14 @@ include __DIR__ . '/../../config/Config.php';
 class AdminUserController extends Controller
 {
     private UserRepository $userRepository;
+    protected ImageService $imageService;
+
 
     public function __construct()
     {
         parent::__construct();
         $this->userRepository = new UserRepository();
+        $this->imageService = new ImageService();
     }
 
     /**
@@ -63,6 +67,7 @@ class AdminUserController extends Controller
             $this->userRepository->delete($userId);
             $user = $this->userRepository->find($userId);
             if ($user && $user->getImage()) {
+                $this->imageService->deleteImage(UPLOADS_PROFILE_PATH . $user->getImage());
                 unlink(UPLOADS_PROFILE_PATH . $user->getImage());
             }
             Superglobals::setFlashMessage('success', "L'utilisateur $userId a été supprimé avec succès.");
