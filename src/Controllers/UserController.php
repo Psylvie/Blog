@@ -44,20 +44,17 @@ class UserController extends Controller
         $userId = filter_var(Superglobals::getSession('user_id'), FILTER_VALIDATE_INT);
 
         if (!$userId) {
-            header("Location: /Blog/login");
-            exit();
+            $this->redirect('/Blog/login');
         }
         $user = $this->userRepository->find($userId);
         if ($user === null) {
             Superglobals::setFlashMessage("danger", "L'utilisateur n'existe pas.");
-            header("Location: /Blog/user/{$userId}");
-            exit();
+            $this->redirect('/Blog/user/{$userId}');
         }
 
-        if (!password_verify($_POST['currentPassword'], $user->getPassword())) {
+        if (!password_verify(Superglobals::getPost('currentPassword'), $user->getPassword())) {
             Superglobals::setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
-            header("Location: /Blog/user/{$userId}");
-            exit();
+            $this->redirect('/Blog/user/{$userId}');
         }
 
         $this->userRepository->delete($userId);
@@ -66,8 +63,7 @@ class UserController extends Controller
         }
         Superglobals::setFlashMessage("success", "Votre compte a été supprimé avec succès.");
         session_destroy();
-        header("Location: /Blog/");
-        exit();
+        $this->redirect('/Blog/');
     }
 
     /**
@@ -80,13 +76,13 @@ class UserController extends Controller
     {
         if (Superglobals::getServer("REQUEST_METHOD") === "POST") {
             $userId = Superglobals::getSession('user_id', FILTER_VALIDATE_INT);
-            $name = trim(htmlspecialchars(Superglobals::getPost('name')));
-            $lastName = trim(htmlspecialchars(Superglobals::getPost('lastName')));
-            $pseudo = trim(htmlspecialchars(Superglobals::getPost('pseudo')));
-            $email = trim(htmlspecialchars(Superglobals::getPost('email')));
-            $currentPassword = trim(htmlspecialchars(Superglobals::getPost('currentPassword')));
-            $newPassword = trim(htmlspecialchars(Superglobals::getPost('newPassword')));
-            $confirmPassword = trim(htmlspecialchars(Superglobals::getPost('confirmPassword')));
+            $name = trim(htmlspecialchars_decode(Superglobals::getPost('name')));
+            $lastName = trim(htmlspecialchars_decode(Superglobals::getPost('lastName')));
+            $pseudo = trim(htmlspecialchars_decode(Superglobals::getPost('pseudo')));
+            $email = trim(htmlspecialchars_decode(Superglobals::getPost('email')));
+            $currentPassword = trim(htmlspecialchars_decode(Superglobals::getPost('currentPassword')));
+            $newPassword = trim(htmlspecialchars_decode(Superglobals::getPost('newPassword')));
+            $confirmPassword = trim(htmlspecialchars_decode(Superglobals::getPost('confirmPassword')));
 
             if ($userId !== null) {
                 $user = $this->userRepository->find($userId);
@@ -94,11 +90,11 @@ class UserController extends Controller
                 if ($user !== null && password_verify($currentPassword, $user->getPassword())) {
                     if ($newPassword === $confirmPassword) {
                         $image = $user->getImage();
-                        if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                        if (Superglobals::getFiles('image')['error'] === 0) {
                             $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                            $filename = $_FILES['image']['name'];
-                            $filetype = $_FILES['image']['type'];
-                            $filesize = $_FILES['image']['size'];
+                            $filename = Superglobals::getFiles('image')['name'];
+                            $filetype = Superglobals::getFiles('image')['type'];
+                            $filesize = Superglobals::getFiles('image')['size'];
 
                             $extension = pathinfo($filename, PATHINFO_EXTENSION);
                             if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
@@ -109,7 +105,7 @@ class UserController extends Controller
                             }
                             $newname = md5(uniqid());
                             $newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
-                            if (move_uploaded_file($_FILES['image']['tmp_name'], $newfilename)) {
+                            if (move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename)) {
                                 if ($image !== 'avatar.png') {
                                     $oldImage = $image;
                                     if ($oldImage !== null) {
@@ -132,10 +128,9 @@ class UserController extends Controller
                             Superglobals::setSession('user_email', $email);
                             Superglobals::setSession('user_pseudo', $pseudo);
                             Superglobals::setFlashMessage("success", "Vos informations ont été mises à jour avec succès.");
-                            header("Location: /Blog/user/{$userId}");
-                            exit();
+                            $this->redirect('/Blog/user/{$userId}');
                         } catch (Exception $e) {
-                            header("Location: /Blog/user/{$userId}");
+                            $this->redirect('/Blog/user/{$userId}');
                             Superglobals::setFlashMessage("danger", "pseudo ou email deja utilisé");
                         }
                     } else {
@@ -143,7 +138,7 @@ class UserController extends Controller
                     }
                 } else {
                     Superglobals::setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
-                    header("Location: /Blog/user/{$userId}");
+                    $this->redirect('/Blog/user/{$userId}');
                 }
             }
         }

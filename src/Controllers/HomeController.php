@@ -48,33 +48,25 @@ class HomeController extends Controller
     public function contactForm()
     {
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
 
             $firstName = Superglobals::getPost('firstName') ?? '';
             $lastName = Superglobals::getPost('lastName') ?? '';
             $email = Superglobals::getPost('email') ?? '';
             $message = Superglobals::getPost('message') ?? '';
 
-//				$firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : '';
-//				$lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
-//				$email = isset($_POST['email']) ? trim($_POST['email']) : '';
-//				$message = isset($_POST['message']) ? trim($_POST['message']) : '';
-
             if (empty($firstName) || empty($lastName) || empty($email) || empty($message)) {
                 Superglobals::setFlashMessage("info", "Tous les champs sont obligatoires !");
-                header('Location: /Blog/');
-                exit;
+                $this->redirect('/Blog/');
             }
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 Superglobals::setFlashMessage("info", "L'adresse email n'est pas valide !");
-                header('Location: /Blog/');
-                exit;
+                $this->redirect('/Blog/');
             }
-            $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+            $recaptchaResponse = Superglobals::getPost('g-recaptcha-response') ?? '';
             if (empty($recaptchaResponse)) {
                 Superglobals::setFlashMessage("info", "Veuillez cocher la case reCAPTCHA !");
-                header('Location: /Blog/');
-                exit;
+                $this->redirect('/Blog/');
             }
             $recaptchaSecretKey = RECAPTCHA_SECRET_KEY;
             $recaptchaVerifyUrl = RECAPTCHA_URL;
@@ -83,9 +75,7 @@ class HomeController extends Controller
 
             if (!$recaptchaData->success) {
                 Superglobals::setFlashMessage("danger", "Erreur de validation reCAPTCHA !");
-                header('Location: /Blog/');
-
-                exit;
+                $this->redirect('/Blog/');
             }
 
             $htmlMessage = "

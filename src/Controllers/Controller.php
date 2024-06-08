@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Utils\Superglobals;
+use JetBrains\PhpStorm\NoReturn;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -44,6 +45,11 @@ class Controller
         Superglobals::unsetSession('flash_message');
         Superglobals::unsetSession('flash_type');
         echo $this->twig->render("$view", $data);
+    }
+
+    protected function redirect($path): void
+    {
+        header("Location: $path");
     }
 
     /**
