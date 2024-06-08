@@ -11,15 +11,23 @@ use Twig\Error\SyntaxError;
 
 include __DIR__ . '/../Config/Config.php';
 
+/**
+ * Class RegisterController
+ * @package App\Controllers
+ */
 class RegisterController extends Controller
 {
 
+    /**
+     * RegisterController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
     /**
+     * Registration form
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -35,7 +43,8 @@ class RegisterController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * Registration action
+     * @throws Exception
      */
     public function register()
     {

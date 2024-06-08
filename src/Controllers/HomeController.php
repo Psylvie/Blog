@@ -13,10 +13,17 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * Class HomeController
+ * @package App\Controllers
+ */
 class HomeController extends Controller
 {
     private PostRepository $postRepository;
 
+    /**
+     * HomeController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -25,6 +32,7 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the home page
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -43,11 +51,12 @@ class HomeController extends Controller
     }
 
     /**
+     * Handle the contact form
+     * @throws SyntaxError
      * @throws \Exception
      */
     public function contactForm()
     {
-
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
 
             $firstName = Superglobals::getPost('firstName') ?? '';
@@ -114,6 +123,7 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the contact page
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -125,6 +135,7 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the privacy policy page
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -135,6 +146,7 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the legal mention page
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError

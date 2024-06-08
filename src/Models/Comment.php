@@ -4,6 +4,10 @@ namespace App\Models;
 
 use DateTime;
 
+/**
+ * Class Comment
+ * @package App\Models
+ */
 class Comment
 {
     private int $id;
@@ -146,6 +150,4 @@ class Comment
     {
         $this->postId = $postId;
     }
-
-
 }

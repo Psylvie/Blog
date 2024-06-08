@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use DateTime;
-
+/**
+ * Class Post
+ * @package App\Models
+ */
 class Post
 {
     private int $id;

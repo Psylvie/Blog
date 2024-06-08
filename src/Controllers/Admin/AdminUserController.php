@@ -12,6 +12,10 @@ use Twig\Error\SyntaxError;
 
 include __DIR__ . '/../../config/Config.php';
 
+/**
+ * Class AdminUserController
+ * @package App\Controllers\Admin
+ */
 class AdminUserController extends Controller
 {
     private UserRepository $userRepository;
@@ -23,10 +27,11 @@ class AdminUserController extends Controller
     }
 
     /**
+     * show all users
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function list()
     {
@@ -35,10 +40,11 @@ class AdminUserController extends Controller
     }
 
     /**
+     * show user profile
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function show($userId)
     {
@@ -46,6 +52,11 @@ class AdminUserController extends Controller
         $this->render('Admin/adminUpdateUserProfile.html.twig', ['user' => $user]);
     }
 
+    /**
+     * delete user by admin
+     * @param $userId
+     * @throws Exception
+     */
     public function delete($userId)
     {
         try {
@@ -62,6 +73,11 @@ class AdminUserController extends Controller
     }
 
     /**
+     * update user profile by admin
+     * @param $userId
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
      * @throws Exception
      */
     public function update($userId)
@@ -77,38 +93,8 @@ class AdminUserController extends Controller
                 Superglobals::setFlashMessage("danger", "L'utilisateur n'existe pas.");
                 $this->redirect('/Blog/admin/users/list');
             }
-
-            $image = $user->getImage();
-            if (Superglobals::getFiles('image')['error'] === 0) {
-                $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                $filename = Superglobals::getFiles('image')['name'];
-                $filetype = Superglobals::getFiles('image')['type'];
-                $filesize = Superglobals::getFiles('image')['size'];
-
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-                    Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
-                } elseif ($filesize > 1024 * 1024) {
-                    Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
-                } else {
-                    $newname = md5(uniqid());
-                    $newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
-                    if (move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename)) {
-                        if ($image !== 'avatar.png') {
-                            $oldImage = $image;
-                            if ($oldImage !== null) {
-                                unlink(UPLOADS_PROFILE_PATH . $oldImage);
-                            }
-                        }
-                        $image = $newname . '.' . $extension;
-                    } else {
-                        Superglobals::setFlashMessage("danger", "Une erreur est survenue lors de l'envoi du fichier.");
-                    }
-                }
-            }
-
             try {
-                $this->userRepository->updateProfileByAdmin($userId, $name, $lastName, $email, $pseudo, $role, $image);
+                $this->userRepository->updateProfileByAdmin($userId, $name, $lastName, $email, $pseudo, $role);
                 Superglobals::setFlashMessage("success", "Les informations de l'utilisateur $name $lastName ont été mises à jour avec succès.");
             } catch (Exception $e) {
                 Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur.");
@@ -119,17 +105,18 @@ class AdminUserController extends Controller
 
 
     /**
+     * create user form
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
      */
     public function createUser()
     {
-
         $this->render('Admin/adminCreateUser.html.twig');
     }
 
     /**
+     * create user process
      * @throws Exception
      */
     public function createUserProcess()
@@ -149,25 +136,6 @@ class AdminUserController extends Controller
             if (!preg_match($pattern, Superglobals::getPost("password"))) {
                 Superglobals::setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule et un chiffre.");
                 $this->redirect('/Blog/admin/users/create');
-            }
-
-            if (Superglobals::getFiles('image')['error'] === 0) {
-                $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                $filename = Superglobals::getFiles('image')['name'];
-                $filetype = Superglobals::getFiles('image')['type'];
-                $filesize = Superglobals::getFiles('image')['size'];
-
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-                    Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
-                }
-                if ($filesize > 1024 * 1024) {
-                    Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
-                }
-                $newname = md5(uniqid());
-                $newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
-                move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename);
-                $image = $newname . '.' . $extension;
             }
             try {
                 $userRepository = new UserRepository();

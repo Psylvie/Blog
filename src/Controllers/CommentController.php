@@ -5,11 +5,19 @@ namespace App\Controllers;
 use App\Config\DatabaseConnect;
 use App\Repository\CommentRepository;
 use App\Utils\Superglobals;
+use Exception;
 use PDOException;
 
-
+/**
+ * Class CommentController
+ * @package App\Controllers
+ */
 class CommentController extends HomeController
 {
+    /**
+     * Add a comment to a post
+     * @throws Exception
+     */
     public function addComment(): void
     {
         if (Superglobals::getServer('REQUEST_METHOD') !== 'POST') {
@@ -26,8 +34,7 @@ class CommentController extends HomeController
             $this->redirect('/Blog/post/' . $postId);
         }
         try {
-            $mysqlClient = DatabaseConnect::connect();
-            $commentRepository = new CommentRepository($mysqlClient);
+            $commentRepository = new CommentRepository();
             $commentRepository->addComment($commentContent, $postId, $userId);
             Superglobals::setFlashMessage("info", "Votre commentaire a été soumis avec succès et est en attente de validation.");
             $this->redirect('/Blog/post/' . $postId);

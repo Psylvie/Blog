@@ -6,16 +6,24 @@ use App\Controllers\Controller;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use App\Utils\Superglobals;
+use Exception;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * Class AdminCommentController
+ * @package App\Controllers\Admin
+ */
 class AdminCommentController extends Controller
 {
 
     private CommentRepository $commentRepository;
     private PostRepository $postRepository;
 
+    /**
+     * AdminCommentController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -24,10 +32,11 @@ class AdminCommentController extends Controller
     }
 
     /**
+     * show all posts
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function showAllPosts()
     {
@@ -47,10 +56,11 @@ class AdminCommentController extends Controller
     }
 
     /**
+     * show all comments for a post
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function showAllComments($postId)
     {
@@ -67,9 +77,10 @@ class AdminCommentController extends Controller
     }
 
     /**
+     * handle comment validation (approve, reject, pending)
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws LoaderError
+     * @throws LoaderError|Exception
      */
     public function handleCommentValidation()
     {

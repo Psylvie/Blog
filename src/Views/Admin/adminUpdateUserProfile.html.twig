@@ -32,11 +32,6 @@
                             <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
                         </li>
                         <li class="list-group-item">
-                            <label for="image" class="form-label">Image de profil :</label>
-                            <input type="file" class="form-control" id="image" name="image">
-                            <i>*format acceptés : jpg, jpeg, png. Taille maximale : 2Mo</i>
-                        </li>
-                        <li class="list-group-item">
                             <label for="role" class="form-label">Rôle :</label>
                             <select class="form-select" id="role" name="role" required>
                                 <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Administrateur

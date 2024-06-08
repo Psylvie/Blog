@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\Controller;
 use App\Repository\PostRepository;
 use App\Utils\Superglobals;
+use Exception;
 use PDOException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -12,12 +13,18 @@ use Twig\Error\SyntaxError;
 
 include __DIR__ . '/../../config/Config.php';
 
-
+/**
+ * Class AdminPostController
+ * @package App\Controllers\Admin
+ */
 class AdminPostController extends Controller
 {
 
     private PostRepository $postRepository;
 
+    /**
+     * AdminPostController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -25,10 +32,11 @@ class AdminPostController extends Controller
     }
 
     /**
+     * show all posts
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function showPost()
     {
@@ -38,6 +46,8 @@ class AdminPostController extends Controller
     }
 
     /**
+     * form to create a new post
+     * @throws Exception
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -48,7 +58,8 @@ class AdminPostController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * create a new post
+     * @throws Exception
      */
     public function createPost()
     {
@@ -100,7 +111,8 @@ class AdminPostController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * delete a post by id and delete comments associated with the post
+     * @throws Exception
      */
     public function deletePost($postId): void
     {
@@ -121,9 +133,9 @@ class AdminPostController extends Controller
     }
 
     /**
-     *
+     * form to update a post
      * @param int $postId
-     * @throws \Exception
+     * @throws Exception
      */
     public function updatePost(int $postId)
     {
@@ -135,7 +147,7 @@ class AdminPostController extends Controller
             $published = filter_var(Superglobals::getPost('published'), FILTER_VALIDATE_INT) ?? 0;
 
             if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
-                throw new \Exception("Tous les champs sont requis.");
+                throw new Exception("Tous les champs sont requis.");
             }
             $post = $this->postRepository->getPostById($postId);
             $currentImage = $post->getImage();
@@ -172,7 +184,7 @@ class AdminPostController extends Controller
                 $this->postRepository->updatePost($postId, $title, $chapo, $author, $content, $image, $published);
                 Superglobals::setFlashMessage("success", "Le post a été mis à jour avec succès !");
             } catch (\PDOException $e) {
-                throw new \Exception("Erreur de connexion à la base de données : " . $e->getMessage());
+                throw new Exception("Erreur de connexion à la base de données : " . $e->getMessage());
             }
             $this->redirect('/Blog/admin/showPost');
         } else {
