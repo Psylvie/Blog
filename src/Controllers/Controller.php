@@ -36,7 +36,8 @@ class Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $this->twig->addGlobal('session', $_SESSION);
+        $sessionData = Superglobals::getSessionData();
+        $this->twig->addGlobal('session', $sessionData);
     }
 
     /**
@@ -51,7 +52,10 @@ class Controller
         $data['flash_type'] = Superglobals::getSession('flash_type');
         Superglobals::unsetSession('flash_message');
         Superglobals::unsetSession('flash_type');
+
+        ob_start();
         echo $this->twig->render("$view", $data);
+        ob_end_flush();
     }
 
     /**
@@ -71,7 +75,6 @@ class Controller
      */
     public function handleErrors(): void
     {
-
         $userRole = Superglobals::getSession('user_role');
         $isAdmin = ($userRole === 'admin');
         $this->render('Error/error.html.twig', [

@@ -4,6 +4,10 @@ namespace App\Utils;
 
 class Superglobals
 {
+    public static function getSessionData(): array
+    {
+        return $_SESSION ?? [];
+    }
     public static function getSession(string $key): ?string
     {
         return $_SESSION[$key] ?? null;

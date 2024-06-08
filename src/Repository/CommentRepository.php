@@ -59,15 +59,15 @@ class CommentRepository
         foreach ($commentsData as $commentData) {
             $createdAt = new DateTime($commentData['createdAt']);
             $updatedAt = new DateTime($commentData['updateAt']);
-            $comment = new Comment(
-                $commentData['id'],
-                $commentData['content'],
-                $commentData['status'],
-                $createdAt,
-                $updatedAt,
-                $commentData['user_id'],
-                $postId
-            );
+            $comment = new Comment([
+                    'id' => $commentData['id'],
+                    'content' => $commentData['content'],
+                    'status' => $commentData['status'],
+                    'createdAt' => $createdAt,
+                    'updateAt' => $updatedAt,
+                    'userId' => $commentData['user_id'],
+                    'postId' => $postId
+                ]);
             $comments[] = $comment;
         }
 

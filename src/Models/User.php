@@ -11,7 +11,7 @@ use DateTime;
  * @uniqueEntity(fields="email"), message="Cet email est déjà utilisé."
  * @uniqueEntity(fields="pseudo"), message="Ce pseudo est déjà utilisé."
  */
-class User
+class User extends EntityModel
 {
     private int $id;
     private string $name;
@@ -27,33 +27,14 @@ class User
     private ?string $resetToken;
 
     /**
-     * @param int $id
-     * @param string $name
-     * @param string $lastName
-     * @param string|null $image
-     * @param string $pseudo
-     * @param string $email
-     * @param string $password
-     * @param DateTime $createdAt
-     * @param DateTime $updateAt
-     * @param string $role
-     * @param bool $firstLoginDone
-     * @param string|null $resetToken
+     * Post constructor.
+     * @param array|null $data
      */
-    public function __construct(int $id, string $name, string $lastName, ?string $image, string $pseudo, string $email, string $password, DateTime $createdAt, DateTime $updateAt, string $role, bool $firstLoginDone, ?string $resetToken)
+    public function __construct(?array $data = [])
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->lastName = $lastName;
-        $this->image = $image;
-        $this->pseudo = $pseudo;
-        $this->email = $email;
-        $this->password = $password;
-        $this->createdAt = $createdAt;
-        $this->updateAt = $updateAt;
-        $this->role = $role;
-        $this->firstLoginDone = $firstLoginDone;
-        $this->resetToken = $resetToken;
+        $this->createdAt = new DateTime();
+        $this->updateAt = new DateTime();
+        parent::__construct($data);
     }
 
     /**

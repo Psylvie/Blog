@@ -7,7 +7,7 @@ use DateTime;
  * Class Post
  * @package App\Models
  */
-class Post
+class Post extends EntityModel
 {
     private int $id;
     private string $title;
@@ -18,35 +18,19 @@ class Post
     private int $user_id;
     private bool $published;
     private DateTime $createdAt;
-    private \DateTime $updatedAt;
+    private DateTime $updatedAt;
     private ?array $comments;
 
     /**
-     * @param int|null $id
-     * @param string|null $title
-     * @param string|null $chapo
-     * @param string|null $author
-     * @param string|null $content
-     * @param string|null $image
-     * @param int|null $user_id
-     * @param bool|null $published
-     * @param DateTime|null $createdAt
-     * @param DateTime|null $updatedAt
-     * @param array|null $comments array
+     * Post constructor.
+     * @param array|null $data
      */
-    public function __construct(?int $id, ?string $title, ?string $chapo, ?string $author, ?string $content, ?string $image, ?int $user_id, ?bool $published, ?DateTime $createdAt, ?DateTime $updatedAt, ?array $comments = [])
+    public function __construct(?array $data = [])
     {
-        $this->id = $id;
-        $this->title = $title;
-        $this->chapo = $chapo;
-        $this->author = $author;
-        $this->content = $content;
-        $this->image = $image;
-        $this->user_id = $user_id;
-        $this->published = $published;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
         $this->comments = [];
+        parent::__construct($data);
     }
 
     /**
