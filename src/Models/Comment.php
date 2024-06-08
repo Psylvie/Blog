@@ -8,7 +8,7 @@ use DateTime;
  * Class Comment
  * @package App\Models
  */
-class Comment
+class Comment extends EntityModel
 {
     private int $id;
     private string $content;
@@ -19,24 +19,15 @@ class Comment
     private ?int $postId;
 
     /**
-     * @param int $id
-     * @param string $content
-     * @param string $status
-     * @param DateTime $createdAt
-     * @param DateTime $updateAt
-     * @param ?int $userId
-     * @param ?int $postId
+     * Comment constructor.
+     * @param array|null $data
      */
 
-    public function __construct(int $id, string $content, string $status, DateTime $createdAt, DateTime $updateAt, ?int $userId, ?int $postId)
+    public function __construct(?array $data = [])
     {
-        $this->id = $id;
-        $this->content = $content;
-        $this->status = $status;
-        $this->createdAt = $createdAt;
-        $this->updateAt = $updateAt;
-        $this->userId = $userId;
-        $this->postId = $postId;
+        $this->createdAt = new DateTime();
+        $this->updateAt = new DateTime();
+        parent::__construct($data);
     }
 
     /**

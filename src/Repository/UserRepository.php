@@ -49,20 +49,22 @@ class UserRepository
         foreach ($usersData as $userData) {
             $createdAt = new DateTime($userData['createdAt']);
             $updatedAt = new DateTime($userData['updateAt']);
-            $users[] = new User(
-                $userData['id'],
-                $userData['name'],
-                $userData['lastName'],
-                $userData['image'],
-                $userData['pseudo'],
-                $userData['email'],
-                $userData['password'],
-                $createdAt,
-                $updatedAt,
-                $userData['role'],
-                $userData['first_login_done'],
-                $userData['resetToken']
-            );
+            $userDataArray = [
+                'id' => $userData['id'],
+                'name' => $userData['name'],
+                'lastName' => $userData['lastName'],
+                'image' => $userData['image'],
+                'pseudo' => $userData['pseudo'],
+                'email' => $userData['email'],
+                'password' => $userData['password'],
+                'createdAt' => $createdAt,
+                'updatedAt' => $updatedAt,
+                'role' => $userData['role'],
+                'firstLoginDone' => $userData['first_login_done'],
+                'resetToken' => $userData['resetToken']
+            ];
+            $user = new User($userDataArray);
+            $users[] = $user;
         }
 
         return $users;
@@ -84,20 +86,21 @@ class UserRepository
         if ($userData) {
             $createdAt = new DateTime($userData['createdAt']);
             $updatedAt = new DateTime($userData['updateAt']);
-            return new User(
-                $userData['id'],
-                $userData['name'],
-                $userData['lastName'],
-                $userData['image'],
-                $userData['pseudo'],
-                $userData['email'],
-                $userData['password'],
-                $createdAt,
-                $updatedAt,
-                $userData['role'],
-                $firstLoginDone,
-                $userData['resetToken']
-            );
+            $userDataArray = [
+                'id' => $userData['id'],
+                'name' => $userData['name'],
+                'lastName' => $userData['lastName'],
+                'image' => $userData['image'],
+                'pseudo' => $userData['pseudo'],
+                'email' => $userData['email'],
+                'password' => $userData['password'],
+                'createdAt' => $createdAt,
+                'updatedAt' => $updatedAt,
+                'role' => $userData['role'],
+                'firstLoginDone' => isset($userData['first_login_done']) ? (bool)$userData['first_login_done'] : null,
+                'resetToken' => $userData['resetToken']
+            ];
+            return new User($userDataArray);
         }
         return null;
     }
@@ -116,20 +119,21 @@ class UserRepository
         if ($userData) {
             $createdAt = new DateTime($userData['createdAt']);
             $updatedAt = new DateTime($userData['updateAt']);
-            return new User(
-                $userData['id'],
-                $userData['name'],
-                $userData['lastName'],
-                $userData['image'],
-                $userData['pseudo'],
-                $userData['email'],
-                $userData['password'],
-                $createdAt,
-                $updatedAt,
-                $userData['role'],
-                $userData['first_login_done'],
-                $userData['resetToken']
-            );
+            $userDataArray = [
+                'id' => $userData['id'],
+                'name' => $userData['name'],
+                'lastName' => $userData['lastName'],
+                'image' => $userData['image'],
+                'pseudo' => $userData['pseudo'],
+                'email' => $userData['email'],
+                'password' => $userData['password'],
+                'createdAt' => $createdAt,
+                'updatedAt' => $updatedAt,
+                'role' => $userData['role'],
+                'firstLoginDone' => isset($userData['first_login_done']) ? (bool)$userData['first_login_done'] : null,
+                'resetToken' => $userData['resetToken']
+            ];
+            return new User($userDataArray);
         }
         return null;
     }
@@ -273,21 +277,22 @@ class UserRepository
         if (!$result) {
             return null;
         }
+        $userDataArray = [
+            'id' => $result['id'],
+            'name' => $result['name'],
+            'lastName' => $result['lastName'],
+            'image' => $result['image'],
+            'pseudo' => $result['pseudo'],
+            'email' => $result['email'],
+            'password' => $result['password'],
+            'createdAt' => new DateTime($result['createdAt']),
+            'updatedAt' => new DateTime($result['updateAt']),
+            'role' => $result['role'],
+            'firstLoginDone' => isset($result['first_login_done']) ? (bool)$result['first_login_done'] : null,
+            'resetToken' => $result['resetToken']
+        ];
 
-        $user = new User(
-            $result['id'],
-            $result['name'],
-            $result['lastName'],
-            $result['image'],
-            $result['pseudo'],
-            $result['email'],
-            $result['password'],
-            new DateTime($result['createdAt']),
-            new DateTime($result['updateAt']),
-            $result['role'],
-            $result['first_login_done'],
-            $result['resetToken']
-        );
+        $user = new User($userDataArray);
         return $user;
     }
 

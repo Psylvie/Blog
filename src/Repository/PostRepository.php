@@ -42,19 +42,19 @@ class PostRepository
             $published = $postData['published'] ?? null;
 
             $createdAt = new DateTime($postData['createdAt']);
-            $post = new Post(
-                $postData['id'],
-                $postData['title'],
-                $postData['chapo'],
-                $postData['author'],
-                $postData['content'],
-                $postData['image'],
-                $userId,
-                $published,
-                $createdAt,
-                new DateTime($postData['updateAt']),
-                []
-            );
+            $post = new Post([
+                'id' => $postData['id'],
+                'title' => $postData['title'],
+                'chapo' => $postData['chapo'],
+                'author' => $postData['author'],
+                'content' => $postData['content'],
+                'image' => $postData['image'],
+                'user_id' => $userId,
+                'published' => $published,
+                'createdAt' => $createdAt,
+                'updatedAt' => new DateTime($postData['updateAt']),
+                'comments' => []
+            ]);
             $posts[] = $post;
         }
 
@@ -94,34 +94,35 @@ class PostRepository
             if (!isset($posts[$postId])) {
                 $createdAtDateTime = new DateTime($postData['createdAt']);
                 $updatedAtDateTime = new DateTime($postData['updateAt']);
-                $post = new Post(
-                    $postId,
-                    $postData['title'],
-                    $postData['chapo'],
-                    $postData['author'],
-                    $postData['content'],
-                    $postData['image'],
-                    $postData['user_id'],
-                    $postData['published'],
-                    $createdAtDateTime,
-                    $updatedAtDateTime,
-                    []
-                );
+                $post = new Post([
+                    'id' => $postId,
+                    'title' => $postData['title'],
+                    'chapo' => $postData['chapo'],
+                    'author' => $postData['author'],
+                    'content' => $postData['content'],
+                    'image' => $postData['image'],
+                    'user_id' => $postData['user_id'],
+                    'published' => $postData['published'],
+                    'createdAt' => $createdAtDateTime,
+                    'updatedAt' => $updatedAtDateTime,
+                    'comments' => []
+                ]);
                 $posts[$postId] = $post;
             }
 
             if (!empty($postData['comment_id'])) {
                 $commentCreatedAt = new DateTime($postData['comment_created_at']);
                 $commentUpdatedAt = new DateTime($postData['comment_updated_at']);
-                $comment = new Comment(
-                    $postData['comment_id'],
-                    $postData['comment_content'],
-                    $postData['comment_status'],
-                    $commentCreatedAt,
-                    $commentUpdatedAt,
-                    $postData['comment_user_id'],
-                    $postId
-                );
+                $commentDataArray = [
+                    'id' => $postData['comment_id'],
+                    'content' => $postData['comment_content'],
+                    'status' => $postData['comment_status'],
+                    'createdAt' => $commentCreatedAt,
+                    'updatedAt' => $commentUpdatedAt,
+                    'userId' => $postData['comment_user_id'],
+                    'postId' => $postId
+                ];
+                $comment = new Comment($commentDataArray);
                 $posts[$postId]->addComment($comment);
             }
         }
@@ -157,32 +158,33 @@ class PostRepository
             if ($post === null) {
                 $createdAt = str_replace('/', '-', $data['createdAt']);
                 $createdAtDateTime = new DateTime($createdAt);
-                $post = new Post(
-                    $data['id'],
-                    $data['title'],
-                    $data['chapo'],
-                    $data['author'],
-                    $data['content'],
-                    $data['image'],
-                    $data['user_id'],
-                    $data['published'],
-                    $createdAtDateTime,
-                    new DateTime($data['updateAt']),
-                    []
-                );
+                $post = new Post([
+                    'id' => $data['id'],
+                    'title' => $data['title'],
+                    'chapo' => $data['chapo'],
+                    'author' => $data['author'],
+                    'content' => $data['content'],
+                    'image' => $data['image'],
+                    'user_id' => $data['user_id'],
+                    'published' => $data['published'],
+                    'createdAt' => $createdAtDateTime,
+                    'updatedAt' => new DateTime($data['updateAt']),
+                    'comments' => []
+                ]);
             }
             if (!empty($data['comment_id']) && $data['comment_status'] === 'approved') {
                 $commentCreatedAt = new DateTime($data['comment_created_at']);
                 $commentUpdatedAt = new DateTime($data['comment_updated_at']);
-                $comment = new Comment(
-                    $data['comment_id'],
-                    $data['comment_content'],
-                    $data['comment_status'],
-                    $commentCreatedAt,
-                    $commentUpdatedAt,
-                    $data['comment_user_id'],
-                    $postId
-                );
+                $commentDataArray = [
+                    'id' => $data['comment_id'],
+                    'content' => $data['comment_content'],
+                    'status' => $data['comment_status'],
+                    'createdAt' => $commentCreatedAt,
+                    'updatedAt' => $commentUpdatedAt,
+                    'userId' => $data['comment_user_id'],
+                    'postId' => $postId
+                ];
+                $comment = new Comment($commentDataArray);
                 $post->addComment($comment);
             }
         }
