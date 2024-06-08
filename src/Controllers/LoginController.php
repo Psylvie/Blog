@@ -12,14 +12,22 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * Class LoginController
+ * @package App\Controllers
+ */
 class LoginController extends Controller
 {
+    /**
+     * LoginController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
     /**
+     * login form
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -30,6 +38,7 @@ class LoginController extends Controller
     }
 
     /**
+     * login action
      * @throws Exception
      */
     public function login()
@@ -75,6 +84,7 @@ class LoginController extends Controller
 
 
     /**
+     * password reset form
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws LoaderError
@@ -85,6 +95,7 @@ class LoginController extends Controller
     }
 
     /**
+     * request password reset
      * @throws Exception
      */
     public function requestPasswordReset()
@@ -108,6 +119,11 @@ class LoginController extends Controller
         }
     }
 
+    /**
+     * send password reset email
+     * @param $email
+     * @param $token
+     */
     private function sendPasswordResetEmail($email, $token)
     {
         $mail = new PHPMailer(true);
@@ -136,6 +152,8 @@ class LoginController extends Controller
     }
 
     /**
+     * new password form
+     * @param $token
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws LoaderError
@@ -168,6 +186,7 @@ class LoginController extends Controller
 
 
     /**
+     * reset password
      * @throws Exception
      */
     public function resetPassword()
@@ -199,6 +218,7 @@ class LoginController extends Controller
     }
 
     /**
+     * first connection form with not password
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -209,6 +229,7 @@ class LoginController extends Controller
     }
 
     /**
+     * handle first connection with not password
      * @throws Exception
      */
     public function handleFirstConnection()
@@ -235,6 +256,7 @@ class LoginController extends Controller
     }
 
     /**
+     * logout action
      * @return void
      */
     #[NoReturn] public function logout(): void

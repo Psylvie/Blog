@@ -12,11 +12,21 @@ class CommentRepository
 {
     private PDO $mysqlClient;
 
+    /**
+     * CommentRepository constructor.
+     */
     public function __construct()
     {
         $this->mysqlClient = DatabaseConnect::connect();
     }
 
+    /**
+     * Adds a comment to the database
+     * @throws Exception
+     * @param string $commentContent content of the comment
+     * @param int $postId id of the post
+     * @param int $userId id of the user who wrote the comment
+     */
     public function addComment(string $commentContent, int $postId, int $userId): void
     {
         $sql = 'INSERT INTO comments (content, status, createdAt, updateAt, user_id, post_id) VALUES (:content, :status, :createdAt, :updateAt, :userId, :postId)';
@@ -33,7 +43,9 @@ class CommentRepository
     }
 
     /**
+     * Finds all comments by post id
      * @throws Exception
+     * @param int $postId id of the post
      */
     public function findAllByPostId(int $postId): array
     {
@@ -62,6 +74,12 @@ class CommentRepository
         return $comments;
     }
 
+    /**
+     * Finds all comments by user id
+     * @param int $commentId id of the comment
+     * @param string $status status of the comment
+     * @throws Exception
+     */
     public function updateCommentStatus(int $commentId, string $status): void
     {
 
@@ -70,10 +88,15 @@ class CommentRepository
         try {
             $statement->execute(['status' => $status, 'commentId' => $commentId]);
         } catch (\PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+            throw new Exception('Error while updating comment status');
         }
     }
 
+    /**
+     * Finds the status of a comment by its id
+     * @param int $commentId id of the comment
+     * @return string status of the comment
+     */
     public function findStatusByComment(int $commentId): string
     {
         $sql = 'SELECT status FROM comments WHERE id = :commentId';
@@ -83,6 +106,11 @@ class CommentRepository
         return $status['status'];
     }
 
+    /**
+     * Deletes a comment by its id
+     * @param int $postId
+     * @return void
+     */
     public function deleteCommentByPostId(int $postId): void
     {
         $sql = 'DELETE FROM comments WHERE post_id = :postId';
@@ -91,6 +119,11 @@ class CommentRepository
     }
 
 
+    /**
+     * Finds the user who wrote a comment
+     * @param int $commentId
+     * @return array|null
+     */
     public function findUserByComment(int $commentId): ?array
     {
         $sql = "SELECT users.* FROM users

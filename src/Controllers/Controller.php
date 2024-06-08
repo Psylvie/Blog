@@ -13,11 +13,17 @@ use Twig\Loader\FilesystemLoader;
 
 require_once __DIR__ . '/../Config/Recaptcha.php';
 
+/**
+ * Class Controller
+ * @package App\Controllers
+ */
 class Controller
 {
-
     protected Environment $twig;
 
+    /**
+     * Controller constructor.
+     */
     public function __construct()
     {
         $loader = new FilesystemLoader(__DIR__ . '\..\Views');
@@ -34,6 +40,7 @@ class Controller
     }
 
     /**
+     * render a view
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -47,12 +54,17 @@ class Controller
         echo $this->twig->render("$view", $data);
     }
 
+    /**
+     * redirect to a path
+     * @param $path
+     */
     protected function redirect($path): void
     {
         header("Location: $path");
     }
 
     /**
+     * handle errors and display error page
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError

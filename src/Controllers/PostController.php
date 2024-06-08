@@ -4,15 +4,23 @@ namespace App\Controllers;
 
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use Exception;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * Class PostController
+ * @package App\Controllers
+ */
 class PostController extends Controller
 {
     private PostRepository $postRepository;
     private CommentRepository $commentRepository;
 
+    /**
+     * PostController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -21,10 +29,11 @@ class PostController extends Controller
     }
 
     /**
+     * Display the list of posts
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function list()
     {
@@ -33,10 +42,11 @@ class PostController extends Controller
     }
 
     /**
+     * show post details
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws LoaderError
-     * @throws \Exception
+     * @throws Exception
      */
     public function show($id)
     {

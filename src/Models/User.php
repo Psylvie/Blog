@@ -6,6 +6,8 @@ namespace App\Models;
 use DateTime;
 
 /**
+ * Class User
+ * @package App\Models
  * @uniqueEntity(fields="email"), message="Cet email est déjà utilisé."
  * @uniqueEntity(fields="pseudo"), message="Ce pseudo est déjà utilisé."
  */

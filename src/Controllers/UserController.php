@@ -12,12 +12,18 @@ use Twig\Error\SyntaxError;
 
 include __DIR__ . '/../Config/Config.php';
 
-
+/**
+ * Class UserController
+ * @package App\Controllers
+ */
 class UserController extends Controller
 {
 
     private UserRepository $userRepository;
 
+    /**
+     * UserController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -25,9 +31,7 @@ class UserController extends Controller
     }
 
     /**
-     * @throws SyntaxError
-     * @throws RuntimeError
-     * @throws LoaderError
+     * Display the user profile
      * @throws Exception
      */
     public function show($userId)
@@ -37,6 +41,7 @@ class UserController extends Controller
     }
 
     /**
+     * Delete a user account
      * @throws Exception
      */
     #[NoReturn] public function deleteUser($userId): void
@@ -49,12 +54,12 @@ class UserController extends Controller
         $user = $this->userRepository->find($userId);
         if ($user === null) {
             Superglobals::setFlashMessage("danger", "L'utilisateur n'existe pas.");
-            $this->redirect('/Blog/user/{$userId}');
+            $this->redirect('/Blog/user/'. $userId);
         }
 
         if (!password_verify(Superglobals::getPost('currentPassword'), $user->getPassword())) {
             Superglobals::setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
-            $this->redirect('/Blog/user/{$userId}');
+            $this->redirect('/Blog/user/'. $userId);
         }
 
         $this->userRepository->delete($userId);
@@ -67,6 +72,7 @@ class UserController extends Controller
     }
 
     /**
+     * Update the user profile
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws LoaderError
@@ -128,9 +134,9 @@ class UserController extends Controller
                             Superglobals::setSession('user_email', $email);
                             Superglobals::setSession('user_pseudo', $pseudo);
                             Superglobals::setFlashMessage("success", "Vos informations ont été mises à jour avec succès.");
-                            $this->redirect('/Blog/user/{$userId}');
+                            $this->redirect('/Blog/user/'. $userId);
                         } catch (Exception $e) {
-                            $this->redirect('/Blog/user/{$userId}');
+                            $this->redirect('/Blog/user/'. $userId);
                             Superglobals::setFlashMessage("danger", "pseudo ou email deja utilisé");
                         }
                     } else {
@@ -138,7 +144,7 @@ class UserController extends Controller
                     }
                 } else {
                     Superglobals::setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
-                    $this->redirect('/Blog/user/{$userId}');
+                    $this->redirect('/Blog/user/'. $userId);
                 }
             }
         }

@@ -13,12 +13,20 @@ class UserRepository
 {
     private \PDO $mysqlClient;
 
+    /**
+     * UserRepository constructor.
+     */
     public function __construct()
     {
         $this->mysqlClient = DatabaseConnect::connect();
     }
 
-    public function findLatestUsers($limit = 3): bool|array
+    /**
+     * find the latest users
+     * @param int $limit
+     * @return bool|array
+     */
+    public function findLatestUsers(int $limit = 3): bool|array
     {
         $sql = 'SELECT * FROM users ORDER BY createdAt DESC LIMIT :limit';
         $statement = $this->mysqlClient->prepare($sql);
@@ -28,6 +36,7 @@ class UserRepository
     }
 
     /**
+     * find all users
      * @throws Exception
      */
     public function findAll(): array
@@ -60,6 +69,9 @@ class UserRepository
     }
 
     /**
+     * find user by email
+     * @param string $email
+     * @return User|null
      * @throws Exception
      */
     public function findByEmail(string $email): ?User
@@ -91,6 +103,7 @@ class UserRepository
     }
 
     /**
+     * find user by id
      * @throws Exception
      */
     public function find(int $id): ?User
@@ -122,18 +135,27 @@ class UserRepository
     }
 
     /**
+     * create a new user
+     * @param string $name
+     * @param string $lastName
+     * @param null $image
+     * @param string $pseudo
+     * @param string $email
+     * @param string $password
+     * @param string $role
+     * @param string $resetToken
      * @throws Exception
      */
-    public function createUser($name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken): void
+    public function createUser(string $name, string $lastName, $image, string $pseudo, string $email, string $password, string $role, string $resetToken): void
     {
         try {
             $pdo = DatabaseConnect::connect();
             $stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, pseudo, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken]);
         } catch (PDOException $e) {
-            if ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_email') !== false) {
+            if ($e->getCode() == '23000' && str_contains($e->getMessage(), 'unique_email')) {
                 throw new Exception("L'adresse e-mail est déjà utilisée.");
-            } elseif ($e->getCode() == '23000' && strpos($e->getMessage(), 'unique_pseudo') !== false) {
+            } elseif ($e->getCode() == '23000' && str_contains($e->getMessage(), 'unique_pseudo')) {
                 throw new Exception("Le pseudo est déjà utilisé.");
             } else {
                 throw new Exception("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
@@ -142,6 +164,8 @@ class UserRepository
     }
 
     /**
+     * delete a user
+     * @param int $id
      * @throws Exception
      */
     public function delete(int $id): void
@@ -167,9 +191,16 @@ class UserRepository
     }
 
     /**
+     * update user profile by user himself
+     * @param int $userId
+     * @param string $name
+     * @param string $image
+     * @param string $lastName
+     * @param string $email
+     * @param string $pseudo
      * @throws Exception
      */
-    public function updateProfile($userId, $name, $image, $lastName, $email, $pseudo): void
+    public function updateProfile(int $userId, string $name, string $image, string $lastName, string $email, string $pseudo): void
     {
         try {
             $sql = 'UPDATE users SET name = :name, lastName = :lastName, image = :image  ,pseudo = :pseudo, email = :email  WHERE id = :id';
@@ -187,7 +218,16 @@ class UserRepository
         }
     }
 
-    public function updateProfileByAdmin($userId, $name, $lastName, $email, $pseudo, $role): void
+    /**
+     * update user profile by admin
+     * @param int $userId
+     * @param string $name
+     * @param string $lastName
+     * @param string $email
+     * @param string $pseudo
+     * @param string $role
+     */
+    public function updateProfileByAdmin(int $userId, string $name, string $lastName, string $email, string $pseudo, string $role): void
     {
         $sql = 'UPDATE users SET name = :name, lastName = :lastName, pseudo = :pseudo, email = :email, role = :role WHERE id = :id';
         $statement = $this->mysqlClient->prepare($sql);
@@ -202,6 +242,11 @@ class UserRepository
     }
 
 
+    /**
+     * update user password
+     * @param $email
+     * @param $resetToken
+     */
     public function setResetToken($email, $resetToken): void
     {
         $sql = 'UPDATE users SET resetToken = :resetToken WHERE email = :email';
@@ -213,6 +258,7 @@ class UserRepository
     }
 
     /**
+     * find user by reset token
      * @param string $resetToken
      * @return User|null
      * @throws Exception
@@ -246,6 +292,9 @@ class UserRepository
     }
 
     /**
+     * update user password
+     * @param string $userEmail
+     * @param string $password_hash
      * @throws Exception
      */
     public function updatePassword(string $userEmail, string $password_hash): void
@@ -262,6 +311,11 @@ class UserRepository
         }
     }
 
+    /**
+     * update first login done
+     * @param int $userId
+     * @param bool $value
+     */
     public function updateFirstLoginDone(int $userId, bool $value): void
     {
         $sql = 'UPDATE users SET first_login_done = :value WHERE id = :userId';

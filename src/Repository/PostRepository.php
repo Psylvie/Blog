@@ -6,6 +6,7 @@ use App\Config\DatabaseConnect;
 use App\Models\Comment;
 use App\Models\Post;
 use DateTime;
+use Exception;
 use PDO;
 use PDOException;
 
@@ -13,13 +14,19 @@ class PostRepository
 {
     private PDO $mysqlClient;
 
+    /**
+     * PostRepository constructor.
+     */
     public function __construct()
     {
         $this->mysqlClient = DatabaseConnect::connect();
     }
 
     /**
-     * @throws \Exception
+     * find latest posts
+     * @param int $limit
+     * @return array
+     * @throws Exception
      */
     public function findLatestPosts(int $limit = 3): array
     {
@@ -55,9 +62,10 @@ class PostRepository
     }
 
     /**
+     * get all posts
      * @param int|null $limit
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getAllPosts(?int $limit = null): array
     {
@@ -123,7 +131,10 @@ class PostRepository
 
 
     /**
-     * @throws \Exception
+     * get post by id
+     * @param int $postId
+     * @return Post|null
+     * @throws Exception
      */
     public function getPostById(int $postId): ?Post
     {
@@ -179,7 +190,16 @@ class PostRepository
     }
 
     /**
-     * @throws \Exception
+     * create post
+     * @param $title
+     * @param $chapo
+     * @param $author
+     * @param $content
+     * @param $image
+     * @param $userId
+     * @param $published
+     * @return void
+     * @throws Exception
      */
     public function createPost($title, $chapo, $author, $content, $image, $userId, $published): void
     {
@@ -187,12 +207,14 @@ class PostRepository
             $stmt = $this->mysqlClient->prepare("INSERT INTO posts (title, chapo, author, content, image, user_id, published) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$title, $chapo, $author, $content, $image, $userId, $published]);
         } catch (PDOException $e) {
-            throw new \Exception("Erreur lors de la création du post : " . $e->getMessage());
+            throw new Exception("Erreur lors de la création du post : " . $e->getMessage());
         }
     }
 
     /**
-     * @throws \Exception
+     * delete post and comments associated with the post
+     * @param $postId
+     * @throws Exception
      */
     public function deletePost($postId): void
     {
@@ -200,10 +222,21 @@ class PostRepository
             $stmt = $this->mysqlClient->prepare("DELETE FROM posts WHERE id = ?");
             $stmt->execute([$postId]);
         } catch (PDOException $e) {
-            throw new \Exception("Erreur lors de la suppression du post : " . $e->getMessage());
+            throw new Exception("Erreur lors de la suppression du post : " . $e->getMessage());
         }
     }
 
+    /**
+     * update post
+     * @param $postId
+     * @param $title
+     * @param $chapo
+     * @param $author
+     * @param $content
+     * @param $image
+     * @param $published
+     * @throws Exception
+     */
     public function updatePost($postId, $title, $chapo, $author, $content, $image, $published): void
     {
         try {
