@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Repository\UserRepository;
+use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;
 use Twig\Error\LoaderError;
@@ -17,6 +18,7 @@ include __DIR__ . '/../Config/Config.php';
  */
 class RegisterController extends Controller
 {
+     protected ImageService $imageService;
 
     /**
      * RegisterController constructor.
@@ -24,6 +26,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->imageService = new ImageService();
     }
 
     /**
@@ -71,26 +74,13 @@ class RegisterController extends Controller
 
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $image = null;
-
             if (Superglobals::getFiles('image') && Superglobals::getFiles('image')['error'] === 0) {
-                $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                $filename = Superglobals::getFiles('image')['name'];
-                $filetype = Superglobals::getFiles('image')['type'];
-                $filesize = Superglobals::getFiles('image')['size'];
-
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-                    Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
+                $image = $this->imageService->uploadImage(Superglobals::getFiles('image'), UPLOADS_PROFILE_PATH);
+                if ($image === null) {
+                    Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier");
+                    $this->redirect('/Blog/inscription');
                 }
-                if ($filesize > 1024 * 1024) {
-                    Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
-                }
-                $newname = md5(uniqid());
-                $newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
-                move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename);
-                $image = $newname . '.' . $extension;
             }
-
             try {
                 $userRepository = new UserRepository();
                 $userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);

@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Repository\PostRepository;
+use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;
 use PDOException;
@@ -20,6 +21,7 @@ include __DIR__ . '/../../config/Config.php';
 class AdminPostController extends Controller
 {
 
+    protected ImageService $imageService;
     private PostRepository $postRepository;
 
     /**
@@ -29,6 +31,7 @@ class AdminPostController extends Controller
     {
         parent::__construct();
         $this->postRepository = new PostRepository();
+        $this->imageService = new ImageService();
     }
 
     /**
@@ -73,28 +76,17 @@ class AdminPostController extends Controller
             $published = filter_var(Superglobals::getPost('published'), FILTER_VALIDATE_INT) ?? 0;
             $userId = Superglobals::getSession('user_id');
             $image = null;
+
+            if (Superglobals::getFiles('image')['error'] === 0) {
+                $image = $this->imageService->uploadImage(Superglobals::getFiles('image'), UPLOADS_POST_PATH);
+                if ($image === null) {
+                    Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier");
+                    $this->redirect('/Blog/admin/newPost');
+                }
+            }
             if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
                 Superglobals::setFlashMessage("danger", "Tous les champs sont requis.");
                 $this->redirect('/Blog/admin/newPost');
-            }
-
-            if (Superglobals::getFiles('image')['error'] === 0) {
-                $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                $filename = Superglobals::getFiles('image')['name'];
-                $filetype = Superglobals::getFiles('image')['type'];
-                $filesize = Superglobals::getFiles('image')['size'];
-
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-                    Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
-                }
-                if ($filesize > 1024 * 1024) {
-                    Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
-                }
-                $newname = md5(uniqid());
-                $newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;
-                move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename);
-                $image = $newname . '.' . $extension;
             }
             try {
                 $postRepository = new PostRepository();
@@ -122,8 +114,9 @@ class AdminPostController extends Controller
             $postRepository = new PostRepository();
             $postRepository->deletePost($postId);
             if ($imageName !== null) {
-                unlink(UPLOADS_POST_PATH . $imageName);
-            }
+                $imagePath = UPLOADS_POST_PATH . $imageName;
+                $this->imageService->deleteImage($imagePath);
+                }
             Superglobals::setFlashMessage("success", "Le post a été supprimé avec succès !");
             $this->redirect('/Blog/admin/showPost');
         } catch (PDOException $e) {
@@ -154,29 +147,15 @@ class AdminPostController extends Controller
             $image = $currentImage;
 
             if (Superglobals::getFiles('image')['error'] === 0) {
-                $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                $filename = Superglobals::getFiles('image')['name'];
-                $filetype = Superglobals::getFiles('image')['type'];
-                $filesize = Superglobals::getFiles('image')['size'];
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-
-                if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-                    Superglobals::setFlashMessage("danger", "Erreur de type de fichier");
-                } elseif ($filesize > 1024 * 1024) {
-                    Superglobals::setFlashMessage("danger", "Erreur de taille de fichier");
-                } else {
-                    $newname = md5(uniqid());
-                    $newfilename = UPLOADS_POST_PATH . $newname . '.' . $extension;
-                    if (move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename)) {
-                        $image = $newname . '.' . $extension;
-                        if ($currentImage && $currentImage !== 'defaultImage.jpg') {
-                            $currentImagePath = UPLOADS_POST_PATH . $currentImage;
-                            if (file_exists($currentImagePath)) {
-                                unlink($currentImagePath);
-                            }
-                        }
-                    } else {
-                        Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier");
+                $image = $this->imageService->uploadImage(Superglobals::getFiles('image'), UPLOADS_POST_PATH);
+                if ($image === null) {
+                    Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier");
+                    $this->redirect('/Blog/admin/showPost');
+                }
+                if ($currentImage && $currentImage !== 'defaultImage.jpg') {
+                    $currentImagePath = UPLOADS_POST_PATH . $currentImage;
+                    if (file_exists($currentImagePath)) {
+                        unlink($currentImagePath);
                     }
                 }
             }

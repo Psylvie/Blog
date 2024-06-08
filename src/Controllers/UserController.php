@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Repository\UserRepository;
+use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
@@ -20,6 +21,7 @@ class UserController extends Controller
 {
 
     private UserRepository $userRepository;
+    protected ImageService $imageService;
 
     /**
      * UserController constructor.
@@ -28,6 +30,7 @@ class UserController extends Controller
     {
         parent::__construct();
         $this->userRepository = new UserRepository();
+        $this->imageService = new ImageService();
     }
 
     /**
@@ -64,7 +67,8 @@ class UserController extends Controller
 
         $this->userRepository->delete($userId);
         if ($user->getImage() !== null) {
-            unlink(UPLOADS_PROFILE_PATH . $user->getImage());
+            $imagePath = UPLOADS_PROFILE_PATH . $user->getImage();
+            $this->imageService->deleteImage($imagePath);
         }
         Superglobals::setFlashMessage("success", "Votre compte a été supprimé avec succès.");
         session_destroy();
@@ -97,30 +101,18 @@ class UserController extends Controller
                     if ($newPassword === $confirmPassword) {
                         $image = $user->getImage();
                         if (Superglobals::getFiles('image')['error'] === 0) {
-                            $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                            $filename = Superglobals::getFiles('image')['name'];
-                            $filetype = Superglobals::getFiles('image')['type'];
-                            $filesize = Superglobals::getFiles('image')['size'];
-
-                            $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                            if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
-                                Superglobals::setFlashMessage("danger", "Le type de fichier n'est pas autorisé.");
-                            }
-                            if ($filesize > 1024 * 1024) {
-                                Superglobals::setFlashMessage("danger", "Le fichier est trop volumineux.");
-                            }
-                            $newname = md5(uniqid());
-                            $newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
-                            if (move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename)) {
-                                if ($image !== 'avatar.png') {
-                                    $oldImage = $image;
-                                    if ($oldImage !== null) {
-                                        unlink(UPLOADS_PROFILE_PATH . $oldImage);
+                            $newImage = $this->imageService->uploadImage(Superglobals::getFiles('image'), UPLOADS_PROFILE_PATH);
+                            if ($newImage !== null) {
+                                if ($image && $image !== 'avatar.png') {
+                                    $oldImagePath = UPLOADS_PROFILE_PATH . $image;
+                                    if (file_exists($oldImagePath)) {
+                                        $this->imageService->deleteImage($oldImagePath);
                                     }
                                 }
-                                $image = $newname . '.' . $extension;
+                                $image = $newImage;
                             } else {
-                                Superglobals::setFlashMessage("danger", "Une erreur est survenue lors de l'envoi du fichier.");
+                                Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier.");
+                                $this->redirect('/Blog/user/' . $userId);
                             }
                         }
                         try {

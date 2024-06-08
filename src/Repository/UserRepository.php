@@ -147,10 +147,10 @@ class UserRepository
      * @param string $email
      * @param string $password
      * @param string $role
-     * @param string $resetToken
+     * @param string|null $resetToken
      * @throws Exception
      */
-    public function createUser(string $name, string $lastName, $image, string $pseudo, string $email, string $password, string $role, string $resetToken): void
+    public function createUser(string $name, string $lastName, $image, string $pseudo, string $email, string $password, string $role, ?string $resetToken): void
     {
         try {
             $pdo = DatabaseConnect::connect();
@@ -277,6 +277,7 @@ class UserRepository
         if (!$result) {
             return null;
         }
+
         $userDataArray = [
             'id' => $result['id'],
             'name' => $result['name'],
