@@ -66,6 +66,11 @@ class AdminCommentController extends Controller
             'post' => $post]);
     }
 
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
     public function handleCommentValidation()
     {
         $requestMethod = Superglobals::getServer('REQUEST_METHOD');
@@ -92,8 +97,7 @@ class AdminCommentController extends Controller
                 if ($postId !== null) {
                     $redirectUrl = "/Blog/admin/showAllComments/$postId";
                     Superglobals::setFlashMessage('success', 'Commentaire mis à jour avec succès !');
-                    header("Location: $redirectUrl");
-                    exit();
+                    $this->redirect($redirectUrl);
                 }
             }
         }

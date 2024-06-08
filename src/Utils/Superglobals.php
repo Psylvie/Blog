@@ -55,5 +55,9 @@ class Superglobals
         }
         return $flash;
     }
+    public static function getCookie(string $key): ?string
+    {
+        return $_COOKIE[$key] ?? null;
+    }
 
 }

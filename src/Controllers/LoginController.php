@@ -34,7 +34,7 @@ class LoginController extends Controller
      */
     public function login()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $email = Superglobals::getPost('email');
             $password = Superglobals::getPost('password');
             $userRepository = new UserRepository();
@@ -42,8 +42,7 @@ class LoginController extends Controller
             if ($user) {
                 if (!password_verify($password, $user->getPassword())) {
                     Superglobals::setFlashMessage("danger", "Mot de passe incorrect");
-
-                    header('Location: /MonBlog/login');
+                    $this->redirect('/Blog/login');
                 } else {
                     Superglobals::setSession('user_id', $user->getId());
                     Superglobals::setSession('user_name', $user->getName());
@@ -57,20 +56,20 @@ class LoginController extends Controller
                         $userRepository->updateFirstLoginDone($user->getId(), true);
                     }
                     if ($user->getRole() == 'admin') {
-                        header('Location: /Blog/admin');
+                        $this->redirect('/Blog/admin');
                     } else {
-                        header('Location: /Blog/');
+                        $this->redirect('/Blog/');
                     }
-                    if (isset($_POST['remember_me']) && $_POST['remember_me'] == 1) {
+                    $rememberMe = Superglobals::getPost('remember_me');
+                    if (isset($rememberMe) && $rememberMe == 1) {
                         /** cookie end 30 days  */
                         setcookie('user_id', $user->getId(), time() + (86400 * 30), "/");
                     }
                 }
             } else {
                 Superglobals::setFlashMessage("danger", "Utilisateur non trouvé");
-                header('Location: /Blog/login');
+                $this->redirect('/Blog/login');
             }
-            exit();
         }
     }
 
@@ -90,7 +89,7 @@ class LoginController extends Controller
      */
     public function requestPasswordReset()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $email = Superglobals::getPost('email');
 
             $userRepository = new UserRepository();
@@ -105,8 +104,7 @@ class LoginController extends Controller
             } else {
                 Superglobals::setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
             }
-            header('Location: /Blog/login');
-            exit();
+            $this->redirect('/Blog/login');
         }
     }
 
@@ -160,13 +158,11 @@ class LoginController extends Controller
                 return;
             } else {
                 Superglobals::setFlashMessage("danger", "Utilisateur non trouvé");
-                header('Location: /Blog/login');
-                exit();
+                $this->redirect('/Blog/login');
             }
         } else {
             Superglobals::setFlashMessage("danger", "Token de réinitialisation invalide.");
-            header('Location: /Blog/login');
-            exit();
+            $this->redirect('/Blog/login');
         }
     }
 
@@ -176,7 +172,7 @@ class LoginController extends Controller
      */
     public function resetPassword()
     {
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        if (Superglobals::getServer('REQUEST_METHOD') === 'POST' ) {
             $resetToken = Superglobals::getPost('resetToken');
             $password = Superglobals::getPost('password');
             $confirmPassword = Superglobals::getPost('confirm_password');
@@ -184,14 +180,11 @@ class LoginController extends Controller
             $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
             if (!preg_match($pattern, $password)) {
                 Superglobals::setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
-                header('Location: /Blog/newPassword/' . $resetToken);
-                exit();
+                $this->redirect('/Blog/newPassword/' . $resetToken);
             }
             if ($password !== $confirmPassword) {
                 Superglobals::setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
-                header('Location: /Blog/newPassword/' . $resetToken);
-                exit();
-
+                $this->redirect('/Blog/newPassword/' . $resetToken);
             }
 
             $userRepository = new UserRepository();
@@ -200,8 +193,7 @@ class LoginController extends Controller
                 $userRepository->updatePassword($user->getEmail(), password_hash($password, PASSWORD_DEFAULT));
                 $userRepository->setResetToken($user->getEmail(), null);
                 Superglobals::setFlashMessage("success", "Votre mot de passe a été réinitialisé avec succès.");
-                header('Location: /Blog/');
-                exit();
+                $this->redirect('/Blog/login');
             }
         }
     }
@@ -222,7 +214,7 @@ class LoginController extends Controller
     public function handleFirstConnection()
     {
 
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $email = Superglobals::getPost('email');
 
             $userRepository = new UserRepository();
@@ -234,13 +226,11 @@ class LoginController extends Controller
 
                 $this->sendPasswordResetEmail($email, $resetToken);
                 Superglobals::setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
-                header('Location: /Blog/login');
+                $this->redirect('/Blog/login');
             } else {
                 Superglobals::setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
-                header('Location: /Blog/first-connection');
+                $this->redirect('/Blog/first-connection');
             }
-            exit();
-
         }
     }
 
@@ -255,11 +245,10 @@ class LoginController extends Controller
         Superglobals::setFlashMessage('success', 'Vous êtes déconnecté');
         $defaultCsrfToken = '';
         Superglobals::setSession('csrfToken', $defaultCsrfToken);
-        if (isset($_COOKIE['user_id'])) {
+        if (Superglobals::getCookie('user_id')) {
             setcookie('user_id', '', time() - 3600, '/');
         }
-        header('Location: /Blog/');
-        exit();
+        $this->redirect('/Blog/login');
     }
 
 }

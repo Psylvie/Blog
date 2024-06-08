@@ -58,8 +58,7 @@ class AdminUserController extends Controller
         } catch (Exception $e) {
             Superglobals::setFlashMessage('danger', "Une erreur s'est produite lors de la suppression de l'utilisateur.");
         }
-        header("Location: /Blog/admin/users/list");
-        exit();
+        $this->redirect('/Blog/admin/users/list');
     }
 
     /**
@@ -76,8 +75,7 @@ class AdminUserController extends Controller
             $user = $this->userRepository->find($userId);
             if ($user === null) {
                 Superglobals::setFlashMessage("danger", "L'utilisateur n'existe pas.");
-                header("Location: /Blog/admin/users/list");
-                exit();
+                $this->redirect('/Blog/admin/users/list');
             }
 
             $image = $user->getImage();
@@ -115,8 +113,7 @@ class AdminUserController extends Controller
             } catch (Exception $e) {
                 Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur.");
             }
-            header("Location: /Blog/admin/users/list");
-            exit();
+            $this->redirect('/Blog/admin/users/list');
         }
     }
 
@@ -151,8 +148,7 @@ class AdminUserController extends Controller
             $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
             if (!preg_match($pattern, Superglobals::getPost("password"))) {
                 Superglobals::setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule et un chiffre.");
-                header("Location: /Blog/admin/users/create");
-                exit();
+                $this->redirect('/Blog/admin/users/create');
             }
 
             if (Superglobals::getFiles('image')['error'] === 0) {
@@ -177,12 +173,10 @@ class AdminUserController extends Controller
                 $userRepository = new UserRepository();
                 $userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
                 Superglobals::setFlashMessage("success", "L'utilisateur a été créé avec succès !");
-                header("Location: /Blog/admin/users/list");
-                exit();
+                $this->redirect('/Blog/admin/users/list');
             } catch (Exception $e) {
                 Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la création de l'utilisateur : " . $e->getMessage());
-                header("Location: /Blog/admin/users/create");
-                exit();
+                $this->redirect('/Blog/admin/users/create');
             }
         }
     }

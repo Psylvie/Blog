@@ -64,8 +64,7 @@ class AdminPostController extends Controller
             $image = null;
             if (empty($title) || empty($chapo) || empty($author) || empty($content)) {
                 Superglobals::setFlashMessage("danger", "Tous les champs sont requis.");
-                header('Location: /Blog/admin/newPost');
-                exit;
+                $this->redirect('/Blog/admin/newPost');
             }
 
             if (Superglobals::getFiles('image')['error'] === 0) {
@@ -90,16 +89,13 @@ class AdminPostController extends Controller
                 $postRepository = new PostRepository();
                 $postRepository->createPost($title, $chapo, $author, $content, $image, $userId, $published);
                 Superglobals::setFlashMessage("success", "Le post a été créé avec succès !");
-                header('Location: /Blog/admin/showPost');
-                exit;
+                $this->redirect('/Blog/admin/showPost');
             } catch (PDOException $e) {
                 Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la création du post : " . $e->getMessage());
-                header('Location: /Blog/admin');
-                exit;
+                $this->redirect('/Blog/admin/newPost');
             }
         } else {
-            header('Location: /Blog/admin/newPost');
-            exit;
+            $this->redirect('/Blog/admin/newPost');
         }
     }
 
@@ -117,12 +113,10 @@ class AdminPostController extends Controller
                 unlink(UPLOADS_POST_PATH . $imageName);
             }
             Superglobals::setFlashMessage("success", "Le post a été supprimé avec succès !");
-            header('Location: /Blog/admin/showPost');
-            exit;
+            $this->redirect('/Blog/admin/showPost');
         } catch (PDOException $e) {
             Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la suppression du post : " . $e->getMessage());
-            header('Location: /Blog/admin/showPost');
-            exit;
+            $this->redirect('/Blog/admin/showPost');
         }
     }
 
@@ -180,9 +174,7 @@ class AdminPostController extends Controller
             } catch (\PDOException $e) {
                 throw new \Exception("Erreur de connexion à la base de données : " . $e->getMessage());
             }
-
-            header('Location: /Blog/admin/showPost');
-            exit();
+            $this->redirect('/Blog/admin/showPost');
         } else {
             $post = $this->postRepository->getPostById($postId);
             $this->render('Admin/adminUpdatePost.html.twig', ['post' => $post]);

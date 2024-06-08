@@ -43,8 +43,7 @@ class RegisterController extends Controller
             $csrfToken = Superglobals::getPost('csrfToken');
             if (!hash_equals(Superglobals::getSession('csrfToken'), $csrfToken)) {
                 Superglobals::setFlashMessage("danger", "Jeton CSRF invalide");
-                header("Location: /Blog/inscription");
-                exit();
+                $this->redirect('/Blog/inscription');
             }
 
             $name = Superglobals::getPost("name");
@@ -58,17 +57,17 @@ class RegisterController extends Controller
             $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
             if (!preg_match($pattern, $password)) {
                 Superglobals::setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
-                header("Location: /Blog/inscription");
-                exit();
+                $this->redirect('/Blog/inscription');
             }
 
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $image = null;
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+
+            if (Superglobals::getFiles('image') && Superglobals::getFiles('image')['error'] === 0) {
                 $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'];
-                $filename = $_FILES['image']['name'];
-                $filetype = $_FILES['image']['type'];
-                $filesize = $_FILES['image']['size'];
+                $filename = Superglobals::getFiles('image')['name'];
+                $filetype = Superglobals::getFiles('image')['type'];
+                $filesize = Superglobals::getFiles('image')['size'];
 
                 $extension = pathinfo($filename, PATHINFO_EXTENSION);
                 if (!array_key_exists($extension, $allowed) || !in_array($filetype, $allowed)) {
@@ -79,7 +78,7 @@ class RegisterController extends Controller
                 }
                 $newname = md5(uniqid());
                 $newfilename = UPLOADS_PROFILE_PATH . $newname . '.' . $extension;
-                move_uploaded_file($_FILES['image']['tmp_name'], $newfilename);
+                move_uploaded_file(Superglobals::getFiles('image')['tmp_name'], $newfilename);
                 $image = $newname . '.' . $extension;
             }
 
@@ -87,12 +86,10 @@ class RegisterController extends Controller
                 $userRepository = new UserRepository();
                 $userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
                 Superglobals::setFlashMessage("success", "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.");
-                header("Location: /Blog/");
-                exit();
+                $this->redirect('/Blog/login');
             } catch (Exception $e) {
                 Superglobals::setFlashMessage("danger", "Erreur lors de la création de votre compte : " . $e->getMessage());
-                header("Location: /Blog/inscription");
-                exit();
+                $this->redirect('/Blog/inscription');
             }
         }
     }
