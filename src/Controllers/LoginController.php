@@ -46,8 +46,7 @@ class LoginController extends Controller
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $email = Superglobals::getPost('email');
             $password = Superglobals::getPost('password');
-            $userRepository = new UserRepository();
-            $user = $userRepository->findByEmail($email);
+            $user = $this->userRepository->findByEmail($email);
             if ($user) {
                 if (!password_verify($password, $user->getPassword())) {
                     Superglobals::setFlashMessage("danger", "Mot de passe incorrect");
@@ -62,7 +61,7 @@ class LoginController extends Controller
                     Superglobals::setFlashMessage("success", "Bienvenue, " . $user->getName() . " ! Connexion réussie !");
 
                     if (!$user->getFirstLoginDone()) {
-                        $userRepository->updateFirstLoginDone($user->getId(), true);
+                        $this->userRepository->updateFirstLoginDone($user->getId(), true);
                     }
                     if ($user->getRole() == 'admin') {
                         $this->redirect('/Blog/admin');
@@ -103,12 +102,11 @@ class LoginController extends Controller
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $email = Superglobals::getPost('email');
 
-            $userRepository = new UserRepository();
-            $user = $userRepository->findByEmail($email);
+            $user = $this->userRepository->findByEmail($email);
 
             if ($user) {
                 $resetToken = uniqid();
-                $userRepository->setResetToken($user->getEmail(), $resetToken);
+                $this->userRepository->setResetToken($user->getEmail(), $resetToken);
 
                 $this->sendPasswordResetEmail($email, $resetToken);
                 Superglobals::setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
@@ -161,11 +159,10 @@ class LoginController extends Controller
      */
     public function newPassword($token)
     {
-        $userRepository = new UserRepository();
-        $user = $userRepository->findByResetToken($token);
+        $user = $this->userRepository->findByResetToken($token);
 
         if ($user) {
-            $userByEmail = $userRepository->findByEmail($user->getEmail());
+            $userByEmail = $this->userRepository->findByEmail($user->getEmail());
 
             if ($userByEmail) {
                 $this->render('Auth/newPassword.html.twig', [
@@ -206,11 +203,11 @@ class LoginController extends Controller
                 $this->redirect('/Blog/newPassword/' . $resetToken);
             }
 
-            $userRepository = new UserRepository();
-            $user = $userRepository->findByResetToken($resetToken);
+
+            $user = $this->userRepository->findByResetToken($resetToken);
             if ($user) {
-                $userRepository->updatePassword($user->getEmail(), password_hash($password, PASSWORD_DEFAULT));
-                $userRepository->setResetToken($user->getEmail(), null);
+                $this->userRepository->updatePassword($user->getEmail(), password_hash($password, PASSWORD_DEFAULT));
+                $this->userRepository->setResetToken($user->getEmail(), null);
                 Superglobals::setFlashMessage("success", "Votre mot de passe a été réinitialisé avec succès.");
                 $this->redirect('/Blog/login');
             }
@@ -238,12 +235,12 @@ class LoginController extends Controller
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $email = Superglobals::getPost('email');
 
-            $userRepository = new UserRepository();
-            $user = $userRepository->findByEmail($email);
+
+            $user = $this->userRepository->findByEmail($email);
 
             if ($user && $user->getFirstLoginDone() === false) {
                 $resetToken = uniqid();
-                $userRepository->setResetToken($user->getEmail(), $resetToken);
+                $this->userRepository->setResetToken($user->getEmail(), $resetToken);
 
                 $this->sendPasswordResetEmail($email, $resetToken);
                 Superglobals::setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");

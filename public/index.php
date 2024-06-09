@@ -72,7 +72,7 @@ try {
     $router->dispatch($uri);
 } catch (\Exception $e) {
     if (str_starts_with($uri, '/Blog/')) {
-        $this->redirect('/Blog/Error/');
+        Controller::redirect('/Blog/Error/');
     }
-    error_log('Error: ' . $e->getMessage());
+    error_log('Error: '. $e->getMessage());
 }

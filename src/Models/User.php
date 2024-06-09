@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-
-use DateTime;
-
 /**
  * Class User
  * @package App\Models
@@ -20,8 +17,6 @@ class User extends EntityModel
     private string $pseudo;
     private string $email;
     private string $password;
-    private datetime $createdAt;
-    private datetime $updateAt;
     private string $role;
     private bool $firstLoginDone = false;
     private ?string $resetToken;
@@ -32,8 +27,6 @@ class User extends EntityModel
      */
     public function __construct(?array $data = [])
     {
-        $this->createdAt = new DateTime();
-        $this->updateAt = new DateTime();
         parent::__construct($data);
     }
 
@@ -147,38 +140,6 @@ class User extends EntityModel
     public function setPassword(string $password): void
     {
         $this->password = $password;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param DateTime $createdAt
-     */
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getUpdateAt(): DateTime
-    {
-        return $this->updateAt;
-    }
-
-    /**
-     * @param DateTime $updateAt
-     */
-    public function setUpdateAt(DateTime $updateAt): void
-    {
-        $this->updateAt = $updateAt;
     }
 
     /**

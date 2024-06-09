@@ -4,7 +4,6 @@ namespace App\Controllers;
 require_once __DIR__ . '/../Config/MailConfig.php';
 require_once __DIR__ . '/../Config/Recaptcha.php';
 
-use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Utils\Superglobals;
 use PHPMailer\PHPMailer\Exception;
@@ -19,15 +18,12 @@ use Twig\Error\SyntaxError;
  */
 class HomeController extends Controller
 {
-    private PostRepository $postRepository;
-
     /**
      * HomeController constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        $this->postRepository = new PostRepository();
 
     }
 
@@ -40,9 +36,8 @@ class HomeController extends Controller
      */
     public function homePage()
     {
-        $userRepository = new UserRepository();
         $userId = Superglobals::getSession('user_id', FILTER_VALIDATE_INT);
-        $user = $userId ? $userRepository->find($userId) : null;
+        $user = $userId ? $this->userRepository->find($userId) : null;
         $posts = $this->postRepository->findLatestPosts(3);
         $this->render('Home/homePage.html.twig', [
             'user' => $user,

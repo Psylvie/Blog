@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Repository\CommentRepository;
+use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 use App\Utils\Superglobals;
-use JetBrains\PhpStorm\NoReturn;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -20,6 +22,9 @@ require_once __DIR__ . '/../Config/Recaptcha.php';
 class Controller
 {
     protected Environment $twig;
+    protected PostRepository $postRepository;
+    protected UserRepository $userRepository;
+    protected CommentRepository $commentRepository;
 
     /**
      * Controller constructor.
@@ -38,6 +43,10 @@ class Controller
         }
         $sessionData = Superglobals::getSessionData();
         $this->twig->addGlobal('session', $sessionData);
+
+        $this->postRepository = new PostRepository();
+        $this->userRepository = new UserRepository();
+        $this->commentRepository = new CommentRepository();
     }
 
     /**
@@ -62,7 +71,7 @@ class Controller
      * redirect to a path
      * @param $path
      */
-    protected function redirect($path): void
+    public static function redirect($path): void
     {
         header("Location: $path");
     }

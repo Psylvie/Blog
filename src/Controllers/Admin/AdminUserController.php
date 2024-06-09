@@ -19,14 +19,12 @@ include __DIR__ . '/../../config/Config.php';
  */
 class AdminUserController extends Controller
 {
-    private UserRepository $userRepository;
     protected ImageService $imageService;
 
 
     public function __construct()
     {
         parent::__construct();
-        $this->userRepository = new UserRepository();
         $this->imageService = new ImageService();
     }
 
@@ -68,7 +66,6 @@ class AdminUserController extends Controller
             $user = $this->userRepository->find($userId);
             if ($user && $user->getImage()) {
                 $this->imageService->deleteImage(UPLOADS_PROFILE_PATH . $user->getImage());
-                unlink(UPLOADS_PROFILE_PATH . $user->getImage());
             }
             Superglobals::setFlashMessage('success', "L'utilisateur $userId a été supprimé avec succès.");
         } catch (Exception $e) {
@@ -143,8 +140,7 @@ class AdminUserController extends Controller
                 $this->redirect('/Blog/admin/users/create');
             }
             try {
-                $userRepository = new UserRepository();
-                $userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
+                $this->userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
                 Superglobals::setFlashMessage("success", "L'utilisateur a été créé avec succès !");
                 $this->redirect('/Blog/admin/users/list');
             } catch (Exception $e) {

@@ -22,7 +22,6 @@ class AdminPostController extends Controller
 {
 
     protected ImageService $imageService;
-    private PostRepository $postRepository;
 
     /**
      * AdminPostController constructor.
@@ -30,7 +29,6 @@ class AdminPostController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->postRepository = new PostRepository();
         $this->imageService = new ImageService();
     }
 
@@ -43,7 +41,6 @@ class AdminPostController extends Controller
      */
     public function showPost()
     {
-        $this->postRepository = new PostRepository();
         $posts = $this->postRepository->getAllPosts();
         $this->render('Admin/adminShowPost.html.twig', ['posts' => $posts]);
     }
@@ -89,7 +86,7 @@ class AdminPostController extends Controller
                 $this->redirect('/Blog/admin/newPost');
             }
             try {
-                $postRepository = new PostRepository();
+                $postRepository = $this->postRepository;
                 $postRepository->createPost($title, $chapo, $author, $content, $image, $userId, $published);
                 Superglobals::setFlashMessage("success", "Le post a été créé avec succès !");
                 $this->redirect('/Blog/admin/showPost');
@@ -111,8 +108,7 @@ class AdminPostController extends Controller
         try {
             $post = $this->postRepository->getPostById($postId);
             $imageName = $post?->getImage();
-            $postRepository = new PostRepository();
-            $postRepository->deletePost($postId);
+            $this->postRepository->deletePost($postId);
             if ($imageName !== null) {
                 $imagePath = UPLOADS_POST_PATH . $imageName;
                 $this->imageService->deleteImage($imagePath);

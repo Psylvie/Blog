@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
 /**
  * Class Post
  * @package App\Models
@@ -17,8 +16,6 @@ class Post extends EntityModel
     private ?string $image;
     private int $user_id;
     private bool $published;
-    private DateTime $createdAt;
-    private DateTime $updatedAt;
     private ?array $comments;
 
     /**
@@ -27,8 +24,6 @@ class Post extends EntityModel
      */
     public function __construct(?array $data = [])
     {
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
         $this->comments = [];
         parent::__construct($data);
     }
@@ -174,37 +169,6 @@ class Post extends EntityModel
         $this->published = $published;
     }
 
-    /**
-     * @return DateTime|null
-     */
-    public function getCreatedAt(): ?DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param DateTime|null $createdAt
-     */
-    public function setCreatedAt(?DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getUpdatedAt(): ?DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @param DateTime|null $updatedAt
-     */
-    public function setUpdatedAt(?DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
 
 }
 	

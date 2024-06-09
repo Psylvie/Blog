@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Config\DatabaseConnect;
 use App\Repository\CommentRepository;
 use App\Utils\Superglobals;
 use Exception;
@@ -14,6 +13,12 @@ use PDOException;
  */
 class CommentController extends HomeController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Add a comment to a post
      * @throws Exception
@@ -29,13 +34,12 @@ class CommentController extends HomeController
         $commentContent = htmlspecialchars_decode(trim(Superglobals::getPost('comment')));
         $postId = Superglobals::getPost('postId');
 
-        if (!$userRole || ($userRole !== 'subscriber' && $userRole !== 'admin')) {
+        if (($userRole !== 'subscriber' && $userRole !== 'admin')) {
             Superglobals::setFlashMessage("danger", "Veuillez vous connecter pour soumettre un commentaire.");
             $this->redirect('/Blog/post/' . $postId);
         }
         try {
-            $commentRepository = new CommentRepository();
-            $commentRepository->addComment($commentContent, $postId, $userId);
+            $this->commentRepository->addComment($commentContent, $postId, $userId);
             Superglobals::setFlashMessage("info", "Votre commentaire a été soumis avec succès et est en attente de validation.");
             $this->redirect('/Blog/post/' . $postId);
         } catch (PDOException $e) {
