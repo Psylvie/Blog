@@ -29,16 +29,12 @@ class CommentRepository
      */
     public function addComment(string $commentContent, int $postId, int $userId): void
     {
-        $sql = 'INSERT INTO comments (content, status, createdAt, updateAt, user_id, post_id) VALUES (:content, :status, :createdAt, :updateAt, :userId, :postId)';
+        $sql = 'INSERT INTO comments (content, status, user_id, post_id) VALUES (:content, :status, :userId, :postId)';
         $statement = $this->mysqlClient->prepare($sql);
         $statement->bindParam(':content', $commentContent, PDO::PARAM_STR);
         $statement->bindValue(':status', 'pending', PDO::PARAM_STR);
         $statement->bindValue(':userId', $userId, PDO::PARAM_INT);
         $statement->bindValue(':postId', $postId, PDO::PARAM_INT);
-        $createdAt = (new DateTime())->format('Y-m-d H:i:s');
-        $updatedAt = $createdAt;
-        $statement->bindValue(':createdAt', $createdAt, PDO::PARAM_STR);
-        $statement->bindValue(':updateAt', $updatedAt, PDO::PARAM_STR);
         $statement->execute();
     }
 
@@ -58,13 +54,13 @@ class CommentRepository
 
         foreach ($commentsData as $commentData) {
             $createdAt = new DateTime($commentData['createdAt']);
-            $updatedAt = new DateTime($commentData['updateAt']);
+            $updatedAt = new DateTime($commentData['updatedAt']);
             $comment = new Comment([
                     'id' => $commentData['id'],
                     'content' => $commentData['content'],
                     'status' => $commentData['status'],
                     'createdAt' => $createdAt,
-                    'updateAt' => $updatedAt,
+                    'updatedAt' => $updatedAt,
                     'userId' => $commentData['user_id'],
                     'postId' => $postId
                 ]);

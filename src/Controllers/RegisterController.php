@@ -82,8 +82,8 @@ class RegisterController extends Controller
                 }
             }
             try {
-                $userRepository = new UserRepository();
-                $userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
+
+                $this->userRepository->createUser($name, $lastName, $image, $pseudo, $email, $hashedPassword, $role, $resetToken);
                 Superglobals::setFlashMessage("success", "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.");
                 $this->redirect('/Blog/login');
             } catch (Exception $e) {

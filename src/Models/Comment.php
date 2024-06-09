@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
 
 /**
  * Class Comment
@@ -13,8 +12,6 @@ class Comment extends EntityModel
     private int $id;
     private string $content;
     private string $status;
-    private datetime $createdAt;
-    private datetime $updateAt;
     private ?int $userId;
     private ?int $postId;
 
@@ -25,8 +22,6 @@ class Comment extends EntityModel
 
     public function __construct(?array $data = [])
     {
-        $this->createdAt = new DateTime();
-        $this->updateAt = new DateTime();
         parent::__construct($data);
     }
 
@@ -76,38 +71,6 @@ class Comment extends EntityModel
     public function setStatus(string $status): void
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param DateTime $createdAt
-     */
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getUpdateAt(): DateTime
-    {
-        return $this->updateAt;
-    }
-
-    /**
-     * @param DateTime $updateAt
-     */
-    public function setUpdateAt(DateTime $updateAt): void
-    {
-        $this->updateAt = $updateAt;
     }
 
     /**

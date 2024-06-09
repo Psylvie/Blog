@@ -3,8 +3,6 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
-use App\Repository\CommentRepository;
-use App\Repository\PostRepository;
 use App\Utils\Superglobals;
 use Exception;
 use Twig\Error\LoaderError;
@@ -17,19 +15,14 @@ use Twig\Error\SyntaxError;
  */
 class AdminCommentController extends Controller
 {
-
-    private CommentRepository $commentRepository;
-    private PostRepository $postRepository;
-
     /**
      * AdminCommentController constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        $this->commentRepository = new CommentRepository();
-        $this->postRepository = new PostRepository();
     }
+
 
     /**
      * show all posts

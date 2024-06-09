@@ -18,16 +18,16 @@
                         <li class="list-group-item">
                             <strong><label for="name" class="form-label">Nom :</label></strong>
                             <input type="text" class="form-control" id="name" name="name"
-                                   value="{{ user.name|capitalize }}">
+                                   value="{{ user.name|capitalize }}" required>
                         </li>
                         <li class="list-group-item">
                             <strong><label for="lastName" class="form-label">Prénom :</label></strong>
                             <input type="text" class="form-control" id="lastName" name="lastName"
-                                   value="{{ user.lastName|capitalize }}">
+                                   value="{{ user.lastName|capitalize }}" required>
                         </li>
                         <li class="list-group-item">
                             <strong><label for="email" class="form-label">Email :</label></strong>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
                         </li>
                         <li class="list-group-item">
                             <strong><label for="image" class="form-label">Image de profil :</label></strong>
@@ -41,7 +41,7 @@
                         <li class="list-group-item">
                             <strong><label for="pseudo" class="form-label">Pseudo :</label></strong>
                             <input type="text" class="form-control" id="pseudo" name="pseudo"
-                                   value="{{ user.pseudo|capitalize }}">
+                                   value="{{ user.pseudo|capitalize }}" required>
                         </li>
                         <li class="list-group-item">
                             <strong><label for="currentPassword" class="form-label">Mot de passe actuel

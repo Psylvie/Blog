@@ -48,7 +48,7 @@ class UserRepository
 
         foreach ($usersData as $userData) {
             $createdAt = new DateTime($userData['createdAt']);
-            $updatedAt = new DateTime($userData['updateAt']);
+            $updatedAt = new DateTime($userData['updatedAt']);
             $userDataArray = [
                 'id' => $userData['id'],
                 'name' => $userData['name'],
@@ -85,7 +85,7 @@ class UserRepository
         $firstLoginDone = isset($userData['first_login_done']) ? (bool)$userData['first_login_done'] : null;
         if ($userData) {
             $createdAt = new DateTime($userData['createdAt']);
-            $updatedAt = new DateTime($userData['updateAt']);
+            $updatedAt = new DateTime($userData['updatedAt']);
             $userDataArray = [
                 'id' => $userData['id'],
                 'name' => $userData['name'],
@@ -118,7 +118,7 @@ class UserRepository
 
         if ($userData) {
             $createdAt = new DateTime($userData['createdAt']);
-            $updatedAt = new DateTime($userData['updateAt']);
+            $updatedAt = new DateTime($userData['updatedAt']);
             $userDataArray = [
                 'id' => $userData['id'],
                 'name' => $userData['name'],
@@ -287,7 +287,7 @@ class UserRepository
             'email' => $result['email'],
             'password' => $result['password'],
             'createdAt' => new DateTime($result['createdAt']),
-            'updatedAt' => new DateTime($result['updateAt']),
+            'updatedAt' => new DateTime($result['updatedAt']),
             'role' => $result['role'],
             'firstLoginDone' => isset($result['first_login_done']) ? (bool)$result['first_login_done'] : null,
             'resetToken' => $result['resetToken']

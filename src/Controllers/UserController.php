@@ -19,8 +19,6 @@ include __DIR__ . '/../Config/Config.php';
  */
 class UserController extends Controller
 {
-
-    private UserRepository $userRepository;
     protected ImageService $imageService;
 
     /**
@@ -29,7 +27,6 @@ class UserController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->userRepository = new UserRepository();
         $this->imageService = new ImageService();
     }
 
@@ -94,25 +91,28 @@ class UserController extends Controller
             $newPassword = trim(htmlspecialchars_decode(Superglobals::getPost('newPassword')));
             $confirmPassword = trim(htmlspecialchars_decode(Superglobals::getPost('confirmPassword')));
 
+            if (empty($name) || empty($lastName) || empty($pseudo) || empty($email)) {
+                Superglobals::setFlashMessage("danger", "Tous les champs sont requis.");
+                $this->redirect('/Blog/user/'. $userId);
+            }
             if ($userId !== null) {
                 $user = $this->userRepository->find($userId);
 
                 if ($user !== null && password_verify($currentPassword, $user->getPassword())) {
                     if ($newPassword === $confirmPassword) {
-                        $image = $user->getImage();
+                        $currentImage = $user->getImage();
+                        $image = $currentImage;
                         if (Superglobals::getFiles('image')['error'] === 0) {
-                            $newImage = $this->imageService->uploadImage(Superglobals::getFiles('image'), UPLOADS_PROFILE_PATH);
-                            if ($newImage !== null) {
-                                if ($image && $image !== 'avatar.png') {
-                                    $oldImagePath = UPLOADS_PROFILE_PATH . $image;
-                                    if (file_exists($oldImagePath)) {
-                                        $this->imageService->deleteImage($oldImagePath);
-                                    }
-                                }
-                                $image = $newImage;
-                            } else {
+                            $image = $this->imageService->uploadImage(Superglobals::getFiles('image'), UPLOADS_PROFILE_PATH);
+                            if ($image === null) {
                                 Superglobals::setFlashMessage("danger", "Erreur lors de l'envoi du fichier.");
                                 $this->redirect('/Blog/user/' . $userId);
+                            }
+                            if ($currentImage && $currentImage !== 'avatar.png') {
+                                $currentImagePath = UPLOADS_PROFILE_PATH . $currentImage;
+                                if (file_exists($currentImagePath)) {
+                                    $this->imageService->deleteImage($currentImagePath);
+                                }
                             }
                         }
                         try {

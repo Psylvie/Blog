@@ -30,7 +30,7 @@ class PostRepository
      */
     public function findLatestPosts(int $limit = 3): array
     {
-        $sql = 'SELECT * FROM posts ORDER BY updateAt DESC LIMIT :limit';
+        $sql = 'SELECT * FROM posts ORDER BY updatedAt DESC LIMIT :limit';
         $statement = $this->mysqlClient->prepare($sql);
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->execute();
@@ -42,6 +42,7 @@ class PostRepository
             $published = $postData['published'] ?? null;
 
             $createdAt = new DateTime($postData['createdAt']);
+            $updatedAt = new DateTime($postData['updatedAt']);
             $post = new Post([
                 'id' => $postData['id'],
                 'title' => $postData['title'],
@@ -52,7 +53,7 @@ class PostRepository
                 'user_id' => $userId,
                 'published' => $published,
                 'createdAt' => $createdAt,
-                'updatedAt' => new DateTime($postData['updateAt']),
+                'updatedAt' => $updatedAt,
                 'comments' => []
             ]);
             $posts[] = $post;
@@ -70,10 +71,10 @@ class PostRepository
     public function getAllPosts(?int $limit = null): array
     {
         $sql = 'SELECT p.*, c.id AS comment_id, c.content AS comment_content, c.status AS comment_status,
-                   c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at, c.user_id AS comment_user_id
+                   c.createdAt AS comment_created_at, c.updatedAt AS comment_updated_at, c.user_id AS comment_user_id
             FROM posts p
             LEFT JOIN comments c ON p.id = c.post_id
-            ORDER BY p.createdAt DESC';
+            ORDER BY p.updatedAt DESC';
 
         if ($limit !== null) {
             $sql .= ' LIMIT :limit';
@@ -93,7 +94,7 @@ class PostRepository
             $postId = $postData['id'];
             if (!isset($posts[$postId])) {
                 $createdAtDateTime = new DateTime($postData['createdAt']);
-                $updatedAtDateTime = new DateTime($postData['updateAt']);
+                $updatedAtDateTime = new DateTime($postData['updatedAt']);
                 $post = new Post([
                     'id' => $postId,
                     'title' => $postData['title'],
@@ -141,7 +142,7 @@ class PostRepository
     {
         $sql = 'SELECT p.*,
       				c.id AS comment_id, c.content AS comment_content, c.status AS comment_status,
-       				c.createdAt AS comment_created_at, c.updateAt AS comment_updated_at, c.user_id AS comment_user_id
+       				c.createdAt AS comment_created_at, c.updatedAt AS comment_updated_at, c.user_id AS comment_user_id
 					FROM posts p
 					LEFT JOIN comments c ON p.id = c.post_id
 					WHERE p.id = :postId';
@@ -168,7 +169,7 @@ class PostRepository
                     'user_id' => $data['user_id'],
                     'published' => $data['published'],
                     'createdAt' => $createdAtDateTime,
-                    'updatedAt' => new DateTime($data['updateAt']),
+                    'updatedAt' => new DateTime($data['updatedAt']),
                     'comments' => []
                 ]);
             }
