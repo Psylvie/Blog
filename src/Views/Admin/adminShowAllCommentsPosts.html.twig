@@ -5,27 +5,27 @@
         <h1>Liste des Posts</h1>
 
         <div class="table-responsive">
-            <table class="table">
-                <thead>
+            <table class="table table-bordered">
+                <thead class="table-dark">
                 <tr>
                     <th>Titre</th>
                     <th>Chapo</th>
-                    <th style="background-color: #d32222; color: white">En attente</th>
-                    <th style="background-color: #3e9344; color: white">Approuvés</th>
-                    <th style="background-color: rgba(89,95,103,0.34); color: white">Rejetés</th>
+                    <th class="bg-danger text-white text-center">En attente</th>
+                    <th class="bg-success text-white text-center">Approuvés</th>
+                    <th class="bg-secondary text-white text-center">Rejetés</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for postData in postsData %}
                     <tr>
-                        <td><a href="/Blog/admin/showAllComments/{{ postData.post.id }}">{{ postData.post.title }}</a>
-                        </td>
+                        <td><a href="/Blog/admin/showAllComments/{{ postData.post.id }}" class="text-danger"><strong>{{ postData.post.title|title }}</strong></a></td>
                         <td>{{ postData.post.chapo }}</td>
-                        <td style="color: #d32222;">
-                            {{ postData.comments|filter(comment => comment.status == 'pending')|length }}
-                        </td>
-                        <td style="color: #063f09;">{{ postData.comments|filter(comment => comment.status == 'approved')|length }}</td>
-                        <td>{{ postData.comments|filter(comment => comment.status == 'rejected')|length }}</td>
+                        <td class="text-danger text-center"><strong>{{ postData.comments|filter(comment => comment.status == 'pending')|length }}</strong></td>
+                        <td class="text-success text-center"><strong>{{ postData.comments|filter(comment => comment.status == 'approved')|length }}</strong></td>
+                        <td class="text-info text-center"><strong>{{ postData.comments|filter(comment => comment.status == 'rejected')|length }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="border-bottom"></td>
                     </tr>
                 {% endfor %}
                 </tbody>

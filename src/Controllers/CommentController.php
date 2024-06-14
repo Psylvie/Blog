@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Repository\CommentRepository;
 use App\Utils\Superglobals;
 use Exception;
 use PDOException;

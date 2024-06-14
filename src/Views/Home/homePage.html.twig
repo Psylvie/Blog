@@ -68,34 +68,31 @@
             </div>
         </div>
     </div>
-
     <div class="container mt-5">
         <h2 class="text-center mb-5">Découvrez les derniers articles</h2>
         <div class="row">
             {% for post in posts %}
-                <div class="col-md-4 mb-4 d-flex">
-                    <div class="card h-100 d-flex flex-column">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
                         {% if post.image %}
-                            <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;"
-                                 alt="image du post">
+                            <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top" style="height: 250px;" alt="image du post">
                         {% else %}
-                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;"
-                                 alt="image par defaut">
+                            <img src="/Blog/images/defaultImage.jpg" class="card-img-top" style="height: 250px;" alt="image par defaut">
                         {% endif %}
-                        <div class="card-body flex-grow-1 d-flex flex-column">
+                        <div class="card-body">
                             <h5 class="card-title">{{ post.title|upper }}</h5>
-                            <p class="card-text flex-grow-1">{{ post.content|slice(0, 100) }}...</p>
+                            <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
                         </div>
-                        <div class="card-footer h-100">
-                            Mise à jour : {{ post.updateAt|date('d/m/Y') }} par {{ post.author|capitalize }}
+                        <div class="card-footer">
+                            <small class="text-muted">Mise à jour : {{ post.updateAt|date('d/m/Y') }} par {{ post.author|capitalize }}</small>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        <div class="text-center mt-5">
+    </div>
+    <div class="text-center mt-5">
             <a href="/Blog/posts" class="btn btn-secondary">Voir tous les articles</a>
-        </div>
     </div>
     {% include 'Home/_contactForm.html.twig' %}
 {% endblock %}

@@ -23,7 +23,7 @@ class PostRepository
     }
 
     /**
-     * find latest posts
+     * find latest posts published
      * @param int $limit
      * @return array
      * @throws Exception

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Repository\UserRepository;
 use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;
@@ -65,6 +64,7 @@ class RegisterController extends Controller
             $role = Superglobals::getPost("role");
             $resetToken = Superglobals::getPost("resetToken");
             $password = Superglobals::getPost("password");
+
 
             $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
             if (!preg_match($pattern, $password)) {
