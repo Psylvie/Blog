@@ -63,11 +63,13 @@
                     <div id="collapseDelete" class="collapse" aria-labelledby="headingDelete"
                          data-parent="#deleteAccountAccordion">
                         <div class="card-body">
+                            <p>
+                                Êtes-vous sûr de vouloir supprimer votre compte ?
+                            </p>
                             <form action="/Blog/user/deleteUser/{{ user.id }}" method="post">
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label for="currentPassword" class="form-label">Mot de passe :</label>
-                                    <input type="password" class="form-control" id="currentPassword"
-                                           name="currentPassword" required>
+                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
                                 </div>
                                 <button type="submit" class="btn btn-danger mt-3">Confirmer la suppression</button>
                             </form>

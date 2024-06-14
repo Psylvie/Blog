@@ -4,7 +4,6 @@ namespace App\Controllers;
 require_once __DIR__ . '/../Config/MailConfig.php';
 require_once __DIR__ . '/../Config/Recaptcha.php';
 
-use App\Repository\UserRepository;
 use App\Utils\Superglobals;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;

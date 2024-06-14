@@ -3,7 +3,6 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
-use App\Repository\UserRepository;
 use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;

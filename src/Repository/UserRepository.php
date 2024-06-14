@@ -168,6 +168,24 @@ class UserRepository
     }
 
     /**
+     * reassign posts and/or comments to anonymous
+     * @param string $tableName
+     * @param int $userId
+     * @param int $anonymousUserId
+     */
+    private function reassignItemsToAnonymous(string $tableName, int $userId, int $anonymousUserId): void
+    {
+        $stmt = $this->mysqlClient->prepare("
+        UPDATE {$tableName}
+        SET user_id = :anonymousUserId
+        WHERE user_id = :userId
+    ");
+        $stmt->bindParam(':anonymousUserId', $anonymousUserId, PDO::PARAM_INT);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
      * delete a user
      * @param int $id
      * @throws Exception
@@ -176,13 +194,9 @@ class UserRepository
     {
         try {
             $this->mysqlClient->beginTransaction();
-            $stmt = $this->mysqlClient->prepare("
-                UPDATE comments
-                SET user_id = (SELECT id FROM users WHERE email = 'sylvie.pepete@live.fr' AND role = 'subscriber')
-                WHERE user_id = :user_id
-            ");
-            $stmt->bindParam(':user_id', $id, PDO::PARAM_INT);
-            $stmt->execute();
+            $anonymousUser = 87;
+            $this->reassignItemsToAnonymous('comments', $id, $anonymousUser);
+            $this->reassignItemsToAnonymous('posts', $id, $anonymousUser);
 
             $sql = 'DELETE FROM users WHERE id = :id';
             $statement = $this->mysqlClient->prepare($sql);

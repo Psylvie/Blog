@@ -32,10 +32,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <small id="passwordHelp" class="form-text text-white">Le mot de passe doit contenir entre 8 et
-                            15 caractères, dont au moins une lettre majuscule, une lettre minuscule, un chiffre et un
-                            caractère spécial.</small>
+                        <input type="password" class="form-control" id="password" name="password"
+                               pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}" required>
+                        <small id="passwordHelp" class="form-text text-white">
+                            Le mot de passe doit contenir au minimum 8 caractères, dont au moins une lettre majuscule, une lettre minuscule et un chiffre.
+                        </small>
                     </div>
                     <input type="hidden" name="role" value="subscriber">
                     <input type="hidden" name="csrfToken" value="{{ csrfToken }}">

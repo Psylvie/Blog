@@ -3,7 +3,6 @@
 namespace App\Controllers;
 require_once __DIR__ . '/../config/MailConfig.php';
 
-use App\Repository\UserRepository;
 use App\Utils\Superglobals;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;

@@ -11,18 +11,16 @@
                         <div class="col-md-4 mb-4">
                             <div class="card mb-4 h-100">
                                 {% if post.image %}
-                                    <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid"
-                                         alt="Post Image" style="height: 200px;">
+                                    <img src="/Blog/public/uploads/{{ post.image }}" class="card-img-top img-fluid" alt="Post Image" style="height: 200px;">
                                 {% else %}
-                                    <img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid"
-                                         alt="Post Image" style="height: 200px;">
+                                    <img src="/Blog/public/images/defaultImage.jpg" class="card-img-top img-fluid" alt="Post Image" style="height: 200px;">
                                 {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ post.title|upper }}</h5>
                                     <p class="card-text">{{ post.content|slice(0, 100) }}...</p>
                                 </div>
-                                <div class="card-footer h-100">
-                                    Mise a jour: {{ post.updateAt|date('d/m/Y') }} par {{ post.author }}
+                                <div class="card-footer">
+                                    <small class="text-muted">Mise à jour : {{ post.updateAt|date('d/m/Y') }} par {{ post.author }}</small>
                                 </div>
                             </div>
                         </div>

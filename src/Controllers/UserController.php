@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Repository\UserRepository;
 use App\Services\ImageService;
 use App\Utils\Superglobals;
 use Exception;
@@ -49,27 +48,37 @@ class UserController extends Controller
         $userId = filter_var(Superglobals::getSession('user_id'), FILTER_VALIDATE_INT);
 
         if (!$userId) {
+            Superglobals::setFlashMessage("danger", "Session expirée, veuillez vous reconnecter.");
             $this->redirect('/Blog/login');
         }
+
         $user = $this->userRepository->find($userId);
+
         if ($user === null) {
             Superglobals::setFlashMessage("danger", "L'utilisateur n'existe pas.");
-            $this->redirect('/Blog/user/'. $userId);
+            $this->redirect('/Blog/user/' . $userId);
         }
 
-        if (!password_verify(Superglobals::getPost('currentPassword'), $user->getPassword())) {
+        $currentPassword = trim(htmlspecialchars_decode(Superglobals::getPost('currentPassword')));
+        if (empty($currentPassword) || !password_verify($currentPassword, $user->getPassword())) {
             Superglobals::setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
-            $this->redirect('/Blog/user/'. $userId);
+            $this->redirect('/Blog/user/' . $userId);
+            return;
         }
+        try {
+            $this->userRepository->delete($userId);
 
-        $this->userRepository->delete($userId);
-        if ($user->getImage() !== null) {
-            $imagePath = UPLOADS_PROFILE_PATH . $user->getImage();
-            $this->imageService->deleteImage($imagePath);
+            if ($user->getImage() !== null) {
+                $imagePath = UPLOADS_PROFILE_PATH . $user->getImage();
+                $this->imageService->deleteImage($imagePath);
+            }
+            Superglobals::setFlashMessage("success", "Votre compte a été supprimé avec succès.");
+            $this->redirect('/Blog/');
+//            session_destroy();
+        } catch (Exception $e) {
+            Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la suppression de votre compte.");
+            $this->redirect('/Blog/user/' . $userId);
         }
-        Superglobals::setFlashMessage("success", "Votre compte a été supprimé avec succès.");
-        session_destroy();
-        $this->redirect('/Blog/');
     }
 
     /**
