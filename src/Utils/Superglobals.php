@@ -63,5 +63,4 @@ class Superglobals
     {
         return $_COOKIE[$key] ?? null;
     }
-
 }

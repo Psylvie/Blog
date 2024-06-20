@@ -21,6 +21,7 @@ class AdminCommentController extends Controller
     public function __construct()
     {
         parent::__construct();
+
     }
 
 
@@ -50,6 +51,7 @@ class AdminCommentController extends Controller
 
     /**
      * show all comments for a post
+     * @param $postId
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -87,13 +89,13 @@ class AdminCommentController extends Controller
 
             if ($validationOption !== null && $commentId !== null) {
                 switch ($validationOption) {
-                    case 'approved':
+                        case 'approved':
                         $this->commentRepository->updateCommentStatus($commentId, 'approved');
                         break;
-                    case 'rejected':
+                        case 'rejected':
                         $this->commentRepository->updateCommentStatus($commentId, 'rejected');
                         break;
-                    default:
+                        default:
                         $this->commentRepository->updateCommentStatus($commentId, 'pending');
                         break;
                 }
@@ -107,4 +109,3 @@ class AdminCommentController extends Controller
         }
     }
 }
-	
