@@ -1,9 +1,10 @@
 <?php
 require '../vendor/autoload.php';
 session_start();
-//header('X-Content-Type-Options: nosniff');
-//header('X-Frame-Options: SAMEORIGIN');
-//header('X-XSS-Protection: 1; mode=block');
+
+// header('X-Content-Type-Options: nosniff');
+// header('X-Frame-Options: SAMEORIGIN');
+// header('X-XSS-Protection: 1; mode=block');
 
 $dotenv = Dotenv\Dotenv::createUnsafeMutable(__DIR__ . '/..');
 $dotenv->load();
@@ -61,6 +62,7 @@ if (isset($userRole) && $userRole == 'admin') {
     $router->addRoute('/Blog/admin/deletePost/{id}', AdminPostController::class, 'deletePost');
     $router->addRoute('/Blog/admin/showAllPosts', AdminCommentController::class, 'showAllPosts');
     $router->addRoute('/Blog/admin/showAllComments/{id}', AdminCommentController::class, 'showAllComments');
+    $router->addRoute('/Blog/admin/showCommentsPending', AdminCommentController::class, 'showPendingComments');
     $router->addRoute('/Blog/admin/handleCommentValidation', AdminCommentController::class, 'handleCommentValidation');
     $router->addRoute('/Blog/admin/users/list', AdminUserController::class, 'list');
     $router->addRoute('/Blog/admin/users/show/{id}', AdminUserController::class, 'show');
@@ -76,5 +78,5 @@ try {
     if (str_starts_with($uri, '/Blog/')) {
         Controller::redirect('/Blog/Error/');
     }
-    error_log('Error: '. $e->getMessage());
+    error_log('Error: '.$e->getMessage());
 }

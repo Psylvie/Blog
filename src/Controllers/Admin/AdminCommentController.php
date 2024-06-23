@@ -59,6 +59,7 @@ class AdminCommentController extends Controller
      */
     public function showAllComments($postId)
     {
+        $commentsUsers = [];
         $comments = $this->commentRepository->findAllByPostId($postId);
         $post = $this->postRepository->getPostById($postId);
         foreach ($comments as $comment) {
@@ -69,6 +70,35 @@ class AdminCommentController extends Controller
             'commentsUsers' => $commentsUsers,
             'comments' => $comments,
             'post' => $post]);
+    }
+
+    /**
+     * show pending comments
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     * @throws Exception
+     */
+    public function showPendingComments()
+    {
+        $comments = $this->commentRepository->findAllPendingComments();
+        $commentsData = [];
+
+        foreach ($comments as $comment) {
+            $user = $this->commentRepository->findUserByComment($comment->getId());
+            $post = $this->postRepository->getPostById($comment->getPostId());
+
+            $commentsData[] = [
+                'comment' => $comment,
+                'user' => $user,
+                'postTitle' => $post->getTitle(),
+                'postChapo' => $post->getChapo(),
+            ];
+        }
+
+        $this->render('Admin/adminCommentsPending.html.twig', [
+            'commentsData' => $commentsData
+        ]);
     }
 
     /**
@@ -84,23 +114,26 @@ class AdminCommentController extends Controller
         if ($requestMethod === 'POST') {
             $validationOption = Superglobals::getPost('validationOption');
             $commentId = Superglobals::getPost('commentId');
+            $referer = Superglobals::getServer('HTTP_REFERER');
             $commentContent = Superglobals::getPost('commentContent');
             $postId = Superglobals::getPost('postId');
 
             if ($validationOption !== null && $commentId !== null) {
                 switch ($validationOption) {
-                        case 'approved':
+                    case 'approved':
                         $this->commentRepository->updateCommentStatus($commentId, 'approved');
                         break;
-                        case 'rejected':
+                    case 'rejected':
                         $this->commentRepository->updateCommentStatus($commentId, 'rejected');
                         break;
-                        default:
+                    default:
                         $this->commentRepository->updateCommentStatus($commentId, 'pending');
                         break;
                 }
 
-                if ($postId !== null) {
+                if (!empty($referer)) {
+                    $this->redirect($referer);
+                } elseif ($postId !== null) {
                     $redirectUrl = "/Blog/admin/showAllComments/$postId";
                     Superglobals::setFlashMessage('success', 'Commentaire mis à jour avec succès !');
                     $this->redirect($redirectUrl);
