@@ -5,6 +5,8 @@ session_start();
 //header('X-Frame-Options: SAMEORIGIN');
 //header('X-XSS-Protection: 1; mode=block');
 
+$dotenv = Dotenv\Dotenv::createUnsafeMutable(__DIR__ . '/..');
+$dotenv->load();
 
 use App\Controllers\Admin\AdminCommentController;
 use App\Controllers\Admin\AdminController;
