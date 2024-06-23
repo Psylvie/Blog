@@ -22,10 +22,10 @@ class CommentRepository
 
     /**
      * Adds a comment to the database
-     * @throws Exception
      * @param string $commentContent content of the comment
      * @param int $postId id of the post
      * @param int $userId id of the user who wrote the comment
+     * @throws Exception
      */
     public function addComment(string $commentContent, int $postId, int $userId): void
     {
@@ -40,12 +40,12 @@ class CommentRepository
 
     /**
      * Finds all comments by post id
-     * @throws Exception
      * @param int $postId id of the post
+     * @throws Exception
      */
     public function findAllByPostId(int $postId): array
     {
-        $sql = 'SELECT * FROM comments WHERE post_id = :post_id';
+        $sql = 'SELECT * FROM comments WHERE post_id = :post_id ORDER BY createdAt DESC';
 
         $statement = $this->mysqlClient->prepare($sql);
         $statement->execute(['post_id' => $postId]);
@@ -56,14 +56,14 @@ class CommentRepository
             $createdAt = new DateTime($commentData['createdAt']);
             $updatedAt = new DateTime($commentData['updatedAt']);
             $comment = new Comment([
-                    'id' => $commentData['id'],
-                    'content' => $commentData['content'],
-                    'status' => $commentData['status'],
-                    'createdAt' => $createdAt,
-                    'updatedAt' => $updatedAt,
-                    'userId' => $commentData['user_id'],
-                    'postId' => $postId
-                ]);
+                'id' => $commentData['id'],
+                'content' => $commentData['content'],
+                'status' => $commentData['status'],
+                'createdAt' => $createdAt,
+                'updatedAt' => $updatedAt,
+                'userId' => $commentData['user_id'],
+                'postId' => $postId
+            ]);
             $comments[] = $comment;
         }
 
@@ -100,6 +100,37 @@ class CommentRepository
         $statement->execute(['commentId' => $commentId]);
         $status = $statement->fetch(PDO::FETCH_ASSOC);
         return $status['status'];
+    }
+
+    /**
+     * Finds all pending comments
+     * @return array
+     * @throws Exception
+     */
+    public function findAllPendingComments(): array
+    {
+        $sql = 'SELECT * FROM comments WHERE status = :status ORDER BY createdAt DESC';
+        $statement = $this->mysqlClient->prepare($sql);
+        $statement->execute(['status' => 'pending']);
+        $commentsData = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $comments = [];
+
+        foreach ($commentsData as $commentData) {
+            $createdAt = new DateTime($commentData['createdAt']);
+            $updatedAt = new DateTime($commentData['updatedAt']);
+            $comment = new Comment([
+                'id' => $commentData['id'],
+                'content' => $commentData['content'],
+                'status' => $commentData['status'],
+                'createdAt' => $createdAt,
+                'updatedAt' => $updatedAt,
+                'userId' => $commentData['user_id'],
+                'postId' => $commentData['post_id']
+            ]);
+            $comments[] = $comment;
+        }
+
+        return $comments;
     }
 
     /**

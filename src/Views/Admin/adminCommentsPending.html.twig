@@ -1,0 +1,119 @@
+{% extends 'admin.html.twig' %}
+
+{% block content %}
+    <div class="text-center mb-4">
+        <h2>Commentaires en Attente</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Auteur</th>
+                <th>Commentaire</th>
+                <th>Post</th>
+                <th>Chapo</th>
+                <th>Valider</th>
+                <th>Supprimer</th>
+                <th>Voir</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for data in commentsData %}
+                <tr>
+                    <td>{{ data.comment.createdAt|date('d/m/Y') }}</td>
+                    <td>{{ data.user.pseudo }}</td>
+                    <td>{{ data.comment.content|slice(0, 50) ~ '...' }}</td>
+                    <td>{{ data.postTitle }}</td>
+                    <td>{{ data.postChapo|slice(0, 50) ~ '...' }}</td>
+                    <td>
+                        <!-- Form for approval -->
+                        <form id="approveForm{{ data.comment.id }}" action="/Blog/admin/handleCommentValidation" method="post">
+                            <input type="hidden" name="commentId" value="{{ data.comment.id }}">
+                            <input type="hidden" name="validationOption" value="approved">
+                            <input type="hidden" name="referer" value="{{ app.request.uri }}">
+                            <button type="button" style="background-color: green" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmApproveModal{{ data.comment.id }}">
+                                V
+                            </button>
+                        </form>
+
+                        <!-- Confirm Approve Modal -->
+                        <div class="modal fade" id="confirmApproveModal{{ data.comment.id }}" tabindex="-1" aria-labelledby="confirmApproveModalLabel{{ data.comment.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmApproveModalLabel{{ data.comment.id }}">Confirmation de Validation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes-vous sûr de vouloir valider ce commentaire ?</p>
+                                        <p>{{ data.comment.content }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" form="approveForm{{ data.comment.id }}" class="btn btn-success">Valider</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <!-- Form for rejection -->
+                        <form id="rejectForm{{ data.comment.id }}" action="/Blog/admin/handleCommentValidation" method="post">
+                            <input type="hidden" name="commentId" value="{{ data.comment.id }}">
+                            <input type="hidden" name="validationOption" value="rejected">
+                            <input type="hidden" name="referer" value="{{ app.request.uri }}">
+                            <button type="button" style="background-color: #af2929" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmRejectModal{{ data.comment.id }}">
+                                X
+                            </button>
+                        </form>
+
+                        <!-- Confirm Reject Modal -->
+                        <div class="modal fade" id="confirmRejectModal{{ data.comment.id }}" tabindex="-1" aria-labelledby="confirmRejectModalLabel{{ data.comment.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmRejectModalLabel{{ data.comment.id }}">Confirmation de Suppression</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes-vous sûr de vouloir supprimer ce commentaire ?</p>
+                                        <p>{{ data.comment.content }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" form="rejectForm{{ data.comment.id }}" class="btn btn-danger">Supprimer</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <!-- Button trigger modal for viewing comment -->
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewCommentModal{{ data.comment.id }}">
+                            Voir
+                        </button>
+                        <!-- Modal for viewing comment -->
+                        <div class="modal fade" id="viewCommentModal{{ data.comment.id }}" tabindex="-1" aria-labelledby="viewCommentModalLabel{{ data.comment.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="viewCommentModalLabel{{ data.comment.id }}">Commentaire ajouté par {{ data.user.pseudo }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ data.comment.content }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
