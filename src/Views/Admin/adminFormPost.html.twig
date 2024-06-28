@@ -14,20 +14,20 @@
                 <form action="/Blog/admin/createPost" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="title" class="form-label">Titre</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
+                        <input type="text" class="form-control" id="title" name="title" aria-required="true" required>
                     </div>
                     <div class="mb-3">
                         <label for="chapo" class="form-label">Chapo</label>
-                        <input type="text" class="form-control" id="chapo" name="chapo" required>
+                        <input type="text" class="form-control" id="chapo" name="chapo" aria-required="true" required>
                     </div>
                     <div class="mb-3">
                         <label for="author" class="form-label">Auteur</label>
                         <input type="text" class="form-control" id="author" name="author"
-                               value="{{ session.user_name }} {{ session.user_last_name }}" required>
+                               value="{{ session.user_name }} {{ session.user_last_name }}" aria-required="true" required>
                     </div>
                     <div class="mb-3">
                         <label for="content" class="form-label">Contenu</label>
-                        <textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+                        <textarea class="form-control" id="content" name="content" rows="6"aria-required="true" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="image" class="form-label">Image</label>
@@ -57,6 +57,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="csrfToken" value="{{ csrfToken }}">
                     <button type="submit" class="btn btn-dark">Créer le Post</button>
                 </form>
             </div>

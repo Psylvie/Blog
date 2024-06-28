@@ -97,6 +97,7 @@
                                       class="form-control" rows="5" required></textarea>
                         </div>
                         <input type="hidden" name="postId" value="{{ post.id }}">
+                        <input type="hidden" name="csrfToken" value="{{ csrfToken }}">
                         <h5 class="text-center">Votre commentaire sera soumis à l'administrateur pour validation</h5>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-secondary me-2">Envoyer</button>

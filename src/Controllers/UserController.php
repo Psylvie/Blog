@@ -59,7 +59,7 @@ class UserController extends Controller
             $this->redirect('/Blog/user/' . $userId);
         }
 
-        $currentPassword = trim(htmlspecialchars_decode(Superglobals::getPost('currentPassword')));
+        $currentPassword = $this->testInput(Superglobals::getPost('currentPassword'));
         if (empty($currentPassword) || !password_verify($currentPassword, $user->getPassword())) {
             Superglobals::setFlashMessage("danger", "Le mot de passe actuel est incorrect.");
             $this->redirect('/Blog/user/' . $userId);
@@ -74,7 +74,7 @@ class UserController extends Controller
             }
             Superglobals::setFlashMessage("success", "Votre compte a été supprimé avec succès.");
             $this->redirect('/Blog/');
-//            session_destroy();
+            session_destroy();
         } catch (Exception $e) {
             Superglobals::setFlashMessage("danger", "Une erreur s'est produite lors de la suppression de votre compte.");
             $this->redirect('/Blog/user/' . $userId);
@@ -92,13 +92,13 @@ class UserController extends Controller
     {
         if (Superglobals::getServer("REQUEST_METHOD") === "POST") {
             $userId = Superglobals::getSession('user_id', FILTER_VALIDATE_INT);
-            $name = trim(htmlspecialchars_decode(Superglobals::getPost('name')));
-            $lastName = trim(htmlspecialchars_decode(Superglobals::getPost('lastName')));
-            $pseudo = trim(htmlspecialchars_decode(Superglobals::getPost('pseudo')));
-            $email = trim(htmlspecialchars_decode(Superglobals::getPost('email')));
-            $currentPassword = trim(htmlspecialchars_decode(Superglobals::getPost('currentPassword')));
-            $newPassword = trim(htmlspecialchars_decode(Superglobals::getPost('newPassword')));
-            $confirmPassword = trim(htmlspecialchars_decode(Superglobals::getPost('confirmPassword')));
+            $name = $this->testInput(Superglobals::getPost('name'));
+            $lastName = $this->testInput(Superglobals::getPost('lastName'));
+            $pseudo = $this->testInput(Superglobals::getPost('pseudo'));
+            $email = $this->testInput(Superglobals::getPost('email'));
+            $currentPassword = $this->testInput(Superglobals::getPost('currentPassword'));
+            $newPassword = $this->testInput(Superglobals::getPost('newPassword'));
+            $confirmPassword = $this->testInput(Superglobals::getPost('confirmPassword'));
 
             if (empty($name) || empty($lastName) || empty($pseudo) || empty($email)) {
                 Superglobals::setFlashMessage("danger", "Tous les champs sont requis.");

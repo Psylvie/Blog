@@ -1,11 +1,12 @@
 <?php
 require '../vendor/autoload.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
-
-// header('X-Content-Type-Options: nosniff');
-// header('X-Frame-Options: SAMEORIGIN');
-// header('X-XSS-Protection: 1; mode=block');
-
+echo '<pre>';
+print_r($_SESSION);
+echo '</pre>';
 $dotenv = Dotenv\Dotenv::createUnsafeMutable(__DIR__ . '/..');
 $dotenv->load();
 

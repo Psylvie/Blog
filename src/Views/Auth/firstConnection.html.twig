@@ -28,6 +28,7 @@
                                 <label for="email" class="form-label">Adresse e-mail :</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
+                            <input type="hidden" name="csrfToken" value="{{ csrfToken }}">
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-secondary">Envoyer le lien de première connexion
                                 </button>

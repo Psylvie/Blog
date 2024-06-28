@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Utils\CsrfProtection;
+use App\Utils\Superglobals;
 use Exception;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -13,6 +15,7 @@ use Twig\Error\SyntaxError;
  */
 class PostController extends Controller
 {
+
     /**
      * PostController constructor.
      */
@@ -44,6 +47,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
+        $csrfToken = CsrfProtection::generateToken();
+        Superglobals::setSession('csrfToken', $csrfToken);
         $comments = $this->commentRepository->findAllByPostId($id);
         $post = $this->postRepository->getPostById($id);
         foreach ($comments as $comment) {
@@ -56,7 +61,8 @@ class PostController extends Controller
         }
         $this->render('Posts/post.html.twig', [
             'post' => $post,
-            'comments' => $comments
+            'comments' => $comments,
+            'csrfToken' => $csrfToken
         ]);
 
     }

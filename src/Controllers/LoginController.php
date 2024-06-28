@@ -3,6 +3,7 @@
 namespace App\Controllers;
 require_once __DIR__ . '/../config/MailConfig.php';
 
+use App\Utils\CsrfProtection;
 use App\Utils\Superglobals;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
@@ -30,10 +31,15 @@ class LoginController extends Controller
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
+     * @throws Exception
      */
     public function loginForm()
     {
-        $this->render('Auth/login.html.twig');
+        $csrfToken = CsrfProtection::generateToken();
+        Superglobals::setSession('csrfToken', $csrfToken);
+        $this->render('Auth/login.html.twig', [
+            'csrfToken' => $csrfToken
+        ]);
     }
 
     /**
@@ -43,6 +49,11 @@ class LoginController extends Controller
     public function login()
     {
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
+            $csrfToken = Superglobals::getPost('csrfToken');
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Token CSRF invalide");
+                $this->redirect('/Blog/login');
+            }
             $email = Superglobals::getPost('email');
             $password = Superglobals::getPost('password');
             $user = $this->userRepository->findByEmail($email);
@@ -69,8 +80,8 @@ class LoginController extends Controller
                     }
                     $rememberMe = Superglobals::getPost('remember_me');
                     if (isset($rememberMe) && $rememberMe == 1) {
-                        /** cookie end 30 days  */
-                        setcookie('user_id', $user->getId(), time() + (86400 * 30), "/");
+                        $cookieLifetime = time() + (86400 * 30); // 30 days
+                        setcookie('user_id', $user->getId(), $cookieLifetime, "/");
                     }
                 }
             } else {
@@ -99,6 +110,11 @@ class LoginController extends Controller
     public function requestPasswordReset()
     {
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
+            $csrfToken = Superglobals::getPost('csrfToken');
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Token CSRF invalide");
+                $this->redirect('/Blog/login');
+            }
             $email = Superglobals::getPost('email');
 
             $user = $this->userRepository->findByEmail($email);
@@ -175,7 +191,7 @@ class LoginController extends Controller
                 $this->redirect('/Blog/login');
             }
         } else {
-            Superglobals::setFlashMessage("danger", "Token de réinitialisation invalide.");
+            Superglobals::setFlashMessage("danger", "Token de réinitialisation invalide ou expiré.");
             $this->redirect('/Blog/login');
         }
     }
@@ -190,19 +206,11 @@ class LoginController extends Controller
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST' ) {
             $resetToken = Superglobals::getPost('resetToken');
             $password = Superglobals::getPost('password');
-            $confirmPassword = Superglobals::getPost('confirm_password');
-
-            $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
-            if (!preg_match($pattern, $password)) {
+            $passwordPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
+            if (!preg_match($passwordPattern, $password)) {
                 Superglobals::setFlashMessage("danger", "Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule, une lettre minuscule, et un chiffre.");
                 $this->redirect('/Blog/newPassword/' . $resetToken);
             }
-            if ($password !== $confirmPassword) {
-                Superglobals::setFlashMessage("danger", "Les mots de passe ne correspondent pas.");
-                $this->redirect('/Blog/newPassword/' . $resetToken);
-            }
-
-
             $user = $this->userRepository->findByResetToken($resetToken);
             if ($user) {
                 $this->userRepository->updatePassword($user->getEmail(), password_hash($password, PASSWORD_DEFAULT));
@@ -232,9 +240,12 @@ class LoginController extends Controller
     {
 
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
-            $email = Superglobals::getPost('email');
-
-
+            $csrfToken = Superglobals::getPost('csrfToken');
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Token CSRF invalide");
+                $this->redirect('/Blog/first-connection');
+            }
+            $email = $this->testInput(Superglobals::getPost('email'));
             $user = $this->userRepository->findByEmail($email);
 
             if ($user && $user->getFirstLoginDone() === false) {
@@ -245,7 +256,7 @@ class LoginController extends Controller
                 Superglobals::setFlashMessage("success", "Un e-mail de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.");
                 $this->redirect('/Blog/login');
             } else {
-                Superglobals::setFlashMessage("danger", "Aucun utilisateur trouvé avec cette adresse e-mail.");
+                Superglobals::setFlashMessage("danger", "Ce compte a deja été initialisé ou n'existe pas.");
                 $this->redirect('/Blog/first-connection');
             }
         }
@@ -261,8 +272,9 @@ class LoginController extends Controller
         session_destroy();
         session_start();
         Superglobals::setFlashMessage('success', 'Vous êtes déconnecté');
-        $defaultCsrfToken = '';
-        Superglobals::setSession('csrfToken', $defaultCsrfToken);
+
+       CsrfProtection::unsetToken();
+
         if (Superglobals::getCookie('user_id')) {
             setcookie('user_id', '', time() - 3600, '/');
         }

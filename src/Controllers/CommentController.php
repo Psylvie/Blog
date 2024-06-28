@@ -28,9 +28,14 @@ class CommentController extends HomeController
             $this->redirect('/Blog/');
         }
 
+        $csrfToken = Superglobals::getPost('csrfToken');
+        if (!hash_equals(Superglobals::getSession('csrfToken'), $csrfToken)) {
+            Superglobals::setFlashMessage("danger", "Jeton CSRF invalide.");
+            $this->redirect('/Blog/');
+        }
         $userRole = Superglobals::getSession('user_role');
         $userId = Superglobals::getSession('user_id');
-        $commentContent = htmlspecialchars_decode(trim(Superglobals::getPost('comment')));
+        $commentContent = $this->testInput(Superglobals::getPost('comment'));
         $postId = Superglobals::getPost('postId');
 
         if (($userRole !== 'subscriber' && $userRole !== 'admin')) {

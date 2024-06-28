@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Services\ImageService;
+use App\Utils\CsrfProtection;
 use App\Utils\Superglobals;
 use Exception;
 use Twig\Error\LoaderError;
@@ -49,8 +50,10 @@ class AdminUserController extends Controller
      */
     public function show($userId)
     {
+        $csrfToken = CsrfProtection::generateToken();
+        Superglobals::setSession('csrfToken', $csrfToken);
         $user = $this->userRepository->find($userId);
-        $this->render('Admin/adminUpdateUserProfile.html.twig', ['user' => $user]);
+        $this->render('Admin/adminUpdateUserProfile.html.twig', ['user' => $user, 'csrfToken' => $csrfToken]);
     }
 
     /**
@@ -84,11 +87,16 @@ class AdminUserController extends Controller
     public function update($userId)
     {
         if (Superglobals::getServer("REQUEST_METHOD") === "POST") {
-            $name = Superglobals::getPost('name', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
-            $lastName = Superglobals::getPost('lastName', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
-            $email = Superglobals::getPost('email', FILTER_VALIDATE_EMAIL) ?? '';
-            $pseudo = Superglobals::getPost('pseudo', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
-            $role = Superglobals::getPost('role', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
+            $csrfToken = Superglobals::getPost('csrfToken');
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Erreur de validation CSRF !");
+                $this->redirect('/Blog/admin/users/list');
+            }
+            $name = $this->testInput(Superglobals::getPost('name'));
+            $lastName = $this->testInput(Superglobals::getPost('lastName'));
+            $email = $this->testInput(Superglobals::getPost('email'));
+            $pseudo = $this->testInput(Superglobals::getPost('pseudo'));
+            $role = $this->testInput(Superglobals::getPost('role'));
             $user = $this->userRepository->find($userId);
             if ($user === null) {
                 Superglobals::setFlashMessage("danger", "L'utilisateur n'existe pas.");
@@ -123,12 +131,17 @@ class AdminUserController extends Controller
     public function createUserProcess()
     {
         if (Superglobals::getServer("REQUEST_METHOD") == "POST") {
-            $name = htmlspecialchars(trim(Superglobals::getPost("name")));
-            $lastName = htmlspecialchars(trim(Superglobals::getPost("lastName")));
-            $pseudo = htmlspecialchars(trim(Superglobals::getPost("pseudo")));
-            $email = htmlspecialchars(trim(Superglobals::getPost("email")));
-            $role = htmlspecialchars(trim(Superglobals::getPost("role")));
-            $resetToken = htmlspecialchars(trim(Superglobals::getPost("resetToken")));
+            $csrfToken = Superglobals::getPost("csrfToken");
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Erreur de validation CSRF !");
+                $this->redirect('/Blog/admin/users/create');
+            }
+            $name = $this->testInput(Superglobals::getPost("name"));
+            $lastName = $this->testInput(Superglobals::getPost("lastName"));
+            $pseudo = $this->testInput(Superglobals::getPost("pseudo"));
+            $email = $this->testInput(Superglobals::getPost("email"));
+            $role = $this->testInput(Superglobals::getPost("role"));
+            $resetToken = $this->testInput(Superglobals::getPost("resetToken"));
             $hashedPassword = password_hash(Superglobals::getPost("password"), PASSWORD_DEFAULT);
             $image = null;
             $firstLoginDone = false;

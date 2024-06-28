@@ -31,13 +31,13 @@ class Controller
      */
     public function __construct()
     {
+
         $loader = new FilesystemLoader(__DIR__ . '\..\Views');
         $this->twig = new Environment($loader, [
             'debug' => true,
             'cache' => false,
         ]);
         $this->twig->addExtension(new DebugExtension());
-
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
@@ -89,6 +89,14 @@ class Controller
         $this->render('Error/error.html.twig', [
             'is_admin' => $isAdmin,
             'recaptchaSiteKey' => RECAPTCHA_SITE_KEY]);
+    }
+
+    public function testInput($data): string
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 }
 	
