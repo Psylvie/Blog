@@ -152,11 +152,6 @@ class UserRepository
 
     /**
      * create a new user
-     * @param string $pseudo User pseudo
-     * @param string $email User email
-     * @param string $password User password
-     * @param string $role User role
-     * @param string|null $resetToken User reset token
      * @throws Exception
      */
     public function createUser(string $name, string $lastName, $image, string $pseudo, string $email, string $password, string $role, ?string $resetToken): void
