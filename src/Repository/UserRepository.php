@@ -152,9 +152,6 @@ class UserRepository
 
     /**
      * create a new user
-     * @param string $name User name
-     * @param string $lastName User last name
-     * @param null $image User image
      * @param string $pseudo User pseudo
      * @param string $email User email
      * @param string $password User password

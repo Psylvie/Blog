@@ -14,11 +14,8 @@ class Router
 
     /**
      * Add a route to the router
-     * @param string $route
-     * @param string $controller
-     * @param string $action
      */
-    public function addRoute(string $route, string $controller, string $action): void
+    public function addRoute( $route, $controller, $action): void
     {
         $this->routes[$route] = [
             'Controllers' => $controller,
@@ -29,7 +26,6 @@ class Router
 
     /**
      * Route dispatcher
-     * @param string $uri
      * @return void
      * @throws Exception
      */
