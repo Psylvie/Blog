@@ -11,7 +11,11 @@ use PDOException;
 
 class UserRepository
 {
+    /**
+     * @var PDO $mysqlClient
+     */
     private \PDO $mysqlClient;
+
 
     /**
      * UserRepository constructor.
@@ -21,23 +25,26 @@ class UserRepository
         $this->mysqlClient = DatabaseConnect::connect();
     }
 
+
     /**
      * find the latest users
-     * @param int $limit
-     * @return bool|array
+     * @param int $limit Number of users to return
+     * @return bool|array Returns an array of users
      */
-    public function findLatestUsers(int $limit = 3): bool|array
+    public function findLatestUsers(int $limit =3): bool|array
     {
         $sql = 'SELECT * FROM users ORDER BY createdAt DESC LIMIT :limit';
         $statement = $this->mysqlClient->prepare($sql);
-        $statement->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $statement->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     /**
      * find all users
      * @throws Exception
+     * @return array Returns an array of users
      */
     public function findAll(): array
     {
@@ -70,10 +77,11 @@ class UserRepository
         return $users;
     }
 
+
     /**
      * find user by email
-     * @param string $email
-     * @return User|null
+     * @param string $email User email
+     * @return User|null Returns a user object or null
      * @throws Exception
      */
     public function findByEmail(string $email): ?User
@@ -82,7 +90,6 @@ class UserRepository
         $statement = $this->mysqlClient->prepare($sql);
         $statement->execute(['email' => $email]);
         $userData = $statement->fetch(PDO::FETCH_ASSOC);
-        $firstLoginDone = isset($userData['first_login_done']) ? (bool)$userData['first_login_done'] : null;
         if ($userData) {
             $createdAt = new DateTime($userData['createdAt']);
             $updatedAt = new DateTime($userData['updatedAt']);
@@ -102,11 +109,15 @@ class UserRepository
             ];
             return new User($userDataArray);
         }
+
         return null;
     }
 
+
     /**
      * find user by id
+     * @param int $id User id
+     * @return User|null Returns a user object or null
      * @throws Exception
      */
     public function find(int $id): ?User
@@ -138,16 +149,17 @@ class UserRepository
         return null;
     }
 
+
     /**
      * create a new user
-     * @param string $name
-     * @param string $lastName
-     * @param null $image
-     * @param string $pseudo
-     * @param string $email
-     * @param string $password
-     * @param string $role
-     * @param string|null $resetToken
+     * @param string $name User name
+     * @param string $lastName User last name
+     * @param null $image User image
+     * @param string $pseudo User pseudo
+     * @param string $email User email
+     * @param string $password User password
+     * @param string $role User role
+     * @param string|null $resetToken User reset token
      * @throws Exception
      */
     public function createUser(string $name, string $lastName, $image, string $pseudo, string $email, string $password, string $role, ?string $resetToken): void
@@ -157,15 +169,18 @@ class UserRepository
             $stmt = $pdo->prepare("INSERT INTO users (name, lastName, image, pseudo, email, password, role, resetToken) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$name, $lastName, $image, $pseudo, $email, $password, $role, $resetToken]);
         } catch (PDOException $e) {
-            if ($e->getCode() == '23000' && str_contains($e->getMessage(), 'unique_email')) {
+            if ($e->getCode() === '23000' && str_contains($e->getMessage(), 'unique_email')) {
                 throw new Exception("L'adresse e-mail est déjà utilisée.");
-            } elseif ($e->getCode() == '23000' && str_contains($e->getMessage(), 'unique_pseudo')) {
-                throw new Exception("Le pseudo est déjà utilisé.");
-            } else {
-                throw new Exception("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
             }
+
+            if ($e->getCode() === '23000' && str_contains($e->getMessage(), 'unique_pseudo')) {
+                throw new Exception("Le pseudo est déjà utilisé.");
+            }
+
+                throw new Exception("Erreur lors de la création de l'utilisateur : ".$e->getMessage());
         }
     }
+
 
     /**
      * reassign posts and/or comments to anonymous
@@ -175,15 +190,16 @@ class UserRepository
      */
     private function reassignItemsToAnonymous(string $tableName, int $userId, int $anonymousUserId): void
     {
-        $stmt = $this->mysqlClient->prepare("
-        UPDATE {$tableName}
-        SET user_id = :anonymousUserId
-        WHERE user_id = :userId
-    ");
+        $stmt = $this->mysqlClient->prepare(
+            "UPDATE {$tableName}
+            SET user_id = :anonymousUserId
+            WHERE user_id = :userId"
+        );
         $stmt->bindParam(':anonymousUserId', $anonymousUserId, PDO::PARAM_INT);
         $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
         $stmt->execute();
     }
+
 
     /**
      * delete a user
@@ -204,21 +220,22 @@ class UserRepository
             $this->mysqlClient->commit();
         } catch (PDOException $e) {
             $this->mysqlClient->rollBack();
-            throw new Exception("Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
+            throw new Exception("Erreur lors de la suppression de l'utilisateur : ".$e->getMessage());
         }
     }
+
 
     /**
      * update user profile by user himself
      * @param int $userId
      * @param string $name
-     * @param string $image
+     * @param string|null $image
      * @param string $lastName
      * @param string $email
      * @param string $pseudo
      * @throws Exception
      */
-    public function updateProfile(int $userId, string $name, string $image, string $lastName, string $email, string $pseudo): void
+    public function updateProfile(int $userId, string $name, ?string $image, string $lastName, string $email, string $pseudo): void
     {
         try {
             $sql = 'UPDATE users SET name = :name, lastName = :lastName, image = :image  ,pseudo = :pseudo, email = :email  WHERE id = :id';
@@ -232,9 +249,10 @@ class UserRepository
                 'id' => $userId,
             ]);
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la mise à jour du profil : " . $e->getMessage());
+            throw new Exception("Erreur lors de la mise à jour du profil : ".$e->getMessage());
         }
     }
+
 
     /**
      * update user profile by admin
@@ -275,6 +293,7 @@ class UserRepository
         ]);
     }
 
+
     /**
      * find user by reset token
      * @param string $resetToken
@@ -311,6 +330,7 @@ class UserRepository
         return $user;
     }
 
+
     /**
      * update user password
      * @param string $userEmail
@@ -327,9 +347,10 @@ class UserRepository
                 'password' => $password_hash,
             ]);
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la mise à jour du mot de passe : " . $e->getMessage());
+            throw new Exception("Erreur lors de la mise à jour du mot de passe : ".$e->getMessage());
         }
     }
+
 
     /**
      * update first login done
@@ -343,7 +364,6 @@ class UserRepository
         $statement->execute([
             'value' => $value,
             'userId' => $userId,
-        ]);
+            ]);
     }
 }
-	
