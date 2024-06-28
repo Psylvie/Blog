@@ -1,0 +1,64 @@
+
+Issues list
+
+General review of the project
+#16 by Psylvie was closed 3 weeks ago
+
+
+Documentation
+#15 by Psylvie was closed 3 weeks ago
+
+
+Security
+#14 by Psylvie was closed 27 days ago
+
+
+Testing and debugging:
+#13 by Psylvie was closed 27 days ago
+
+
+Optimization for mobile devices
+#12 by Psylvie was closed 27 days ago
+
+Bootstrap Integration and design
+#11 by Psylvie was closed on May 26
+
+
+Validation and management of comments
+#10 by Psylvie was closed on May 25
+
+
+Implementing Authentication and Authorization
+#9 by Psylvie was closed on May 20
+
+
+Creation of the login/registration page
+#8 by Psylvie was closed on May 9
+
+
+Admin : Creation of the page to edit a blog post
+#7 by Psylvie was closed on May 9
+
+
+Admin: Creating the page to add a blog post
+#6 by Psylvie was closed on May 8
+
+
+Creating the detail page of a blog post
+#5 by Psylvie was closed on Mar 31
+
+
+Creation of the page listing blog posts
+#4 by Psylvie was closed on Mar 31
+
+
+Creating the home page
+#3 by Psylvie was closed on Mar 31
+
+
+Setting up the database and connecting
+#2 by Psylvie was closed on Feb 29
+
+
+Creation of the basic structure of the project
+#1 by Psylvie was closed on Feb 23

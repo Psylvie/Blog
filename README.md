@@ -111,7 +111,9 @@ Before you start using the project, follow these steps to configure your configu
 
 ### 2. Importing the database schema:
 
--Download the provided SQL file (My_Blog.sql) containing the necessary table structure.
+-Create a new database named `My_Blog` in your database management system.
+
+-Download the provided SQL file (my_blog.sql) containing the necessary table structure.
 
 -Import this SQL file into your database to create the required tables for the project.
 
