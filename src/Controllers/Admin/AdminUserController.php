@@ -64,6 +64,9 @@ class AdminUserController extends Controller
     public function delete($userId)
     {
         try {
+            if ($userId == 87) {
+                throw new Exception("Vous ne pouvez pas supprimer l'utilisateur anonyme.");
+            }
             $this->userRepository->delete($userId);
             $user = $this->userRepository->find($userId);
             if ($user && $user->getImage()) {

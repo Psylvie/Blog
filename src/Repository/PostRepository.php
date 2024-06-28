@@ -75,17 +75,13 @@ class PostRepository
             FROM posts p
             LEFT JOIN comments c ON p.id = c.post_id
             ORDER BY p.updatedAt DESC';
-
         if ($limit !== null) {
             $sql .= ' LIMIT :limit';
         }
-
         $statement = $this->mysqlClient->prepare($sql);
-
         if ($limit !== null) {
             $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         }
-
         $statement->execute();
         $postsData = $statement->fetchAll(PDO::FETCH_ASSOC);
         $posts = [];
