@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Services\ImageService;
+use App\Utils\CsrfProtection;
 use App\Utils\Superglobals;
 use Exception;
 use Twig\Error\LoaderError;
@@ -37,7 +38,7 @@ class RegisterController extends Controller
      */
     public function registrationForm()
     {
-        $csrfToken = bin2hex(random_bytes(32));
+        $csrfToken = CsrfProtection::generateToken();
         Superglobals::setSession('csrfToken', $csrfToken);
         $this->render('Auth/register.html.twig', [
             'csrfToken' => $csrfToken
@@ -52,16 +53,16 @@ class RegisterController extends Controller
     {
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
             $csrfToken = Superglobals::getPost('csrfToken');
-            if (!hash_equals(Superglobals::getSession('csrfToken'), $csrfToken)) {
-                Superglobals::setFlashMessage("danger", "Jeton CSRF invalide");
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Erreur CSRF : Votre session a expiré. Veuillez réessayer.");
                 $this->redirect('/Blog/inscription');
             }
 
-            $name = Superglobals::getPost("name");
-            $lastName = Superglobals::getPost("lastName");
-            $pseudo = Superglobals::getPost("pseudo");
-            $email = Superglobals::getPost("email");
-            $role = Superglobals::getPost("role");
+            $name = $this->testInput(Superglobals::getPost("name"));
+            $lastName = $this->testInput(Superglobals::getPost("lastName"));
+            $pseudo = $this->testInput(Superglobals::getPost("pseudo"));
+            $email = $this->testInput(Superglobals::getPost("email"));
+            $role = $this->testInput(Superglobals::getPost("role"));
             $resetToken = Superglobals::getPost("resetToken");
             $password = Superglobals::getPost("password");
 

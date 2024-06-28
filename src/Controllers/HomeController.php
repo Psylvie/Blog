@@ -4,6 +4,7 @@ namespace App\Controllers;
 require_once __DIR__ . '/../Config/MailConfig.php';
 require_once __DIR__ . '/../Config/Recaptcha.php';
 
+use App\Utils\CsrfProtection;
 use App\Utils\Superglobals;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -52,11 +53,16 @@ class HomeController extends Controller
     public function contactForm()
     {
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
+            $csrfToken = Superglobals::getPost('csrfToken') ?? '';
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Erreur de validation CSRF !");
+                $this->redirect('/Blog/');
+            }
 
-            $firstName = Superglobals::getPost('firstName') ?? '';
-            $lastName = Superglobals::getPost('lastName') ?? '';
-            $email = Superglobals::getPost('email') ?? '';
-            $message = Superglobals::getPost('message') ?? '';
+            $firstName = $this->testInput(Superglobals::getPost('firstName') ?? '');
+            $lastName = $this->testInput(Superglobals::getPost('lastName') ?? '');
+            $email = $this->testInput(Superglobals::getPost('email') ?? '');
+            $message = $this->testInput(Superglobals::getPost('message') ?? '');
 
             if (empty($firstName) || empty($lastName) || empty($email) || empty($message)) {
                 Superglobals::setFlashMessage("info", "Tous les champs sont obligatoires !");
@@ -108,7 +114,7 @@ class HomeController extends Controller
                 $mail->Body = $htmlMessage;
 
                 $mail->send();
-                Superglobals::setFlashMessage("success", "Le formulaire a été envoyé avec succès !");
+                Superglobals::setFlashMessage("success", "Votre demande a été envoyé !");
             } catch (Exception $e) {
                 Superglobals::setFlashMessage("danger", "Erreur d'envoi de mail !");
             }
@@ -121,11 +127,15 @@ class HomeController extends Controller
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
+     * @throws \Exception
      */
     public function contact()
     {
+        $csrfToken = CsrfProtection::generateToken();
+        Superglobals::setSession('csrfToken', $csrfToken);
         $this->render('Home/contact.html.twig',
-            ['recaptchaSiteKey' => RECAPTCHA_SITE_KEY]);
+            ['recaptchaSiteKey' => RECAPTCHA_SITE_KEY,
+                'csrfToken' => $csrfToken]);
     }
 
     /**

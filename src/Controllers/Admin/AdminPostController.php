@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
 use App\Services\ImageService;
+use App\Utils\CsrfProtection;
 use App\Utils\Superglobals;
 use Exception;
 use PDOException;
@@ -53,7 +54,8 @@ class AdminPostController extends Controller
      */
     public function newPost()
     {
-        $this->render('Admin/adminFormPost.html.twig');
+        $csrfToken = CsrfProtection::generateToken();
+        $this->render('Admin/adminFormPost.html.twig', ['csrfToken' => $csrfToken]);
     }
 
     /**
@@ -65,10 +67,15 @@ class AdminPostController extends Controller
         $requestMethod = Superglobals::getServer('REQUEST_METHOD');
 
         if ($requestMethod === 'POST') {
-            $title = trim(htmlspecialchars(Superglobals::getPost('title') ?? ''));
-            $chapo = trim(htmlspecialchars(Superglobals::getPost('chapo') ?? ''));
-            $author = trim(htmlspecialchars(Superglobals::getPost('author') ?? ''));
-            $content = trim(htmlspecialchars(Superglobals::getPost('content') ?? ''));
+            $csrfToken = Superglobals::getPost('csrfToken');
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Token CSRF invalide");
+                $this->redirect('/Blog/admin/newPost');
+            }
+            $title =$this->testInput(Superglobals::getPost('title') ?? '');
+            $chapo = $this->testInput(Superglobals::getPost('chapo') ?? '');
+            $author = $this->testInput(Superglobals::getPost('author') ?? '');
+            $content = $this->testInput(Superglobals::getPost('content') ?? '');
             $published = filter_var(Superglobals::getPost('published'), FILTER_VALIDATE_INT) ?? 0;
             $userId = Superglobals::getSession('user_id');
             $image = null;
@@ -128,10 +135,15 @@ class AdminPostController extends Controller
     public function updatePost(int $postId)
     {
         if (Superglobals::getServer('REQUEST_METHOD') === 'POST') {
-            $title = trim(htmlspecialchars(Superglobals::getPost('title') ?? ''));
-            $chapo = trim(htmlspecialchars(Superglobals::getPost('chapo') ?? ''));
-            $author = trim(htmlspecialchars(Superglobals::getPost('author') ?? ''));
-            $content = trim(htmlspecialchars(Superglobals::getPost('content') ?? ''));
+            $csrfToken = Superglobals::getPost('csrfToken');
+            if (!CsrfProtection::checkToken($csrfToken)) {
+                Superglobals::setFlashMessage("danger", "Token CSRF invalide");
+                $this->redirect('/Blog/admin/showPost');
+            }
+            $title = $this->testInput(Superglobals::getPost('title') ?? '');
+            $chapo = $this->testInput(Superglobals::getPost('chapo') ?? '');
+            $author = $this->testInput(Superglobals::getPost('author') ?? '');
+            $content = $this->testInput(Superglobals::getPost('content') ?? '');
             $published = filter_var(Superglobals::getPost('published'), FILTER_VALIDATE_INT) ?? 0;
 
             if (empty($title) || empty($chapo) || empty($author) || empty($content)) {

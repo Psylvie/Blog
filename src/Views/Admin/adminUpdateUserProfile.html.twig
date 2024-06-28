@@ -19,17 +19,17 @@
                     <ul class="list-group">
                         <li class="list-group-item">
                             <label for="name" class="form-label">Nom :</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}"
-                                   minlength="3" maxlength="30">
+                            <input type="text" class="form-control" id="name" name="name" value="{{ user.name|raw }}"
+                                   minlength="3" maxlength="30" required>
                         </li>
                         <li class="list-group-item">
                             <label for="lastName" class="form-label">Prénom :</label>
                             <input type="text" class="form-control" id="lastName" name="lastName"
-                                   value="{{ user.lastName }}" minlength="3" maxlength="30">
+                                   value="{{ user.lastName }}" minlength="3" maxlength="30" required>
                         </li>
                         <li class="list-group-item">
                             <label for="email" class="form-label">Email :</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
                         </li>
                         <li class="list-group-item">
                             <label for="role" class="form-label">Rôle :</label>
@@ -44,8 +44,9 @@
                         <li class="list-group-item">
                             <label for="pseudo" class="form-label">Pseudo :</label>
                             <input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ user.pseudo }}"
-                                   minlength="3" maxlength="30">
+                                   minlength="3" maxlength="30" required>
                     </ul>
+                    <input type="hidden" name="csrfToken" value="{{ csrfToken }}">
                     <button type="submit" class="btn btn-secondary mt-3">Enregistrer les modifications</button>
                 </form>
                 <form action="/Blog/admin/users/delete/{{ user.id }}" method="post">
@@ -74,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <input type="hidden" name="csrfToken" value="{{ csrfToken }}">
                 </form>
             </div>
         </div>
