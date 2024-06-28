@@ -1,5 +1,7 @@
 # <p align="center">Professional PHP Blog
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/badf32a590eb4d0ea288daef997869c1)](https://app.codacy.com/gh/Psylvie/Blog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 
 # <p align="left">🗒️Description
 
