@@ -1,7 +1,7 @@
 <?php
 require '../vendor/autoload.php';
 session_start();
-$dotenv = Dotenv\Dotenv::createUnsafeMutable(__DIR__ . '/..');
+$dotenv = Dotenv\Dotenv::createUnsafeMutable(__DIR__.'/..');
 $dotenv->load();
 
 use App\Controllers\Admin\AdminCommentController;
@@ -20,7 +20,7 @@ use App\Utils\Superglobals;
 
 $uri = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
 
-$userRole = filter_var(Superglobals::getSession('user_role') ?? null);
+$userRole = (filter_var(Superglobals::getSession('user_role') ?? null));
 
 $router = new Router();
 $router->addRoute('/Blog/', HomeController::class, 'homePage');
@@ -48,7 +48,7 @@ $router->addRoute('/Blog/addComment', CommentController::class, 'addComment');
 $router->addRoute('/Blog/Error/', Controller::class, 'handleErrors');
 
 
-if (isset($userRole) && $userRole == 'admin') {
+if (isset($userRole) && $userRole === 'admin') {
     $router->addRoute('/Blog/admin', AdminController::class, 'index');
     $router->addRoute('/Blog/admin/showPost', AdminPostController::class, 'showPost');
     $router->addRoute('/Blog/admin/newPost', AdminPostController::class, 'newPost');
@@ -70,8 +70,9 @@ if (isset($userRole) && $userRole == 'admin') {
 try {
     $router->dispatch($uri);
 } catch (\Exception $e) {
-    if (str_starts_with($uri, '/Blog/')) {
+    if (str_starts_with($uri, '/Blog/') === true) {
         Controller::redirect('/Blog/Error/');
     }
+
     error_log('Error: '.$e->getMessage());
 }
